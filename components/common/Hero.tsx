@@ -25,9 +25,7 @@ export default function Hero() {
             objectFit="cover"
           />
           <Box color="#fff">
-            <Heading fontSize="5em">
-              Trustworthy dental services
-            </Heading>
+            <Heading fontSize="5em">Trustworthy dental services</Heading>
             <Text fontSize="22px" marginY="70px" lineHeight="40px">
               Our dental clinic offers a range of services to help you achieve a
               healthy and beautiful smile.
@@ -45,8 +43,7 @@ export default function Hero() {
               Learn More
             </Button>
             <Box>
-                          <Image src={dantxLogo} alt="dantx logo" width={30} height={30} />
-
+              <Image src={dantxLogo} alt="dantx logo" width={30} height={30} />
             </Box>
           </Box>
         </HStack>
