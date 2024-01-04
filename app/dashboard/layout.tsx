@@ -24,7 +24,7 @@ export default function DashboardLayout({
           bg="#ffffff"
           as="aside"
           minHeight={{ lg: "100vh" }}
-          p="30px"
+          
         >
           <SideBar />
         </GridItem>

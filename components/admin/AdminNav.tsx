@@ -18,6 +18,7 @@ import { IoIosSearch } from "react-icons/io";
 export default function AdminNav() {
   return (
     <Flex
+    
       // justifyContent="space-between"
       alignItems="center"
       position="fixed"
@@ -27,6 +28,7 @@ export default function AdminNav() {
       px="8px"
       py="3px"
       borderRadius="10px"
+      zIndex='50'
     >
       <Box>
         <Breadcrumb>
