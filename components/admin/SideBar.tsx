@@ -4,21 +4,16 @@
     return (
       <Box>
         <Text pb="10px">Clinic Admin</Text>
-        <List spacing='10px'>
-          <ListItem cursor='pointer'> 
-        
-          <Link href='/dashboard'>
-          Home
-          </Link>
-            </ListItem>
-            <ListItem cursor='pointer'> 
-           <Link href='/datatabl'>
-          Data Tabel
-          </Link>
-            </ListItem>
-          <ListItem cursor='pointer'> 
-            userManagment
-            </ListItem>
+        <List spacing="10px">
+          <ListItem cursor="pointer">
+            <Link href="/dashboard">Home</Link>
+          </ListItem>
+          <ListItem cursor="pointer">
+            <Link href="/dashboard/table">Data Tabel</Link>
+          </ListItem>
+          <ListItem cursor="pointer">
+            <Link href="/dashboard/usermanagment">userManagment</Link>
+          </ListItem>
         </List>
       </Box>
     );

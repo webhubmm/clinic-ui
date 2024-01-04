@@ -2,7 +2,7 @@ import { Box, Grid, GridItem } from "@chakra-ui/react";
 
 export default function MainDashboard() {
   return (
-    <Grid templateColumns="repeat(6,1fr)" gap={4}>
+    <Grid templateColumns="repeat(3, 1fr)" gap={4}>
       <GridItem>
         <Box border="1px" height="80px">
           Box1
@@ -10,54 +10,32 @@ export default function MainDashboard() {
       </GridItem>
       <GridItem>
         <Box border="1px" height="80px">
-          Box1
+          Box2
         </Box>
       </GridItem>
       <GridItem>
         <Box border="1px" height="80px">
-          Box1
+          Box3
         </Box>
       </GridItem>
       <GridItem>
         <Box border="1px" height="80px">
-          Box1
+          Box4
         </Box>
       </GridItem>
       <GridItem>
         <Box border="1px" height="80px">
-          Box1
+          Box5
         </Box>
       </GridItem>
       <GridItem>
         <Box border="1px" height="80px">
-          Box1
+          Box6
         </Box>
       </GridItem>
-      <GridItem colSpan={3}>
-        <Box border="1px" height="300px">
-          Box1
-        </Box>
-      </GridItem>
-      <GridItem colSpan={3}>
-        <Box border="1px" height="300px">
-          Box1
-        </Box>
-      </GridItem>
-      <GridItem colSpan={2}>
-        <Box border="1px" height="300px">
-          Box1
-        </Box>
-      </GridItem>
-      <GridItem colSpan={2}>
-        <Box border="1px" height="300px">
-          Box1
-        </Box>
-      </GridItem>
-      <GridItem colSpan={2}>
-        <Box border="1px" height="300px">
-          Box1
-        </Box>
-      </GridItem>
+
     </Grid>
+   
+
   );
 }

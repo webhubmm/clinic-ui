@@ -1,7 +1,9 @@
-export default function Employee() {
+import { Box } from "@chakra-ui/react";
+
+export default function UserManagment() {
   return (
-    <div>
-        Employee Page
-    </div>
+    <Box mt='80px'>
+        UserManagment Page
+    </Box>
   )
 }
