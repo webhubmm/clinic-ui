@@ -1,90 +1,86 @@
 import { Heading,Box, Grid, GridItem,Flex,Spacer ,Circle,HStack,Text} from "@chakra-ui/react";
 import { SiGoogleanalytics } from "react-icons/si";
+import { FaDollarSign } from "react-icons/fa6";
+import AnalysticsBox from "./analysticsbox/AnalysticsBox";
 
 export default function HomeDashboard() {
   return (
-    <Grid templateColumns="repeat(3, 1fr)" gap={4} px='8px'>
+   <Box px='8px'>
+      <Grid templateColumns="repeat(3, 1fr)" gap={5} >
       <GridItem>
-        <Box height="100px" borderRadius='15px' p='15px' bg='#ffffff'>
-         <HStack spacing={10}>
-          <Circle size='50px' bg='#f4f7fe' color='#422afb'>
-    <SiGoogleanalytics  size={20}/>
-  </Circle>
-  
-  <Box>
-    <Text>
-      Earning
-    </Text>
-    <Text fontSize='26px'>
-      $42423
+      <AnalysticsBox />
+      </GridItem>
+      <GridItem>
+        <AnalysticsBox />
+       
+      </GridItem>
+   <GridItem>
+      <AnalysticsBox />
 
-    </Text>
-  </Box>
-         </HStack>
-        </Box>
       </GridItem>
-      <GridItem>
-        <Box height="100px" borderRadius='15px' p='15px' bg='#ffffff'>
-          Box1
-        </Box>
-      </GridItem>
-          <GridItem>
-        <Box height="100px" borderRadius='15px' p='15px' bg='#ffffff'>
-          Box1
-        </Box>
-      </GridItem>
-           <GridItem>
-        <Box height="100px" borderRadius='15px' p='15px' bg='#ffffff'>
-          Box1
-        </Box>
+  <GridItem>
+      <AnalysticsBox />
+
       </GridItem>
             <GridItem>
-        <Box height="100px" borderRadius='15px' p='15px' bg='#ffffff'>
-          Box1
-        </Box>
+      <AnalysticsBox />
+      
       </GridItem>
       <GridItem>
-        <Box height="100px" borderRadius='15px' p='15px' bg='#ffffff'>
-          Box1
-        </Box>
-      </GridItem>
-   
-    <GridItem colSpan={3} >
-      <Flex  gap={3}>
-    <Box  width='50%' border='1px'>
-      Box8
-    </Box>
-    <Spacer />
-      <Box  border='1px' width='50%'>
-      Box9
-      </Box>
-    </Flex>
-    </GridItem>
-   
+      <AnalysticsBox />
 
-<GridItem>
-        <Box border="1px" height="80px">
-          Box1
-        </Box>
       </GridItem>
+      </Grid>
+  
+   <Grid templateColumns="repeat(2, 1fr)" my='22px' gap={5} >
       <GridItem>
-        <Box border="1px" height="80px">
-          Box2
+        <Box borderRadius='20px' p='20px' bg='#ffffff' height='300px'>
+         
         </Box>
-      </GridItem>
+     </GridItem>
+           <GridItem>
+        <Box borderRadius='20px' p='20px' bg='#ffffff' height='300px'>
+         
+        </Box>
+     </GridItem>
+   </Grid>
+        <Grid templateColumns="repeat(2, 1fr)" my='22px' gap={5} >
       <GridItem>
-        <Box border="1px" height="80px">
-          Box3
+        <Box borderRadius='20px' p='20px' bg='#ffffff' height='300px'>
+         
         </Box>
-      </GridItem>
-      <GridItem>
-        <Box border="1px" height="80px">
-          Box4
+     </GridItem>
+           <GridItem >
+  <HStack spacing='10px'>
+           <Box borderRadius='20px' p='20px' bg='#ffffff' height='300px' width='100%'>
+
+
+         
         </Box>
-      </GridItem>
-    
-   
-    </Grid>
+       <Box borderRadius='20px' p='20px' bg='#ffffff' height='300px' width='100%'>
+         
+        </Box>
+   </HStack>
+     </GridItem>
+           <GridItem>
+        <Box borderRadius='20px' p='20px' bg='#ffffff' height='300px'>
+         
+        </Box>
+     </GridItem>
+           <GridItem >
+  <HStack spacing='10px'>
+           <Box borderRadius='20px' p='20px' bg='#ffffff' height='300px' width='100%'>
+
+
+         
+        </Box>
+       <Box borderRadius='20px' p='20px' bg='#ffffff' height='300px' width='100%'>
+         
+        </Box>
+   </HStack>
+     </GridItem>
+   </Grid>
+</Box>
 
 
   );

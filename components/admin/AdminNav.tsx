@@ -24,7 +24,7 @@ export default function AdminNav() {
       position="fixed"
       backgroundColor={`rgba(244, 247, 254, 0.2),rgba(11,20,55,0.5)`}
       backdropFilter="saturate(180%) blur(5px)"
-      w="81%"
+      w="80%"
       px="8px"
       py="3px"
       borderRadius="10px"

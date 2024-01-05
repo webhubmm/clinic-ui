@@ -33,6 +33,14 @@
               </HStack>
             </Link>
           </ListItem>
+           <ListItem cursor="pointer">
+            <Link href="/signin">
+                <HStack>
+                
+                <Text>SignIn</Text>
+              </HStack>
+            </Link>
+          </ListItem>
         </List>
 </Box>
         </Stack>
