@@ -28,7 +28,7 @@ export default function DashboardLayout({
         >
           <SideBar />
         </GridItem>
-        <GridItem bg="#f4f7fe" as="main" colSpan={5} p="20px">
+        <GridItem bg="#f4f7fe" colSpan={5} p="20px">
           <AdminNavbar />
 
           {children}

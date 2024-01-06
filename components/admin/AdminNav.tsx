@@ -22,10 +22,10 @@ export default function AdminNav() {
       // justifyContent="space-between"
       alignItems="center"
       position="fixed"
-      backgroundColor={`rgba(244, 247, 254, 0.2),rgba(11,20,55,0.5)`}
+      backgroundColor={`rgba(244, 247, 254, 0.1),rgba(11,20,55,0.5)`}
       backdropFilter="saturate(180%) blur(5px)"
       w="80%"
-      px="8px"
+      px="5px"
       py="3px"
       borderRadius="10px"
       zIndex='50'
@@ -47,7 +47,7 @@ export default function AdminNav() {
       </Box>
       <Spacer />
       <Flex bg="#fff"  alignItems='center' gap={3} p='10px' borderRadius='80px'    justifyContent='space-between' >
-        <Input placeholder='Search' borderRadius='30px' padding='10px' maxW='70%' bg='#f4f7fe'/>
+        <Input placeholder='Search' borderRadius='30px' paddingX='10px' maxW='70%' bg='#f4f7fe'/>
         <IoIosNotifications  size={20}/>
         <Avatar  name='Leo' size='sm'/>
       </Flex>

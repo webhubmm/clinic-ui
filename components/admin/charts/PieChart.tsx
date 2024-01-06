@@ -1,43 +1,36 @@
-import React from 'react';
-import ReactApexChart from 'react-apexcharts';
+'use client';
+import React, { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
+
+const ReactApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 type ChartProps = {
-	// using `interface` is also ok
-	[x: string]: any;
-};
-type ChartState = {
-	chartData: any[];
-	chartOptions: any;
+  chartData: any[];
+  chartOptions: any;
 };
 
-class PieChart extends React.Component<ChartProps, ChartState> {
-	constructor(props: { chartData: any[]; chartOptions: any }) {
-		super(props);
+const PieChart: React.FC<ChartProps> = ({ chartData, chartOptions }) => {
+  const [state, setState] = useState({
+    chartData: [],
+    chartOptions: {},
+  });
 
-		this.state = {
-			chartData: [],
-			chartOptions: {}
-		};
-	}
+  useEffect(() => {
+    setState({
+      chartData,
+      chartOptions,
+    });
+  }, [chartData, chartOptions]);
 
-	componentDidMount() {
-		this.setState({
-			chartData: this.props.chartData,
-			chartOptions: this.props.chartOptions
-		});
-	}
-
-	render() {
-		return (
-			<ReactApexChart
-				options={this.state.chartOptions}
-				series={this.state.chartData}
-				type='pie'
-				width='100%'
-				height='55%'
-			/>
-		);
-	}
-}
+  return (
+    <ReactApexChart
+      options={state.chartOptions}
+      series={state.chartData}
+      type='pie'
+      width='100%'
+      height='55%'
+    />
+  );
+};
 
 export default PieChart;

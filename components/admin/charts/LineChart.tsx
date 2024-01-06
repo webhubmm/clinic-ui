@@ -1,43 +1,32 @@
-import React from 'react';
-import ReactApexChart from 'react-apexcharts';
+'use client';
+import React, { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
 
 type ChartProps = {
-	// using `interface` is also ok
-	[x: string]: any;
-};
-type ChartState = {
-	chartData: any[];
-	chartOptions: any;
+  chartData: any[];
+  chartOptions: any;
 };
 
-class LineChart extends React.Component<ChartProps, ChartState> {
-	constructor(props: { chartData: any[]; chartOptions: any }) {
-		super(props);
+const ReactApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
-		this.state = {
-			chartData: [],
-			chartOptions: {}
-		};
-	}
+const LineChart: React.FC<ChartProps> = ({ chartData: initialChartData, chartOptions: initialChartOptions }) => {
+  const [chartData, setChartData] = useState<any[]>(initialChartData);
+  const [chartOptions, setChartOptions] = useState<any>(initialChartOptions);
 
-	componentDidMount() {
-		this.setState({
-			chartData: this.props.chartData,
-			chartOptions: this.props.chartOptions
-		});
-	}
+  useEffect(() => {
+    setChartData(initialChartData);
+    setChartOptions(initialChartOptions);
+  }, [initialChartData, initialChartOptions]);
 
-	render() {
-		return (
-			<ReactApexChart
-				options={this.state.chartOptions}
-				series={this.state.chartData}
-				type='line'
-				width='100%'
-				height='100%'
-			/>
-		);
-	}
-}
+  return (
+    <ReactApexChart
+      options={chartOptions}
+      series={chartData}
+      type='line'
+      width='100%'
+      height='100%'
+    />
+  );
+};
 
 export default LineChart;

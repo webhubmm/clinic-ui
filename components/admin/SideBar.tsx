@@ -1,4 +1,7 @@
   import { Box,Flex, Text,List ,ListItem, HStack ,Stack} from "@chakra-ui/react";
+  import { FaHome } from "react-icons/fa";
+import { SiGoogleanalytics } from "react-icons/si";
+
   import Link from 'next/link';
   export default function SideBar() {
     return (
@@ -9,18 +12,18 @@
         <Stack direction='column' mt='8px' mb='auto'>
 <Box ps='20px' pe={{ lg: '16px', '2xl': '16px' }}>
             <List spacing="10px">
-          <ListItem cursor="pointer">
+          <ListItem cursor="pointer" py='10px'>
             <Link href="/dashboard">
-              <HStack>
-
+              <HStack spacing='25px'>
+                <FaHome  size={20}/>
                 <Text>Home</Text>
               </HStack>
             </Link>
           </ListItem>
-          <ListItem cursor="pointer">
+          <ListItem cursor="pointer" py='10px'>
             <Link href="/dashboard/table">
-          <HStack>
-                
+          <HStack spacing='25px'>
+                <SiGoogleanalytics  size={20}/>
                 <Text>Data Tables</Text>
               </HStack>
             </Link>
