@@ -75,7 +75,7 @@ export default function HomeDashboard() {
 						</Text>
 					</Flex>
 				</Flex>
-				<Box minH='260px' minW='75%' mt='auto'>
+				<Box minH='260px' minW='75%' mt='auto' color='blue'>
 					<LineChart chartData={lineChartDataTotalSpent} chartOptions={lineChartOptionsTotalSpent} />
 				</Box>
 			</Flex>

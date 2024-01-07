@@ -14,7 +14,8 @@ import {
 } from "@chakra-ui/react";
 import { IoIosNotifications } from "react-icons/io";
 import { IoIosSearch } from "react-icons/io";
-
+import { MdDarkMode } from "react-icons/md";
+import { FaSearch } from "react-icons/fa";
 export default function AdminNav() {
   return (
     <Flex
@@ -47,8 +48,21 @@ export default function AdminNav() {
       </Box>
       <Spacer />
       <Flex bg="#fff"  alignItems='center' gap={3} p='10px' borderRadius='80px'    justifyContent='space-between' >
-        <Input placeholder='Search' borderRadius='30px' paddingX='10px' maxW='70%' bg='#f4f7fe'/>
+    
+<InputGroup >
+  <InputLeftElement
+    pointerEvents="none"
+    // children={<FaSearch color="gray.300"  w='15px' h='15px' mr='10px'/>}
+  />
+				
+  <Input placeholder="Search" borderRadius='30px' fontSize='sm'/>
+</InputGroup>
+        <Box>
         <IoIosNotifications  size={20}/>
+        </Box>
+        <Box>
+          <MdDarkMode size={20}/>
+          </Box>
         <Avatar  name='Leo' size='sm'/>
       </Flex>
     </Flex>
