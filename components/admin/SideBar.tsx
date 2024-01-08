@@ -15,7 +15,7 @@ const NavLinks = [
     const isActive = (path) => path === pathname;
 
       return (
-        <Flex pos='fixed' direction='column' height='100%' pt='25px' borderRadius='30px' alignItems='center'>
+        <Flex pos='fixed' direction='column' height='100%'  pt='25px' borderRadius='30px' alignItems='center' >
           <Flex alignItems='center' flexDirection='column' >
             <Text my='15px' fontSize='20px' >Clinic Admin</Text>
           </Flex>
@@ -26,7 +26,7 @@ const NavLinks = [
                   NavLinks.map(link =>{
                     return (
  <ListItem cursor="pointer" py='10px' key={link.id} >
-              <Link href={link.path} className={isActive(link.path) ? 'active' : ''}>
+              <Link href={link.path} className={isActive(link.path) ? 'active' : 'transperent'}>
                 <HStack spacing='25px'  >
                   {link.icons}
                   <Text>{link.name}</Text>
@@ -37,30 +37,7 @@ const NavLinks = [
                   })
                 }
            
-            {/* <ListItem cursor="pointer" py='10px'>
-              <Link href="/dashboard/table">
-            <HStack spacing='25px'>
-                  <SiGoogleanalytics  size={20}/>
-                  <Text>Data Tables</Text>
-                </HStack>
-              </Link>
-            </ListItem>
-            <ListItem cursor="pointer" py='10px'>
-              <Link href="/dashboard/usermanagment">
-                  <HStack spacing='25px'>
-                  <FaLock size={20}/>
-                  <Text>usermanagment</Text>
-                </HStack>
-              </Link>
-            </ListItem>
-            <ListItem cursor="pointer" py='10px'>
-              <Link href="/signin">
-      <HStack spacing='25px'>
-                  <FaLock size={20}/>
-                  <Text>SingIn</Text>
-                </HStack>
-              </Link>
-            </ListItem> */}
+          
           </List>
   </Box>
           </Stack>

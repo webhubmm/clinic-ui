@@ -1,13 +1,14 @@
 'use client'
 import React, { useState, useEffect } from 'react';
-import Chart from 'react-apexcharts';
 import dynamic from 'next/dynamic';
 
 type ChartProps = {
   chartData: any[];
   chartOptions: any;
 };
-const ReactApexChart = dynamic(() => import('react-apexcharts'), { ssr: false });
+
+// Dynamic import of Chart component
+const DynamicChart = dynamic(() => import('react-apexcharts'), { ssr: false });
 
 const ColumnChart: React.FC<ChartProps> = ({ chartData, chartOptions }) => {
   const [state, setState] = useState({
@@ -23,7 +24,7 @@ const ColumnChart: React.FC<ChartProps> = ({ chartData, chartOptions }) => {
   }, [chartData, chartOptions]);
 
   return (
-    <Chart
+    <DynamicChart
       options={state.chartOptions}
       series={state.chartData}
       type='bar'
