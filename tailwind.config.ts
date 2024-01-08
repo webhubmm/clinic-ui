@@ -1,5 +1,7 @@
 import type { Config } from "tailwindcss";
 
+const { fontFamily } = require("tailwindcss/defaultTheme");
+
 const config: Config = {
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
@@ -31,6 +33,15 @@ const config: Config = {
         sky_two: "#5cd1e9",
         gray_opacity: "#122258",
         white: "#f3f3f3",
+        neat: {
+          primary: "#EEF5FF",
+          secondary: "#B4D4FF",
+          tertiary: "#86B6F6",
+          other: "#176B87",
+        },
+      },
+      fontFamily: {
+        neat: ["var(--font-montserrat)", ...fontFamily.sans],
       },
     },
   },

@@ -2,7 +2,7 @@ import { Box, Grid, GridItem,Flex,Spacer ,Circle,HStack,Text, Card, Center, Tabl
 
 export default function CheckTable(){
     return (
-          <Table size='md'  variant='simple' color='gray.500'   borderRadius='20px'  >
+          <Table   variant='simple' color='gray.500'   borderRadius='20px'  >
     <Thead >
       <Tr>
         <Th>Name</Th>

@@ -1,6 +1,8 @@
 
 export default function SingIn() {
   return (
-    <div>SinginPage</div>
+    <Box>
+    SingIn Page
+    </Box>
   )
 }

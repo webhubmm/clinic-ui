@@ -10,8 +10,8 @@ import LineChart from "./charts/LineChart";
 import ColumnChart from "./charts/BarChart";
 import ComplexTable from "./complexTable/ComplexTable";
 import CheckTable from "./checkTable/CheckTable";
-import { MdOutlineDragIndicator } from "react-icons/md";
-
+import { MdOutlineDragIndicator } from "react-icons/md"
+import MiniCalendar from "./calender/MiniCalender";
 export default function HomeDashboard() {
   return (
    <Box px='10px'>
@@ -111,10 +111,7 @@ export default function HomeDashboard() {
         </HStack> 
 
 			</Flex>
-				{/* <Text  fontSize='22px' mb="4px" fontWeight='700' lineHeight='100%'>
-					Check Table
-				</Text>
-          */}
+				
   <ComplexTable />
   </Card>
   </GridItem>
@@ -282,6 +279,9 @@ export default function HomeDashboard() {
 				</Flex>
 			</Box>
       </Card>
+
+          
+		  {/* <MiniCalendar /> */}
    <Card py='20px' px='15px' alignItems='center' flexDirection='column' w='48%' borderRadius='20px'>
 			<Flex
 				px={{ base: '0px', '2xl': '10px' }}
@@ -331,7 +331,7 @@ export default function HomeDashboard() {
 						25%
 					</Text>
 				</Flex>
-			</Card>
+			</Card>	
 		</Card>
 		</HStack>
 
