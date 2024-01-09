@@ -4,8 +4,8 @@ import {
 } from "@chakra-ui/react";
 import SideBar from "@/components/admin/SideBar";
 import AdminNavbar from "@/components/admin/AdminNav";
-
 import type { Metadata } from "next";
+
 export const metadata: Metadata = {
   title: "Admin Dashbaord",
   description: "Admin Dashbaord for clinic",
@@ -28,7 +28,7 @@ export default function DashboardLayout({
         >
           <SideBar />
         </GridItem>
-        <GridItem bg="#f4f7fe" colSpan={5} p="20px">
+        <GridItem bg="#f4f7fe" colSpan={5}  px='20px'>
           <AdminNavbar />
 
           {children}

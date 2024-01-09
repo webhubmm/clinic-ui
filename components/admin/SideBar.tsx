@@ -15,9 +15,9 @@ const NavLinks = [
     const isActive = (path) => path === pathname;
 
       return (
-        <Flex pos='fixed' direction='column' height='100%'  pt='25px' borderRadius='30px' alignItems='center' >
+        <Flex pos='fixed' direction='column' height='100%'  pt='20px' borderRadius='30px' alignItems='center' >
           <Flex alignItems='center' flexDirection='column' >
-            <Text my='15px' fontSize='20px' >Clinic Admin</Text>
+            <Text mb='20px' fontSize='20px' >Clinic Admin</Text>
           </Flex>
           <Stack direction='column' mt='8px' mb='auto'>
           <Box ps='20px' pe={{ lg: '16px', '2xl': '16px' }}>
@@ -26,7 +26,7 @@ const NavLinks = [
                   NavLinks.map(link =>{
                     return (
  <ListItem cursor="pointer" py='10px' key={link.id} >
-              <Link href={link.path} className={isActive(link.path) ? 'active' : 'transperent'}>
+              <Link href={link.path} className={isActive(link.path) ? 'text-[hotpink]' : 'transperent'}>
                 <HStack spacing='25px'  >
                   {link.icons}
                   <Text>{link.name}</Text>

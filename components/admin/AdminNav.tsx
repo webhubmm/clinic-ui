@@ -27,7 +27,7 @@ export default function AdminNav() {
       backdropFilter="saturate(180%) blur(5px)"
       w="80%"
       px="5px"
-      py="3px"
+      py="5px"
       borderRadius="10px"
       zIndex='50'
     >
