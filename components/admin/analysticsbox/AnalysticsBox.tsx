@@ -4,7 +4,7 @@ import { Heading,Box, Grid, GridItem,Flex,Spacer ,Circle,HStack,Text} from "@cha
 
 export default function AnalysticsBox() {
   return (
-      <Box height="100px" borderRadius='20px' p='20px' bg='#ffffff'>
+      <Box height={{base:'auto',md:"100px"}} borderRadius='20px' p='20px' bg='#ffffff'>
          <HStack spacing={5}>
           <Circle size='60px' bg='#f4f7fe' color='#422afb'>
     <SiGoogleanalytics  size={24}/>
@@ -14,7 +14,7 @@ export default function AnalysticsBox() {
     <Text  fontSize='14px'>
       Earning
     </Text>
-    <Text fontSize='26px' fontWeight='bold'>
+    <Text fontSize={{base:'19px',md:'26px'}} fontWeight='bold'>
       $42423
 
     </Text>

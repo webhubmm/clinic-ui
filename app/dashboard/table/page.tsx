@@ -5,11 +5,11 @@ import { BsThreeDots } from "react-icons/bs";
 
 export default function Tables() {
   return (
-    <Grid mt='90px' px='7px' templateColumns="repeat(2, 1fr)" gap={5}>
+    <Grid mt='90px' px='7px' templateColumns={{ base: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)'}} gap={5}>
 
     {/* <Flex  alignItems='center' gap={10} > */}
   <GridItem>
-         <Card flexDirection='column' w='100%' x='10px' overflowX={{ sm: 'scroll', lg: 'hidden' }}  zIndex='10' bg='#fff'>
+         <Card flexDirection='column' w={{md:'100%'}} x='10px' overflowX={{ sm: 'scroll', lg: 'hidden' }}  zIndex='10' bg='#fff'>
        <Flex p='25px' mb="8px" justifyContent='space-between' align='center'>
 				<Text  fontSize='22px' mb="4px" fontWeight='700' lineHeight='100%'>
 					Complex Table

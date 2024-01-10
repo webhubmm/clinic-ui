@@ -15,11 +15,11 @@ const NavLinks = [
     const isActive = (path) => path === pathname;
 
       return (
-        <Flex pos='fixed' direction='column' height='100%'  pt='20px' borderRadius='30px' alignItems='center' >
+        <Flex pos={{base:'static',xl:"fixed"}} direction={{base:'row','xl':'column'}} height='100%'  pt={{base:"5px" ,xl:'20px'}} borderRadius='30px' alignItems='center' >
           <Flex alignItems='center' flexDirection='column' >
             <Text mb='20px' fontSize='20px' >Clinic Admin</Text>
           </Flex>
-          <Stack direction='column' mt='8px' mb='auto'>
+          <Stack direction={{base:'row',xl:'column'}} mt='8px' mb='auto'>
           <Box ps='20px' pe={{ lg: '16px', '2xl': '16px' }}>
               <List spacing="15px" w='100%' >
                 {

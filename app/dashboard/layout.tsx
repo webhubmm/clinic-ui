@@ -20,7 +20,7 @@ export default function DashboardLayout({
     <main className=" bg-[#ffff]">
       <Grid templateColumns="repeat(6,1fr)">
         <GridItem
-          colSpan={{ base: 6, lg: 2, xl: 1 }}
+          colSpan={{ base: 6, xl: 1 }}
           bg="#ffffff"
           as="aside"
           minHeight={{ lg: "100vh" }}
@@ -28,7 +28,7 @@ export default function DashboardLayout({
         >
           <SideBar />
         </GridItem>
-        <GridItem bg="#f4f7fe" colSpan={5}  px='20px'>
+        <GridItem bg="#f4f7fe" colSpan={{base:6,lg:2,xl:5}}  px={{base:'20px',lg:'20px'}}>
           <AdminNavbar />
 
           {children}
