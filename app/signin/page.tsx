@@ -18,23 +18,26 @@ import { FaGoogle ,FaArrowLeft} from "react-icons/fa";
 import { MdOutlineRemoveRedEye } from "react-icons/md";
 import { RiEyeCloseLine } from "react-icons/ri";
 import Link from 'next/link';  // Import Link instead of NavLink
+import Image from 'next/image'
+import SinginImg from "@/public/assets/asset 5.webp";
 
 export default function SignIn() {
   const [show, setShow] = React.useState(false);
   const handleClick = () => setShow(!show);
 
   return (
-    <Container bg="#f4f7fe">
-      <Link href='/'  className='my-8'>
+    <Flex bg="#f4f7fe" alignItems='center' justifyContent='center' gap={8}  h='100vh'>
+    <Flex   flexDirection='column'>
+      <Link href='/' >
       <Flex alignItems='center' gap={3} >
       <FaArrowLeft size={20}/>
-      <span>Back To Home</span>
+      <span className='py-3'>Back To Home</span>
       </Flex>
       </Link>
       <Flex
         maxW={{ base: "100%", md: "max-content" }}
         w="100%"
-        mx={{ base: "auto", lg: "30px" }}
+        mx={{ base: "auto", xl: "30px" }}
         marginRight="auto"
         alignItems="start"
         justifyContent="center"
@@ -42,10 +45,10 @@ export default function SignIn() {
         flexDirection="column"
       >
         <Box marginRight="auto">
-          <Heading color="#000" fontSize="36px" mb="10px">
+          <Heading color="#000" fontSize="36px" mb="5px">
             Medical Care
           </Heading>
-          <Text mb="36px" ms="4px" color="#000" fontWeight="400" fontSize="md">
+          <Text mb="20px" ms="4px" color="#000" fontWeight="400" fontSize="md">
             Enter your email and password to sign in!
           </Text>
         </Box>
@@ -68,6 +71,7 @@ export default function SignIn() {
             py="15px"
             h="50px"
             borderRadius="16px"
+            _hover='#332941'
           >
             <FaGoogle  size={20}/>
             <span className='ml-3'>Sign in with Google</span>
@@ -90,7 +94,7 @@ export default function SignIn() {
               ms={{ base: "0px", md: "0px" }}
               type="email"
               placeholder="mail@simmmple.com"
-              mb="24px"
+              mb="20px"
               fontWeight="500"
               size="lg"
             />
@@ -108,7 +112,7 @@ export default function SignIn() {
                 isRequired={true}
                 fontSize="sm"
                 placeholder="Min. 8 characters"
-                mb="24px"
+                mb="20px"
                 size="lg"
                 type={show ? "text" : "password"}
               />
@@ -119,7 +123,7 @@ export default function SignIn() {
               </InputRightElement>
             </InputGroup>
           </FormControl>
-          <Flex justifyContent="space-between" align="center" mb="24px">
+          <Flex justifyContent="space-between" align="center" mb="20px">
             <FormControl display="flex" alignItems="center">
               <Checkbox
                 id="remember-login"
@@ -146,7 +150,7 @@ export default function SignIn() {
             fontWeight="500"
             w="100%"
             h="50"
-            mb="24px"
+            mb="20px"
             bg='#332941'
             color='#fff'
           >
@@ -168,6 +172,13 @@ export default function SignIn() {
           </Flex>
         </Flex>
       </Flex>
-    </Container>
+    </Flex>
+    <Box >
+       <Image src={SinginImg} alt='singinimage' width={0}
+  height={0}
+  sizes="95vw"
+  style={{ width: '100%', height: 'auto' }} />
+      </Box>
+    </Flex>
   );
 }
