@@ -23,6 +23,7 @@ export default function DashboardLayout({
           colSpan={{ base: 6, xl: 1 }}
           bg="#ffffff"
           as="aside"
+          display={{base:'none',md:'none',lg:'block'}}
           minHeight={{ lg: "100vh" }}
           
         >

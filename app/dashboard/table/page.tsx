@@ -5,7 +5,7 @@ import { BsThreeDots } from "react-icons/bs";
 
 export default function Tables() {
   return (
-    <Grid mt='90px' px='7px' templateColumns={{ base: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)'}} gap={5}>
+    <Grid mt='90px' px='7px' templateColumns={{ base: 'repeat(1, 1fr)', lg: 'repeat(2, 1fr)'}} gap={5}>
 
     {/* <Flex  alignItems='center' gap={10} > */}
   <GridItem>
@@ -20,7 +20,7 @@ export default function Tables() {
           </Center>
         </HStack>
 			</Flex>
-      <ComplexTable />
+      <CheckTable />
   
   </Card>
    </GridItem>
@@ -38,168 +38,7 @@ export default function Tables() {
         </HStack>
 			</Flex>
       <CheckTable />
-  {/* <Table   bg='#ffffff'  variant='unstyle' borderRadius='20px'  >
-    <Thead borderBottom='1px'>
-      <Tr>
-        <Th>Name</Th>
-        <Th >Email</Th>
-        <Th >Date </Th>
-        <Th >Progress</Th>
-        
-
-
-      </Tr>
-    </Thead>
-    <Tbody fontWeight="bold">
-      <Tr>
-        <Td >
-          <Flex align='center'>
-					<Checkbox  colorScheme='purple' me='10px' color='blue' />
-					<Text  fontSize='sm' fontWeight='700'>
-						Leo
-					</Text>
-				</Flex>
-        </Td>
-        <Td>
-          Leo@gmail.com
-          </Td>
-                  <Td >{new Date().toLocaleDateString()}</Td>
-              <Td >
-          <Progress hasStripe  colorScheme='blue' size='sm' value={30}/>
-        </Td>     
-
-      </Tr>
-
-   
- <Tr>
-        <Td >
-          <Flex align='center'>
-					<Checkbox  colorScheme='purple' me='10px' color='blue' />
-					<Text  fontSize='sm' fontWeight='700'>
-						Leo
-					</Text>
-				</Flex>
-        </Td>
-        <Td>
-          Leo@gmail.com
-          </Td>
-                  <Td >{new Date().toLocaleDateString()}</Td>
-              <Td >
-          <Progress hasStripe  colorScheme='blue' size='sm' value={30}/>
-        </Td>     
-
-      </Tr>
-      <Tr>
-        <Td >
-          <Flex align='center'>
-					<Checkbox  colorScheme='purple' me='10px' color='blue' />
-					<Text  fontSize='sm' fontWeight='700'>
-						Leo
-					</Text>
-				</Flex>
-        </Td>
-        <Td>
-          Leo@gmail.com
-          </Td>
-                  <Td >{new Date().toLocaleDateString()}</Td>
-              <Td >
-          <Progress hasStripe  colorScheme='blue' size='sm' value={30}/>
-        </Td>     
-
-      </Tr>
-        <Tr>
-        <Td >
-          <Flex align='center'>
-					<Checkbox  colorScheme='purple' me='10px' color='blue' />
-					<Text  fontSize='sm' fontWeight='700'>
-						Leo
-					</Text>
-				</Flex>
-        </Td>
-        <Td>
-          Leo@gmail.com
-          </Td>
-                  <Td >{new Date().toLocaleDateString()}</Td>
-              <Td >
-          <Progress hasStripe  colorScheme='blue' size='sm' value={30}/>
-        </Td>     
-
-      </Tr>
-   <Tr>
-        <Td >
-          <Flex align='center'>
-					<Checkbox  colorScheme='purple' me='10px' color='blue' />
-					<Text  fontSize='sm' fontWeight='700'>
-						Leo
-					</Text>
-				</Flex>
-        </Td>
-        <Td>
-          Leo@gmail.com
-          </Td>
-                  <Td >{new Date().toLocaleDateString()}</Td>
-              <Td >
-          <Progress hasStripe  colorScheme='blue' size='sm' value={30}/>
-        </Td>     
-
-      </Tr>
-        <Tr>
-        <Td >
-          <Flex align='center'>
-					<Checkbox  colorScheme='purple' me='10px' color='blue' />
-					<Text  fontSize='sm' fontWeight='700'>
-						Leo
-					</Text>
-				</Flex>
-        </Td>
-        <Td>
-          Leo@gmail.com
-          </Td>
-                  <Td >{new Date().toLocaleDateString()}</Td>
-              <Td >
-          <Progress hasStripe  colorScheme='blue' size='sm' value={30}/>
-        </Td>     
-
-      </Tr>
-        <Tr>
-        <Td >
-          <Flex align='center'>
-					<Checkbox  colorScheme='purple' me='10px' color='blue' />
-					<Text  fontSize='sm' fontWeight='700'>
-						Leo
-					</Text>
-				</Flex>
-        </Td>
-        <Td>
-          Leo@gmail.com
-          </Td>
-                  <Td >{new Date().toLocaleDateString()}</Td>
-              <Td >
-          <Progress hasStripe  colorScheme='blue' size='sm' value={30}/>
-        </Td>     
-
-      </Tr>
-        <Tr>
-        <Td >
-          <Flex align='center'>
-					<Checkbox  colorScheme='purple' me='10px' color='blue' />
-					<Text  fontSize='sm' fontWeight='700'>
-						Leo
-					</Text>
-				</Flex>
-        </Td>
-        <Td>
-          Leo@gmail.com
-          </Td>
-                  <Td >{new Date().toLocaleDateString()}</Td>
-              <Td >
-          <Progress hasStripe  colorScheme='blue' size='sm' value={30}/>
-        </Td>     
-
-      </Tr>
-    </Tbody>
-   
-  </Table> */}
+  
   </Card>
    </GridItem>
 
@@ -217,7 +56,7 @@ export default function Tables() {
           </Center>
         </HStack>
 			</Flex>
-      <ComplexTable />
+      <CheckTable />
   
   </Card>
    </GridItem>
@@ -235,168 +74,7 @@ export default function Tables() {
         </HStack>
 			</Flex>
       <CheckTable />
-  {/* <Table   bg='#ffffff'  variant='unstyle' borderRadius='20px'  >
-    <Thead borderBottom='1px'>
-      <Tr>
-        <Th>Name</Th>
-        <Th >Email</Th>
-        <Th >Date </Th>
-        <Th >Progress</Th>
-        
 
-
-      </Tr>
-    </Thead>
-    <Tbody fontWeight="bold">
-      <Tr>
-        <Td >
-          <Flex align='center'>
-					<Checkbox  colorScheme='purple' me='10px' color='blue' />
-					<Text  fontSize='sm' fontWeight='700'>
-						Leo
-					</Text>
-				</Flex>
-        </Td>
-        <Td>
-          Leo@gmail.com
-          </Td>
-                  <Td >{new Date().toLocaleDateString()}</Td>
-              <Td >
-          <Progress hasStripe  colorScheme='blue' size='sm' value={30}/>
-        </Td>     
-
-      </Tr>
-
-   
- <Tr>
-        <Td >
-          <Flex align='center'>
-					<Checkbox  colorScheme='purple' me='10px' color='blue' />
-					<Text  fontSize='sm' fontWeight='700'>
-						Leo
-					</Text>
-				</Flex>
-        </Td>
-        <Td>
-          Leo@gmail.com
-          </Td>
-                  <Td >{new Date().toLocaleDateString()}</Td>
-              <Td >
-          <Progress hasStripe  colorScheme='blue' size='sm' value={30}/>
-        </Td>     
-
-      </Tr>
-      <Tr>
-        <Td >
-          <Flex align='center'>
-					<Checkbox  colorScheme='purple' me='10px' color='blue' />
-					<Text  fontSize='sm' fontWeight='700'>
-						Leo
-					</Text>
-				</Flex>
-        </Td>
-        <Td>
-          Leo@gmail.com
-          </Td>
-                  <Td >{new Date().toLocaleDateString()}</Td>
-              <Td >
-          <Progress hasStripe  colorScheme='blue' size='sm' value={30}/>
-        </Td>     
-
-      </Tr>
-        <Tr>
-        <Td >
-          <Flex align='center'>
-					<Checkbox  colorScheme='purple' me='10px' color='blue' />
-					<Text  fontSize='sm' fontWeight='700'>
-						Leo
-					</Text>
-				</Flex>
-        </Td>
-        <Td>
-          Leo@gmail.com
-          </Td>
-                  <Td >{new Date().toLocaleDateString()}</Td>
-              <Td >
-          <Progress hasStripe  colorScheme='blue' size='sm' value={30}/>
-        </Td>     
-
-      </Tr>
-   <Tr>
-        <Td >
-          <Flex align='center'>
-					<Checkbox  colorScheme='purple' me='10px' color='blue' />
-					<Text  fontSize='sm' fontWeight='700'>
-						Leo
-					</Text>
-				</Flex>
-        </Td>
-        <Td>
-          Leo@gmail.com
-          </Td>
-                  <Td >{new Date().toLocaleDateString()}</Td>
-              <Td >
-          <Progress hasStripe  colorScheme='blue' size='sm' value={30}/>
-        </Td>     
-
-      </Tr>
-        <Tr>
-        <Td >
-          <Flex align='center'>
-					<Checkbox  colorScheme='purple' me='10px' color='blue' />
-					<Text  fontSize='sm' fontWeight='700'>
-						Leo
-					</Text>
-				</Flex>
-        </Td>
-        <Td>
-          Leo@gmail.com
-          </Td>
-                  <Td >{new Date().toLocaleDateString()}</Td>
-              <Td >
-          <Progress hasStripe  colorScheme='blue' size='sm' value={30}/>
-        </Td>     
-
-      </Tr>
-        <Tr>
-        <Td >
-          <Flex align='center'>
-					<Checkbox  colorScheme='purple' me='10px' color='blue' />
-					<Text  fontSize='sm' fontWeight='700'>
-						Leo
-					</Text>
-				</Flex>
-        </Td>
-        <Td>
-          Leo@gmail.com
-          </Td>
-                  <Td >{new Date().toLocaleDateString()}</Td>
-              <Td >
-          <Progress hasStripe  colorScheme='blue' size='sm' value={30}/>
-        </Td>     
-
-      </Tr>
-        <Tr>
-        <Td >
-          <Flex align='center'>
-					<Checkbox  colorScheme='purple' me='10px' color='blue' />
-					<Text  fontSize='sm' fontWeight='700'>
-						Leo
-					</Text>
-				</Flex>
-        </Td>
-        <Td>
-          Leo@gmail.com
-          </Td>
-                  <Td >{new Date().toLocaleDateString()}</Td>
-              <Td >
-          <Progress hasStripe  colorScheme='blue' size='sm' value={30}/>
-        </Td>     
-
-      </Tr>
-    </Tbody>
-   
-  </Table> */}
   </Card>
    </GridItem>
 

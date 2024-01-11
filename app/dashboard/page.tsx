@@ -7,7 +7,7 @@ export default function Dashboard() {
       
 
         <Box mt="90px"  >
-         <HomeDashboard />a
+         <HomeDashboard />
         </Box>
   
   );
