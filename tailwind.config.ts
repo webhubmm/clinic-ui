@@ -14,6 +14,7 @@ const config: Config = {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+        heroBackgroundImage: "url('../public/assets/asset 37.webp')",
       },
       colors: {
         dark: "#000000",
@@ -34,10 +35,10 @@ const config: Config = {
         gray_opacity: "#122258",
         white: "#f3f3f3",
         neat: {
-          primary: "#EEF5FF",
-          secondary: "#B4D4FF",
-          tertiary: "#86B6F6",
-          other: "#176B87",
+          primary: "#05b9de",
+          secondary: "#052e73",
+          tertiary: "#000e25",
+          other: "#176B87", // not needed yet
         },
       },
       fontFamily: {
