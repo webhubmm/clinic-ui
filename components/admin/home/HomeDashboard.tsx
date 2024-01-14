@@ -23,9 +23,9 @@ import {
 } from "@chakra-ui/react";
 import { SiGoogleanalytics } from "react-icons/si";
 import { FaDollarSign } from "react-icons/fa6";
-import AnalysticsBox from "./analysticsbox/AnalysticsBox";
 import { BsThreeDots } from "react-icons/bs";
-import PieChart from "./charts/PieChart";
+import AnalysticsBox from "../analysticsbox/AnalysticsBox";
+import PieChart from "../charts/PieChart";
 import {
   barChartDataConsumption,
   barChartOptionsConsumption,
@@ -35,11 +35,11 @@ import {
   pieChartOptions,
   barChartOptionsDailyTraffic,
   barChartDataDailyTraffic,
-} from "./variables/charts";
-import { VSeparator } from "./separator/Separators";
-import LineChart from "./charts/LineChart";
-import ColumnChart from "./charts/BarChart";
-import CheckTable from "./checkTable/CheckTable";
+} from "../variables/charts";
+import { VSeparator } from "../separator/Separators";
+import LineChart from "../charts/LineChart";
+import ColumnChart from "../charts/BarChart";
+import CheckTable from "../checkTable/CheckTable";
 import { MdOutlineDragIndicator } from "react-icons/md";
 export default function HomeDashboard() {
   return (

@@ -17,14 +17,16 @@ MenuItem,
   Breadcrumb,
   InputLeftElement,
 } from "@chakra-ui/react";
-import { IoIosNotifications } from "react-icons/io";
-import { IoIosSearch } from "react-icons/io";
-import { MdDarkMode } from "react-icons/md";
-import { FaSearch } from "react-icons/fa";
+// import { IoIosNotifications } from "react-icons/io";
+// import { IoIosSearch } from "react-icons/io";
+// import { MdDarkMode } from "react-icons/md";
+// import { FaSearch } from "react-icons/fa";
+import { RiMenu3Fill } from "react-icons/ri";
+
 export default function AdminNav() {
   return (
     <Flex
-      // justifyContent="space-between"
+      justifyContent={{base:'flex-end',md:"space-between"}}
       alignItems="center"
       position="fixed"
       backgroundColor={`rgba(244, 247, 254, 0.1),rgba(11,20,55,0.5)`}
@@ -36,25 +38,18 @@ export default function AdminNav() {
       zIndex="50"
       // display={{ base: 'none', md: 'block' }}
     >
-      <Box display={{ base: "none", md: "block" }}>
+      <Box >
         
-        <Text fontSize="35px" fontWeight="bold">
+        <Text fontSize="35px" fontWeight="bold" display={{ base: "none", lg: "block" }}>
           {" "}
           Main Dashboard
         </Text>
+      
       </Box>
-      <Spacer />
-      {/* <Flex
-        bg="#fff"
-        alignItems="center"
-        gap={3}
-        p="10px"
-        borderRadius="80px"
-        justifyContent="space-between"
-      > */}
+     
         
-        <Menu>
-          <MenuButton  colorScheme="blue">
+        <Menu flex='1'>
+          <MenuButton  color="blue">
                     <Avatar name="Leo" size={{base:'sm',md:'md'}} />
 
           </MenuButton>

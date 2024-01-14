@@ -1,4 +1,4 @@
-import HomeDashboard from "@/components/admin/HomeDashboard";
+import HomeDashboard from "@/components/admin/home/HomeDashboard";
 
 import { Box} from "@chakra-ui/react";
 export default function Dashboard() {
