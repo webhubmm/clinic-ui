@@ -1,26 +1,12 @@
-import { Card,Flex,Text } from "@chakra-ui/react";
+import CreateUser from "@/components/admin/adminuser/CreateUser";
+import { Card,Flex,Text,Button } from "@chakra-ui/react";
+import Link from "next/link";
+import { FaRegTrashAlt,FaUserEdit } from "react-icons/fa";
 
 export default function UserManagment() {
   return (
     <Card mt='96px' paddingBottom='10px' >
-      <Flex
-                p="25px"
-                mb="8px"
-                justifyContent="space-between"
-                align="center"
-              >
-                <Text
-                  fontSize="22px"
-                  mb="4px"
-                  fontWeight="700"
-                  lineHeight="100%"
-                >
-                  User Table
-                </Text>
-                {/* <button className='px-3 py-2 bg-black'>
-                  Create User
-                  <button> */}
-              </Flex>
+     <CreateUser />
   {/* component */}
   <section className="container  mx-auto  rounded-md  sm:px-5 lg:px-3">
     <div className="flex flex-col">
@@ -35,10 +21,7 @@ export default function UserManagment() {
                     className="py-3.5 px-4 text-sm font-normal text-left rtl:text-right text-gray-500 "
                   >
                     <div className="flex items-center gap-x-3">
-                      <input
-                        type="checkbox"
-                        className="text-blue-500 border-gray-300 rounded dark:bg-gray-900 dark:ring-offset-gray-900 bg-[#fff]"
-                      />
+                     
                       <button className="flex items-center gap-x-2">
                         <span>Appointment</span>
                         <svg
@@ -102,10 +85,7 @@ export default function UserManagment() {
                 <tr>
                   <td className="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
                     <div className="inline-flex items-center gap-x-3">
-                      <input
-                        type="checkbox"
-                        className="text-blue-500 border-gray-300 rounded dark:bg-gray-900 dark:ring-offset-gray-900 bg-[#fff]"
-                      />
+                     
                       <span>#3066</span>
                     </div>
                   </td>
@@ -113,7 +93,7 @@ export default function UserManagment() {
                     Jan 6, 2022
                   </td>
                   <td className="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
-                    <div className="inline-flex items-center px-3 py-1 rounded-full gap-x-2 text-emerald-500 bg-emerald-100/60 dark:bg-gray-800">
+                    <div className="inline-flex items-center px-3 py-1 rounded-full gap-x-2 text-emerald-500 bg-emerald-100/60 ">
                       <svg
                         width={12}
                         height={12}
@@ -153,23 +133,21 @@ export default function UserManagment() {
                     Monthly subscription
                   </td>
                   <td className="px-4 py-4 text-sm whitespace-nowrap">
-                    <div className="flex items-center gap-x-6">
-                      <button className="text-gray-500 transition-colors duration-200 dark:hover:text-indigo-500 dark:text-gray-300 hover:text-indigo-500 focus:outline-none">
-                       Edit
+                    <div className="flex items-center gap-x-8">
+                       <button className=" transition-colors duration-200 text-emerald-500  focus:outline-none">
+                        <FaUserEdit size={20}/>
                       </button>
-                      <button className="text-blue-500 transition-colors duration-200 hover:text-indigo-500 focus:outline-none">
-                        Download
+                      <button className="text-red-600 transition-colors duration-200 dark:hover:text-red-500 dark:text-gray-300 hover:text-indigo-500 focus:outline-none">
+                       <FaRegTrashAlt size={18}/>
                       </button>
+                     
                     </div>
                   </td>
                 </tr>
                 <tr>
                   <td className="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
                     <div className="inline-flex items-center gap-x-3">
-                      <input
-                        type="checkbox"
-                        className="text-blue-500 border-gray-300 rounded dark:bg-gray-900 dark:ring-offset-gray-900 bg-[#fff]"
-                      />
+                     
                       <span>#3065</span>
                     </div>
                   </td>
@@ -218,22 +196,22 @@ export default function UserManagment() {
                   </td>
                   <td className="px-4 py-4 text-sm whitespace-nowrap">
                     <div className="flex items-center gap-x-6">
-                      <button className="text-gray-500 transition-colors duration-200 dark:hover:text-indigo-500 dark:text-gray-300 hover:text-indigo-500 focus:outline-none">
-                       Edit
+                      <div className="flex items-center gap-x-8">
+                       <button className=" transition-colors duration-200 text-emerald-500  focus:outline-none">
+                         <FaUserEdit size={20}/>
                       </button>
-                      <button className="text-blue-500 transition-colors duration-200 hover:text-indigo-500 focus:outline-none">
-                        Download
+                      <button className="text-red-600 transition-colors duration-200 dark:hover:text-red-500 dark:text-gray-300 hover:text-indigo-500 focus:outline-none">
+                       <FaRegTrashAlt size={18}/>
                       </button>
+                     
+                    </div>
                     </div>
                   </td>
                 </tr>
                 <tr>
                   <td className="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
                     <div className="inline-flex items-center gap-x-3">
-                      <input
-                        type="checkbox"
-                        className="text-blue-500 border-gray-300 rounded dark:bg-gray-900 dark:ring-offset-gray-900 bg-[#fff]"
-                      />
+                     
                       <span>#3064</span>
                     </div>
                   </td>
@@ -282,22 +260,22 @@ export default function UserManagment() {
                   </td>
                   <td className="px-4 py-4 text-sm whitespace-nowrap">
                     <div className="flex items-center gap-x-6">
-                      <button className="text-gray-500 transition-colors duration-200 dark:hover:text-indigo-500 dark:text-gray-300 hover:text-indigo-500 focus:outline-none">
-                       Edit
+                      <div className="flex items-center gap-x-8">
+                       <button className=" transition-colors duration-200 text-emerald-500  focus:outline-none">
+                        <FaUserEdit size={20}/>
                       </button>
-                      <button className="text-blue-500 transition-colors duration-200 hover:text-indigo-500 focus:outline-none">
-                        Download
+                      <button className="text-red-600 transition-colors duration-200 dark:hover:text-red-500 dark:text-gray-300 hover:text-indigo-500 focus:outline-none">
+                       <FaRegTrashAlt size={18}/>
                       </button>
+                     
+                    </div>
                     </div>
                   </td>
                 </tr>
                 <tr>
                   <td className="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
                     <div className="inline-flex items-center gap-x-3">
-                      <input
-                        type="checkbox"
-                        className="text-blue-500 border-gray-300 rounded dark:bg-gray-900 dark:ring-offset-gray-900 bg-[#fff]"
-                      />
+                     
                       <span>#3063</span>
                     </div>
                   </td>
@@ -346,22 +324,22 @@ export default function UserManagment() {
                   </td>
                   <td className="px-4 py-4 text-sm whitespace-nowrap">
                     <div className="flex items-center gap-x-6">
-                      <button className="text-gray-500 transition-colors duration-200 dark:hover:text-indigo-500 dark:text-gray-300 hover:text-indigo-500 focus:outline-none">
-                       Edit
+                      <div className="flex items-center gap-x-8">
+                       <button className=" transition-colors duration-200 text-emerald-500  focus:outline-none">
+                        <FaUserEdit size={20}/>
                       </button>
-                      <button className="text-blue-500 transition-colors duration-200 hover:text-indigo-500 focus:outline-none">
-                        Download
+                      <button className="text-red-600 transition-colors duration-200 dark:hover:text-red-500 dark:text-gray-300 hover:text-indigo-500 focus:outline-none">
+                       <FaRegTrashAlt size={18}/>
                       </button>
+                     
+                    </div>
                     </div>
                   </td>
                 </tr>
                 <tr>
                   <td className="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
                     <div className="inline-flex items-center gap-x-3">
-                      <input
-                        type="checkbox"
-                        className="text-blue-500 border-gray-300 rounded dark:bg-gray-900 dark:ring-offset-gray-900 bg-[#fff]"
-                      />
+                     
                       <span>#3062</span>
                     </div>
                   </td>
@@ -410,22 +388,22 @@ export default function UserManagment() {
                   </td>
                   <td className="px-4 py-4 text-sm whitespace-nowrap">
                     <div className="flex items-center gap-x-6">
-                      <button className="text-gray-500 transition-colors duration-200 dark:hover:text-indigo-500 dark:text-gray-300 hover:text-indigo-500 focus:outline-none">
-                       Edit
+                      <div className="flex items-center gap-x-8">
+                       <button className=" transition-colors duration-200 text-emerald-500  focus:outline-none">
+                        <FaUserEdit size={20}/>
                       </button>
-                      <button className="text-blue-500 transition-colors duration-200 hover:text-indigo-500 focus:outline-none">
-                        Download
+                      <button className="text-red-600 transition-colors duration-200 dark:hover:text-red-500 dark:text-gray-300 hover:text-indigo-500 focus:outline-none">
+                       <FaRegTrashAlt size={18}/>
                       </button>
+                     
+                    </div>
                     </div>
                   </td>
                 </tr>
                                 <tr>
                   <td className="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
                     <div className="inline-flex items-center gap-x-3">
-                      <input
-                        type="checkbox"
-                        className="text-blue-500 border-gray-300 rounded dark:bg-gray-900 dark:ring-offset-gray-900 bg-[#fff]"
-                      />
+                     
                       <span>#3066</span>
                     </div>
                   </td>
@@ -474,12 +452,15 @@ export default function UserManagment() {
                   </td>
                   <td className="px-4 py-4 text-sm whitespace-nowrap">
                     <div className="flex items-center gap-x-6">
-                      <button className="text-gray-500 transition-colors duration-200 dark:hover:text-indigo-500 dark:text-gray-300 hover:text-indigo-500 focus:outline-none">
-                       Edit
+                      <div className="flex items-center gap-x-8">
+                       <button className=" transition-colors duration-200 text-emerald-500  focus:outline-none">
+                        <FaUserEdit size={20}/>
                       </button>
-                      <button className="text-blue-500 transition-colors duration-200 hover:text-indigo-500 focus:outline-none">
-                        Download
+                      <button className="text-red-600 transition-colors duration-200 dark:hover:text-red-500 dark:text-gray-300 hover:text-indigo-500 focus:outline-none">
+                       <FaRegTrashAlt size={18}/>
                       </button>
+                     
+                    </div>
                     </div>
                   </td>
                 </tr>

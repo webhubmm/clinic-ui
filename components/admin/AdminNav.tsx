@@ -40,7 +40,7 @@ export default function AdminNav() {
     >
       <Box >
         
-        <Text fontSize="35px" fontWeight="bold" display={{ base: "none", lg: "block" }}>
+        <Text fontSize="35px" fontWeight="bold" display={{ base: "none", lg: "none" }}>
           {" "}
           Main Dashboard
         </Text>
