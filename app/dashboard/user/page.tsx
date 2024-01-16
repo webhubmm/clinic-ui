@@ -134,9 +134,9 @@ export default function UserManagment() {
                   </td>
                   <td className="px-4 py-4 text-sm whitespace-nowrap">
                     <div className="flex items-center gap-x-8">
-                       <button className=" transition-colors duration-200 text-emerald-500  focus:outline-none">
-                        <FaUserEdit size={20}/>
-                      </button>
+                 <Link  href='/dashboard/user/edit' className=" transition-colors duration-200 text-emerald-500  focus:outline-none" >
+                <FaUserEdit size={20}/>
+                </Link>
                       <button className="text-red-600 transition-colors duration-200 dark:hover:text-red-500 dark:text-gray-300 hover:text-indigo-500 focus:outline-none">
                        <FaRegTrashAlt size={18}/>
                       </button>
@@ -197,9 +197,9 @@ export default function UserManagment() {
                   <td className="px-4 py-4 text-sm whitespace-nowrap">
                     <div className="flex items-center gap-x-6">
                       <div className="flex items-center gap-x-8">
-                       <button className=" transition-colors duration-200 text-emerald-500  focus:outline-none">
-                         <FaUserEdit size={20}/>
-                      </button>
+                     <Link  href='/dashboard/user/edit' className=" transition-colors duration-200 text-emerald-500  focus:outline-none" >
+                <FaUserEdit size={20}/>
+                </Link>
                       <button className="text-red-600 transition-colors duration-200 dark:hover:text-red-500 dark:text-gray-300 hover:text-indigo-500 focus:outline-none">
                        <FaRegTrashAlt size={18}/>
                       </button>
@@ -261,9 +261,9 @@ export default function UserManagment() {
                   <td className="px-4 py-4 text-sm whitespace-nowrap">
                     <div className="flex items-center gap-x-6">
                       <div className="flex items-center gap-x-8">
-                       <button className=" transition-colors duration-200 text-emerald-500  focus:outline-none">
-                        <FaUserEdit size={20}/>
-                      </button>
+ <Link  href='/dashboard/user/edit' className=" transition-colors duration-200 text-emerald-500  focus:outline-none" >
+                <FaUserEdit size={20}/>
+                </Link>
                       <button className="text-red-600 transition-colors duration-200 dark:hover:text-red-500 dark:text-gray-300 hover:text-indigo-500 focus:outline-none">
                        <FaRegTrashAlt size={18}/>
                       </button>
@@ -325,9 +325,9 @@ export default function UserManagment() {
                   <td className="px-4 py-4 text-sm whitespace-nowrap">
                     <div className="flex items-center gap-x-6">
                       <div className="flex items-center gap-x-8">
-                       <button className=" transition-colors duration-200 text-emerald-500  focus:outline-none">
-                        <FaUserEdit size={20}/>
-                      </button>
+ <Link  href='/dashboard/user/edit' className=" transition-colors duration-200 text-emerald-500  focus:outline-none" >
+                <FaUserEdit size={20}/>
+                </Link>
                       <button className="text-red-600 transition-colors duration-200 dark:hover:text-red-500 dark:text-gray-300 hover:text-indigo-500 focus:outline-none">
                        <FaRegTrashAlt size={18}/>
                       </button>
@@ -389,9 +389,9 @@ export default function UserManagment() {
                   <td className="px-4 py-4 text-sm whitespace-nowrap">
                     <div className="flex items-center gap-x-6">
                       <div className="flex items-center gap-x-8">
-                       <button className=" transition-colors duration-200 text-emerald-500  focus:outline-none">
-                        <FaUserEdit size={20}/>
-                      </button>
+ <Link  href='/dashboard/user/edit' className=" transition-colors duration-200 text-emerald-500  focus:outline-none" >
+                <FaUserEdit size={20}/>
+                </Link>
                       <button className="text-red-600 transition-colors duration-200 dark:hover:text-red-500 dark:text-gray-300 hover:text-indigo-500 focus:outline-none">
                        <FaRegTrashAlt size={18}/>
                       </button>
@@ -453,9 +453,9 @@ export default function UserManagment() {
                   <td className="px-4 py-4 text-sm whitespace-nowrap">
                     <div className="flex items-center gap-x-6">
                       <div className="flex items-center gap-x-8">
-                       <button className=" transition-colors duration-200 text-emerald-500  focus:outline-none">
-                        <FaUserEdit size={20}/>
-                      </button>
+<Link  href='/dashboard/user/edit' className=" transition-colors duration-200 text-emerald-500  focus:outline-none" >
+                <FaUserEdit size={20}/>
+                </Link>
                       <button className="text-red-600 transition-colors duration-200 dark:hover:text-red-500 dark:text-gray-300 hover:text-indigo-500 focus:outline-none">
                        <FaRegTrashAlt size={18}/>
                       </button>

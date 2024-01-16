@@ -142,7 +142,7 @@ export default function UserCreate() {
               size="lg"
               border='1px'
               borderColor='gray' 
-             placeholder='Enter Your Address' />          
+             placeholder='Enter Your Add  ress' />          
 </GridItem>
       </Grid>
            <Flex justifyContent='flex-end'>
