@@ -93,7 +93,7 @@ export default function SideBar({setIsSidebarOpen}) {
       
       <Flex alignItems={{lg:"center"}}   flexDirection={{base:'row',lg:"column"}} >
 
-        <Text pt={{base:'20px',md:'20px',lg:"0px" }} mb={{base:'20px'}} fontSize="20px">
+        <Text  pt={{base:'20px',md:'20px',lg:"0px" }} mb={{base:'20px'}} fontSize="20px">
           Clinic Admin
         </Text>
         <Spacer />

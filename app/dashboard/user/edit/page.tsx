@@ -2,14 +2,22 @@ import { GridItem,Card,Grid,Flex,Box,FormControl,FormLabel,Text ,Input,Button} f
 import UserImg from '@/public/assets/asset 11.webp';
 import Image from 'next/image'
 import { Textarea } from '@chakra-ui/react';
+import {  FaArrowLeft} from "react-icons/fa";
+import Link from 'next/link';  
 export default function EditUser() {
   return (
-    <Box className='mt-[96px]'     >
-      <Flex  gap={5} justifyContent='center' alignItems='center' >
+   <Box className='mt-[96px]' bg='#fff' borderRadius='10px' padding='10px' minH='100hv'>
+      <Flex alignItems='center' gap={3}  mb='20px'>
+      <Link href='/dashboard/user' className='flex items-center gap-5'>
+      <FaArrowLeft size={20}/>
+      <span className='py-3'>Back To UserLists</span>
+      </Link>
+      </Flex>
+      <Flex  gap={5} justifyContent='center' alignItems='center'>
           
-      
-      <FormControl maxW='50vw' minH='100hv' bg='#fff' padding='10px' borderRadius='10px'>
-    <Grid templateColumns='1fr 1fr' gap={3}>
+        
+      <FormControl maxW={{lg:'50vw'}}>
+    <Grid templateColumns={{base:'1fr',md:'1fr 1fr'}} gap={3}>
                  <GridItem>
                    <FormLabel
               display="flex"
@@ -117,7 +125,7 @@ export default function EditUser() {
 </GridItem>
 
 
-<GridItem colSpan='2'>
+<GridItem colSpan={{md:'2'}}>
     <FormLabel
               display="flex"
               ms="4px"
@@ -140,7 +148,7 @@ export default function EditUser() {
              placeholder='Enter Your Add  ress' />          
 </GridItem>
       </Grid>
-           <Flex justifyContent='flex-end' >
+           <Box maxW={{md:'200px'}}  flexBasis='1'>
              <Button
             fontSize="sm"
             variant="brand"
@@ -151,11 +159,12 @@ export default function EditUser() {
             bg='#332941'
             color='#fff'
           >
-           Update
+            Update
           </Button>
-            </Flex>
+            </Box>
             </FormControl>
         </Flex>
     </Box>
+
   )
 }

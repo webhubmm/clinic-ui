@@ -5,8 +5,8 @@ export default function CreateUser() {
   const router =useRouter();
   return (
      <Flex
-                p="25px"
-                mb="8px"
+                p={{md:"25px"}}
+                mb={{base:'15px',md:"8px"}}
                 justifyContent="space-between"
                 align="center"
               >

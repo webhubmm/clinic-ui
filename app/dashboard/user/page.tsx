@@ -1,11 +1,11 @@
 import CreateUser from "@/components/admin/adminuser/CreateUser";
-import { Card,Flex,Text,Button } from "@chakra-ui/react";
+import { Card,Flex,Text,Button,Box } from "@chakra-ui/react";
 import Link from "next/link";
 import { FaRegTrashAlt,FaUserEdit } from "react-icons/fa";
 
 export default function UserManagment() {
   return (
-    <Card mt='96px' paddingBottom='10px' >
+    <Box mt='96px' paddingBottom='10px' bg={{md:"#fff"}}>
      <CreateUser />
   {/* component */}
   <section className="container  mx-auto  rounded-md  sm:px-5 lg:px-3">
@@ -559,6 +559,6 @@ export default function UserManagment() {
     </div>
   </section>
 
-    </Card>
+    </Box>
   )
 }
