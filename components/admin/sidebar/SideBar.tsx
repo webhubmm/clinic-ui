@@ -123,7 +123,7 @@ export default function SideBar({setIsSidebarOpen}) {
                   <Link
                     href={link.path}
                     className={
-                      isActive(link.path) ? "text-[blue]  " : "transperent"
+                      isActive(link.path) ? "text-[blue] " : "transperent"
                     }
                   >
                     <HStack spacing="25px">

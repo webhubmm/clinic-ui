@@ -1,6 +1,8 @@
 'use client';
-import { Card,Flex,Text,Button } from "@chakra-ui/react";
+import { Card,Flex,Text,Button,Select ,Stack,option} from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
+import { FaCaretDown } from "react-icons/fa";
+
 export default function CreateUser() {
   const router =useRouter();
   return (
@@ -10,7 +12,8 @@ export default function CreateUser() {
                 justifyContent="space-between"
                 align="center"
               >
-                <Text
+              <Stack spacing={3}>
+                  <Text
                   fontSize="22px"
                   mb="4px"
                   fontWeight="700"
@@ -18,12 +21,25 @@ export default function CreateUser() {
                 >
                   User Table
                 </Text>
-                <Button bg='#000' _hover={{
+                <Select icon={<FaCaretDown />} placeholder='Name or Email' >
+                    <option value='name'>userName </option>
+  <option value='email'>Email </option>
+                </Select>
+                </Stack>
+                <Stack spacing={3}>
+                   <Button bg='#000' _hover={{
                   background: "#01011",
     
                 }} color='#fff' onClick={() => router.push('/dashboard/user/create')}>
                   Create User
                   </Button>
+                   <Select icon={<FaCaretDown />} placeholder=' Role '  >
+                    <option value='admin'>Admin </option>
+  <option value='staff'>Staff </option>
+  <option value='user'>User </option>
+
+                </Select>
+                  </Stack>
               </Flex>
   )
 }

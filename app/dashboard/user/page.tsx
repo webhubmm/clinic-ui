@@ -7,6 +7,7 @@ export default function UserManagment() {
   return (
     <Box mt='96px' paddingBottom='10px' bg={{md:"#fff"}}>
      <CreateUser />
+     
   {/* component */}
   <section className="container  mx-auto  rounded-md  sm:px-5 lg:px-3">
     <div className="flex flex-col">
