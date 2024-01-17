@@ -2,7 +2,4 @@
 @tailwind components;
 @tailwind utilities;
 
-.active{
-    border-right:2px;
-    color:blue;
-}
+ 
