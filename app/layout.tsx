@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { Inter, Montserrat } from "next/font/google";
 import "./globals.css";
 import Providers from "./provider";
-import NavBar from "@/components/user/navbar/NavBar";
+import Banner from "@/components/common/banner/Banner";
+import NavBar from "@/components/common/navbar/Navbar";
 export const metadata: Metadata = {
   title: "Dental Clinic",
   description: "Developed by Neat Tech",
@@ -21,7 +22,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${montserrat.variable} font-neat`}>
-        <Providers>{children}</Providers>
+        <Providers>
+          <main>{children}</main>
+        </Providers>
       </body>
     </html>
   );
