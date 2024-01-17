@@ -6,7 +6,11 @@ interface TextProp {
 }
 
 const Text = ({ children, color }: TextProp) => {
-  return <h1 className={`text-xl font-semibold ${color ?? ""}`}>{children}</h1>;
+  return (
+    <h1 className={`text-lg lg:text-xl font-semibold ${color ?? ""}`}>
+      {children}
+    </h1>
+  );
 };
 
 export default Text;

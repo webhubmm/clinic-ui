@@ -38,7 +38,7 @@ const config: Config = {
           primary: "#05b9de",
           secondary: "#052e73",
           tertiary: "#000e25",
-          other: "#176B87", // not needed yet
+          pearlwhite: "#f6faff",
         },
       },
       fontFamily: {

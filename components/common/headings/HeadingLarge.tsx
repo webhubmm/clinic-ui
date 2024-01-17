@@ -1,11 +1,11 @@
 import React from "react";
 
-interface HeaderLargeProp {
+interface HeadingLargeProp {
   children: string;
 }
 
-const HeadingLarge = ({ children }: HeaderLargeProp) => {
-  return <h1 className=" text-6xl font-bold">{children}</h1>;
+const HeadingLarge = ({ children }: HeadingLargeProp) => {
+  return <h1 className=" text-4xl md:text-6xl font-bold">{children}</h1>;
 };
 
 export default HeadingLarge;

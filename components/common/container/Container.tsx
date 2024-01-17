@@ -6,7 +6,9 @@ interface ContainerProp {
 
 const Container = ({ children }: ContainerProp) => {
   return (
-    <div className=" mx-auto max-w-screen-xl max-h-screen">{children}</div>
+    <div className=" mx-auto px-10 md:px-20 lg:px-0 lg:max-w-screen-xl">
+      {children}
+    </div>
   );
 };
 

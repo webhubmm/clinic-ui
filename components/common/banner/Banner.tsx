@@ -9,7 +9,7 @@ interface BannerProp {
 
 const Banner = ({ left, right }: BannerProp) => {
   return (
-    <div className="  bg-neat-tertiary text-white p-2 hidden md:block">
+    <div className="  bg-neat-secondary text-white p-2 hidden lg:block">
       <Container>
         <div className="flex justify-between items-center">
           <TextSmall>{left}</TextSmall>

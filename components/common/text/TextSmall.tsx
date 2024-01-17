@@ -6,7 +6,11 @@ interface TextSmallProp {
 }
 
 const TextSmall = ({ children, color }: TextSmallProp) => {
-  return <h1 className={` font-semibold ${color ?? ""}`}>{children}</h1>;
+  return (
+    <h1 className={` text-sm lg:text-base font-semibold ${color ?? ""}`}>
+      {children}
+    </h1>
+  );
 };
 
 export default TextSmall;
