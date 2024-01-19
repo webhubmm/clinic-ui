@@ -3,7 +3,6 @@ import React from "react";
 import dantxLogo from "@/public/assets/asset 6.svg";
 import Image from "next/image";
 import Text from "@/components/common/text/Text";
-import Card from "@/components/common/card/Card";
 import Heading from "@/components/common/headings/Heading";
 import Link from "next/link";
 import { FaGoogle } from "react-icons/fa6";
@@ -12,7 +11,6 @@ import {
   FormLabel,
   Button,
   Input,
-  Checkbox,
   FormErrorMessage,
 } from "@chakra-ui/react";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -33,7 +31,6 @@ const SignUp = () => {
   ) => {
     registerMutation.mutate(data);
   };
-
   return (
     <section className=" w-full py-5 min-h-screen flex items-center justify-center bg-[#f2f6f9] px-5 md:px-0">
       <div>
@@ -71,10 +68,9 @@ const SignUp = () => {
               <div className="flex-grow border-t border-gray-500"></div>
             </div>
             <form
-              action=""
               className="space-y-3"
               onSubmit={handleSubmit(handleRegisterSubmit)}>
-              <FormControl isRequired>
+              <FormControl isInvalid={errors.name}>
                 <FormLabel>Name</FormLabel>
                 <Input
                   type="text"
@@ -83,11 +79,11 @@ const SignUp = () => {
                     required: "Name is required",
                   })}
                 />
-                <FormErrorMessage>
-                  {errors.name && errors.name.message}
-                </FormErrorMessage>
+                {errors.name && (
+                  <FormErrorMessage>{errors.name.message}</FormErrorMessage>
+                )}
               </FormControl>
-              <FormControl isRequired>
+              <FormControl isInvalid={errors.email}>
                 <FormLabel>Email Address</FormLabel>
                 <Input
                   type="email"
@@ -100,7 +96,7 @@ const SignUp = () => {
                   {errors.email && errors.email.message}
                 </FormErrorMessage>
               </FormControl>
-              <FormControl isRequired>
+              <FormControl isInvalid={errors.phone}>
                 <FormLabel>Phone</FormLabel>
                 <Input
                   type="tel"
@@ -117,7 +113,7 @@ const SignUp = () => {
                   {errors.phone && errors.phone.message}
                 </FormErrorMessage>
               </FormControl>
-              <FormControl isRequired>
+              <FormControl isInvalid={errors.password}>
                 <FormLabel>Password</FormLabel>
                 <Input
                   type="password"
@@ -134,7 +130,7 @@ const SignUp = () => {
                   {errors.password && errors.password.message}
                 </FormErrorMessage>
               </FormControl>
-              <FormControl isRequired>
+              <FormControl isInvalid={errors.password_confirmation}>
                 <FormLabel>Confirm Password</FormLabel>
                 <Input
                   type="password"
@@ -143,7 +139,8 @@ const SignUp = () => {
                     required: "Password Confirmation is required",
                     minLength: {
                       value: 8,
-                      message: "Password minimum length should be 8",
+                      message:
+                        "Password Confirmation minimum length should be 8",
                     },
                   })}
                 />
@@ -152,7 +149,9 @@ const SignUp = () => {
                     errors.password_confirmation.message}
                 </FormErrorMessage>
               </FormControl>
-              <button className=" bg-neat-primary py-3 text-white rounded-md w-full text-center">
+              <button
+                type="submit"
+                className=" bg-neat-primary py-3 text-white rounded-md w-full text-center">
                 Sign Up
               </button>
             </form>

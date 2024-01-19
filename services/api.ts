@@ -12,6 +12,6 @@ export const login = async (loginInfo: loginType) => {
 };
 
 export const register = async (registerInfo: registerType) => {
-  await axiosInstance.post("register", registerInfo);
+  return await axiosInstance.post("register", registerInfo);
 };
 // Auth apis end
