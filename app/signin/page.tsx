@@ -128,6 +128,8 @@ export default function SignIn() {
                 <FormErrorMessage>
                   {errors.email && errors.email.message}
                 </FormErrorMessage>
+              </FormControl>
+              <FormControl>
                 <FormLabel
                   ms="4px"
                   fontSize="sm"
@@ -163,27 +165,8 @@ export default function SignIn() {
                   </InputRightElement>
                 </InputGroup>
               </FormControl>
-              <Flex justifyContent="space-between" align="center" mb="20px">
-                <FormControl display="flex" alignItems="center" flex={1}>
-                  <Checkbox
-                    id="remember-login"
-                    colorScheme="brandScheme"
-                    me="10px"
-                  />
-                  <FormLabel
-                    htmlFor="remember-login"
-                    mb="0"
-                    fontWeight="normal"
-                    color="#000"
-                    fontSize="sm">
-                    Keep me logged in
-                  </FormLabel>
-                </FormControl>
-                <Link href="/auth/forgot-password" color="#000">
-                  <p className="text-sm font-semibold">Forgot password?</p>
-                </Link>
-              </Flex>
               <Button
+                type="submit"
                 fontSize="sm"
                 variant="brand"
                 fontWeight="500"

@@ -11,9 +11,9 @@ export const useLogin = () => {
   const toast = useToast();
   return useMutation({
     mutationFn: (loginInfo: loginType) => login(loginInfo),
-    onSuccess: (response) => {
-      console.log(response);
-      // Cookies.set("token", response.token);
+    onSuccess: ({ data: response }) => {
+      Cookies.set("token", response.data.token);
+      Cookies.set("user", JSON.stringify(response.data.user));
       router.push("/dashboard");
       toast({
         title: "Logged In",

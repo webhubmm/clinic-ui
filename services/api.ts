@@ -8,7 +8,7 @@ const axiosInstance = axios.create({ baseURL: BASE_URL });
 
 // Auth apis start
 export const login = async (loginInfo: loginType) => {
-  await axiosInstance.post("login", loginInfo);
+  return await axiosInstance.post("login", loginInfo);
 };
 
 export const register = async (registerInfo: registerType) => {

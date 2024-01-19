@@ -108,8 +108,8 @@ const SignUp = () => {
                   {...register("phone", {
                     required: "Phone is required",
                     minLength: {
-                      value: 4,
-                      message: "Phone minimum length should be 8",
+                      value: 5,
+                      message: "Phone minimum length should be 5",
                     },
                   })}
                 />
