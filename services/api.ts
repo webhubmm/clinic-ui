@@ -9,3 +9,6 @@ const axiosInstance = axios.create({ baseURL: BASE_URL });
 export const login = async (loginInfo: loginType) => {
   await axiosInstance.post("login", loginInfo);
 };
+
+
+
