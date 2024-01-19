@@ -33,7 +33,6 @@ const config: Config = {
         slate: "#4b5362",
         sky_two: "#5cd1e9",
         gray_opacity: "#122258",
-        white: "#f3f3f3",
         neat: {
           primary: "#05b9de",
           secondary: "#052e73",
