@@ -14,7 +14,25 @@ export const useLogin = () => {
     onSuccess: ({ data: response }) => {
       Cookies.set("token", response.data.token);
       Cookies.set("user", JSON.stringify(response.data.user));
-      router.push("/dashboard");
+
+      const userRole = response.data.user.role;
+      let redirectRoute;
+
+      switch (userRole) {
+        case "admin":
+          redirectRoute = "/dashboard";
+          break;
+        case "staff":
+          redirectRoute = "/dashboard/staff";
+          break;
+        case "user":
+          redirectRoute = "/";
+          break;
+        default:
+          redirectRoute = "/";
+      }
+
+      router.push(redirectRoute);
       toast({
         title: "Logged In",
         description: "Welcome, you are successfully logged in",
@@ -37,6 +55,15 @@ export const useRegister = () => {
         title: "Account created.",
         description: "We've created your account for you.",
         status: "success",
+        duration: 9000,
+        isClosable: true,
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error",
+        description: error.response.data.data[0],
+        status: "error",
         duration: 9000,
         isClosable: true,
       });

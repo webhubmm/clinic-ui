@@ -52,6 +52,7 @@ const BookAppointment = () => {
                   </div>
                   <Image
                     src={provideDentalCareImg}
+                    className=" object-contain"
                     alt="providing dental care image"
                     width={400}
                     height={400}
