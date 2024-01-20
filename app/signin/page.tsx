@@ -166,7 +166,8 @@ export default function SignIn() {
                 </InputGroup>
               </FormControl>
               <Button
-                type="submit"
+              disabled={isSubmitting}
+             type="submit"
                 fontSize="sm"
                 variant="brand"
                 fontWeight="500"

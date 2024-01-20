@@ -1,9 +1,20 @@
+'use client';
 import CreateUser from "@/components/admin/adminuser/CreateUser";
 import { Card,Flex,Text,Button,Box } from "@chakra-ui/react";
-import Link from "next/link";
 import { FaRegTrashAlt,FaUserEdit } from "react-icons/fa";
+import Link from "next/link";
+import { useQuery } from "@tanstack/react-query";
+import { getUser } from "@/services/api";
+import {UserList } from "@/services/queries"
 
-export default function UserManagment() {
+export default function  UserManagment() {
+
+//  const  list =UserList();
+const list =useQuery({
+  queryKey:['users'],
+  queryFn:getUser
+})
+  console.log(list.data)
   return (
     <Box mt='96px' paddingBottom='10px' bg={{md:"#fff"}}>
      <CreateUser />

@@ -5,6 +5,7 @@ import { registerType } from "@/types/registerType";
 import { useRouter } from "next/navigation";
 import { useToast } from "@chakra-ui/react";
 import Cookies from "js-cookie";
+
 // Auth mutations start
 export const useLogin = () => {
   const router = useRouter();
@@ -12,8 +13,9 @@ export const useLogin = () => {
   return useMutation({
     mutationFn: (loginInfo: loginType) => login(loginInfo),
     onSuccess: ({ data: response }) => {
-      Cookies.set("token", response.data.token);
+      Cookies.set("token", response.data.token,{experies:7});
       Cookies.set("user", JSON.stringify(response.data.user));
+      
       router.push("/dashboard");
       toast({
         title: "Logged In",
