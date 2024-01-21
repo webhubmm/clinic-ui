@@ -46,7 +46,7 @@ export const getUser = async (): Promise<any> => {
 };
 
 export const createUser = async (userInfo:userInfo) =>{
- await axiosInstance.post('admin/user_management',userInfo)
+ return await axiosInstance.post('admin/user_management',userInfo)
 }
 
 
