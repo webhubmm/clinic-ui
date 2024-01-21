@@ -1,14 +1,10 @@
-import HomeDashboard from "@/components/admin/HomeDashboard";
+import HomeDashboard from "@/components/admin/home/HomeDashboard";
 
-import { Box, Grid, GridItem, HStack } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 export default function Dashboard() {
   return (
-   
-      
-
-        <Box mt="90px"  >
-         <HomeDashboard />
-        </Box>
-  
+    <Box mt="90px">
+      <HomeDashboard />
+    </Box>
   );
 }

@@ -1,5 +1,7 @@
 import type { Config } from "tailwindcss";
 
+const { fontFamily } = require("tailwindcss/defaultTheme");
+
 const config: Config = {
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
@@ -12,6 +14,7 @@ const config: Config = {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+        heroBackgroundImage: "url('../public/assets/asset 37.webp')",
       },
       colors: {
         dark: "#000000",
@@ -30,7 +33,15 @@ const config: Config = {
         slate: "#4b5362",
         sky_two: "#5cd1e9",
         gray_opacity: "#122258",
-        white: "#f3f3f3",
+        neat: {
+          primary: "#05b9de",
+          secondary: "#052e73",
+          tertiary: "#000e25",
+          pearlwhite: "#f6faff",
+        },
+      },
+      fontFamily: {
+        neat: ["var(--font-montserrat)", ...fontFamily.sans],
       },
     },
   },
