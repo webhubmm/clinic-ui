@@ -6,6 +6,8 @@ import Text from "@/components/common/text/Text";
 import Heading from "@/components/common/headings/Heading";
 import Link from "next/link";
 import { FaGoogle } from "react-icons/fa6";
+import { Spinner } from '@chakra-ui/react'
+
 import {
   FormControl,
   FormLabel,
