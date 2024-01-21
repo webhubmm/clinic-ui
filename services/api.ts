@@ -2,7 +2,6 @@ import { loginType } from "@/types/loginType";
 import { registerType } from "@/types/registerType";
 import { userInfo } from "@/types/userType";
 import axios, { AxiosResponse } from "axios";
-// const token =Cookies.get("token");
 
 // console.log(token);
 const BASE_URL = "https://clinic.neattechmm.com/api/v1";
