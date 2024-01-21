@@ -2,7 +2,6 @@ import { loginType } from "@/types/loginType";
 import { registerType } from "@/types/registerType";
 import { userInfo } from "@/types/userType";
 import axios, { AxiosResponse } from "axios";
-import Cookies from "js-cookie";
 // const token =Cookies.get("token");
 
 // console.log(token);
