@@ -29,8 +29,8 @@ export default function UserCreate() {
   } = useForm<UserCreateFormData>();
 
  const  list =UserList() ;
-
-  const createUserMutation = useUserCreate(list.data);
+  console.log(list)
+  const createUserMutation = useUserCreate();
 
   const handleCreateUserSubmit: SubmitHandler<UserCreateFormData> = (data: UserCreateFormData) => {
     createUserMutation.mutate(data);
@@ -241,9 +241,10 @@ export default function UserCreate() {
                 mb='20px'
                 bg='#332941'
                 color='#fff'
-                isLoading={createUserMutation.isPending && isSubmitting}
+                  isLoading={isSubmitting}
+              disabled={isSubmitting}
               >
-                 {isSubmitting && createUserMutation.isPending ? "loading" :"Create"}
+                 {isSubmitting ? "loading" :"Create"}
               </Button>
             </Flex>
           </FormControl>

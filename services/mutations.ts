@@ -89,9 +89,10 @@ export const useUserCreate = () => {
    onMutate:() =>{
     console.log('mutate')
    },
-    onSuccess:  async ({data}) => {
+    onSuccess:  async (data) => {
       console.log(data)
-      await queryClient.invalidateQueries({ queryKey: ['users'] })
+      await queryClient.invalidateQueries('users')
+     
       router.push('/dashboard/user');
 
       toast({
@@ -102,16 +103,17 @@ export const useUserCreate = () => {
         isClosable: true,
       });
     },
-     onError:({data:response}) =>{
-      console.log("Error",response.data);
+     onError:(error) =>{
+      console.log("Error",error.response.data);
        toast({
-        // title: "title",
+        title: error.response.data,
         description: "Plase Try Again.",
-        status: "error",
+        // status: error.response.data.data[0],
         duration: 9000,
         isClosable: true,
       });
     },
+ 
     
   });
 };
