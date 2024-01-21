@@ -24,6 +24,7 @@ import SinginImg from "@/public/assets/asset 5.webp";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useLogin } from "@/services/mutations";
 import { loginType } from "@/types/loginType";
+import { Spinner } from '@chakra-ui/react'
 
 export default function SignIn() {
   const [show, setShow] = React.useState(false);
@@ -39,6 +40,7 @@ export default function SignIn() {
 
   const handleLoginSubmit: SubmitHandler<loginType> = (data: loginType) => {
     loginMutation.mutate(data);
+    console.log('submitting')
   };
 
   return (
@@ -166,6 +168,7 @@ export default function SignIn() {
                 </InputGroup>
               </FormControl>
               <Button
+                isLoading={isSubmitting}
               disabled={isSubmitting}
              type="submit"
                 fontSize="sm"
@@ -176,7 +179,9 @@ export default function SignIn() {
                 mb="20px"
                 bg="#332941"
                 color="#fff">
-                Sign In
+                  {isSubmitting ? "loading"  :  "Sign In"}
+                  {/* <Spinner size='sm' /> */}
+               
               </Button>
             </form>
 

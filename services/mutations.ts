@@ -1,10 +1,13 @@
 import { loginType } from "@/types/loginType";
 import { useMutation } from "@tanstack/react-query";
-import { login, register } from "./api";
+import { createUser, login, register } from "./api";
 import { registerType } from "@/types/registerType";
 import { useRouter } from "next/navigation";
 import { useToast } from "@chakra-ui/react";
+import { userInfo } from "@/types/userType";
 import Cookies from "js-cookie";
+import { useQueryClient } from '@tanstack/react-query'
+
 
 // Auth mutations start
 export const useLogin = () => {
@@ -13,7 +16,8 @@ export const useLogin = () => {
   return useMutation({
     mutationFn: (loginInfo: loginType) => login(loginInfo),
     onSuccess: ({ data: response }) => {
-      Cookies.set("token", response.data.token,{experies:7});
+      // console.log(response.data);
+      Cookies.set("token", response.data.token,{expires:7});
       Cookies.set("user", JSON.stringify(response.data.user));
       
       router.push("/dashboard");
@@ -46,3 +50,43 @@ export const useRegister = () => {
   });
 };
 // Auth mutations ends
+
+
+// Admin mutation Start
+export const useUserCreate = () => {
+  const queryClient =useQueryClient();
+
+  const router = useRouter();
+  const toast = useToast();
+  return useMutation({
+    mutationFn: (userInfo: userInfo) => createUser(userInfo),
+   onMutate:() =>{
+    console.log('mutate')
+   },
+    onSuccess:  async ({data}) => {
+      console.log(data)
+      await queryClient.invalidateQueries({ queryKey: ['users'] })
+      router.push('/dashboard/user');
+
+      toast({
+        title: "User created",
+        description: "We've created user account.",
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+      });
+    },
+     onError:({data:response}) =>{
+      console.log("Error",response.data);
+       toast({
+        // title: "title",
+        description: "Plase Try Again.",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    },
+    
+  });
+};
+// Admiin mutations start

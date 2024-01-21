@@ -5,10 +5,9 @@ import { useToast } from '@chakra-ui/react';
 
 export function UserList(){
   // console.log(token)
-  const toast = useToast();
 
   return useQuery<userType>({
-   queryKey:['user'],
+   queryKey:['users'],
    queryFn:getUser,
   //  queryFn:getUser,
 

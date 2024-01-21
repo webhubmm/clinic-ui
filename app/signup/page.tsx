@@ -7,6 +7,8 @@ import Card from "@/components/common/card/Card";
 import Heading from "@/components/common/headings/Heading";
 import Link from "next/link";
 import { FaGoogle } from "react-icons/fa6";
+import { Spinner } from '@chakra-ui/react'
+
 import {
   FormControl,
   FormLabel,
@@ -152,8 +154,8 @@ const SignUp = () => {
                     errors.password_confirmation.message}
                 </FormErrorMessage>
               </FormControl>
-              <button className=" bg-neat-primary py-3 text-white rounded-md w-full text-center">
-                Sign Up
+              <button disabled={isSubmitting} className=" bg-neat-primary py-3 text-white rounded-md w-full text-center">
+                {isSubmitting ? <Spinner size='sm' /> : " Sign Up"}
               </button>
             </form>
           </div>

@@ -10,3 +10,13 @@ export interface userType {
    updated_at: string;
 
 }
+
+export interface userInfo {
+   name: string;
+    email: string;
+    phone: string;
+    password: string;
+    password_confirmation: string,
+    role: string
+
+}
