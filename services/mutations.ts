@@ -1,12 +1,14 @@
 import { loginType } from "@/types/loginType";
-import { useMutation } from "@tanstack/react-query";
-import { createUser, login, register } from "./api";
+import { QueryClient, useMutation } from "@tanstack/react-query";
+import { createUser, login, register, updateUser } from "./api";
 import { registerType } from "@/types/registerType";
 import { useRouter } from "next/navigation";
 import { useToast } from "@chakra-ui/react";
 import { userInfo } from "@/types/userType";
 import Cookies from "js-cookie";
 import { useQueryClient } from '@tanstack/react-query'
+import { useDispatch } from "react-redux";
+import { setApiUserData } from "./feature/dashboardUserSlice";
 
 
 // Auth mutations start
@@ -84,19 +86,25 @@ export const useUserCreate = () => {
 
   const router = useRouter();
   const toast = useToast();
+    const dispatch = useDispatch();
+
   return useMutation({
     mutationFn: (userInfo: userInfo) => createUser(userInfo),
    onMutate:() =>{
+
     console.log('mutate')
    },
     onSuccess:  async (data) => {
       console.log(data)
-      await queryClient.invalidateQueries('users')
+      dispatch(setApiUserData(data))
+      await queryClient.invalidateQueries({queryKey:['users']})
      
       router.push('/dashboard/user');
 
       toast({
-        title: "User created",
+        colorScheme:'green',
+        position: 'top-right',
+        title: "User created Success",
         description: "We've created user account.",
         status: "success",
         duration: 9000,
@@ -104,17 +112,51 @@ export const useUserCreate = () => {
       });
     },
      onError:(error) =>{
-      console.log("Error",error.response.data);
+      console.log("Error",error);
        toast({
-        title: error.response.data,
+        position: 'top-right',
+        colorScheme:"red",
+        
+        title: "What's Wrong",  
         description: "Plase Try Again.",
         // status: error.response.data.data[0],
         duration: 9000,
         isClosable: true,
       });
     },
+
+   
  
     
+  });
+};
+
+
+export const useUserUpdate =() =>{
+  const queryClient =useQueryClient();
+  const toast =useToast();
+return useMutation<void, Error, { id: number; userInfo: userInfo }>({
+    mutationFn: async ({ id, userInfo }) => updateUser(id, userInfo), // Adjust the updateUser function call
+    onSuccess: async(data, variables) => {
+      await queryClient.invalidateQueries({queryKey:['users']});
+
+      await queryClient.invalidateQueries(['users', { id: variables.id }]);
+
+      // Display a success message or perform any other necessary actions
+      console.log('User updated successfully:', data);
+    },
+    onError: (error) => {
+      console.error('Error updating user:', error);
+
+      // Use the toast function to show an error message
+      toast({
+        title: 'Error',
+        description: 'Failed to update user. Please try again.',
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+      });
+    },
   });
 };
 // Admiin mutations start

@@ -1,20 +1,40 @@
 'use client';
-import CreateUser from "@/components/admin/adminuser/CreateUser";
-import { Card,Flex,Text,Button,Box } from "@chakra-ui/react";
-import { FaRegTrashAlt,FaUserEdit } from "react-icons/fa";
+// import CreateUser from "@/components/admin/adminuser/CreateUser";
+import { Flex,Text,Button,Box,Stack,HStack,Input } from "@chakra-ui/react";
+import { FaRegTrashAlt,FaRegEdit ,FaTrashRestore} from "react-icons/fa";
+import { IoTrashBin } from "react-icons/io5";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { getUser } from "@/services/api";
 import {UserList } from "@/services/queries"
 import { userType } from "@/types/userType";
 import PulseLoader from "react-spinners/PulseLoader";
+import { FaCaretDown } from "react-icons/fa";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setApiUserData } from "@/services/feature/dashboardUserSlice";
+interface RootState {
+  dashboardData: {
+    userList: userType; // Adjust the type accordingly
+  };
+}
 
 export default function  UserManagment() {
+  const [trashList,setTrashList] =useState(false);
+ // Redux state - getting user data
+  const userData = useSelector((state:RootState) => state.dashboardData.userList);
+  console.log("userData",userData);
+ const  {users,isPending,isError} =UserList()  as {
+    users: userType;
+    isPending: boolean;
+    isError: any;
+  };;
 
- const  {data:users,isPending,isError} =UserList() as { data: userType, isPending: boolean, isError: any };;
 
-  
 
+   const handleTrashList =() =>{
+    setTrashList(prev =>!prev)
+   }
 
   // console.log("users",users?.data);
    const formatDateString = (dateString: string): string => {
@@ -24,7 +44,46 @@ export default function  UserManagment() {
   };
   return (
     <Box mt='96px' paddingBottom='10px' bg={{md:"#fff"}}>
-     <CreateUser />
+     {/* <CreateUser /> */}
+      <Flex
+                p={{md:"25px"}}
+                mb={{base:'15px',md:"8px"}}
+                justifyContent="space-between"
+                align="center"
+              >
+              <Stack spacing={3}>
+                  <Text
+                  fontSize="22px"
+                  mb="4px"
+                  fontWeight="700"
+                  lineHeight="100%"
+                >
+                  User Table
+                </Text>
+                <Box boxShadow='sm'>
+                   <Input htmlSize={12} width='auto' placeholder='Search....' />
+                  </Box>
+                </Stack>
+                <HStack spacing={3}>
+                   <Button  minW='100px' bg={trashList ?'#332941':'red' } _hover={{
+                  background: "#01011",
+    
+                }} color='#fff' onClick={handleTrashList}>
+                 {
+                  trashList  ? "  Back" :" Trash List" 
+                 }
+                  </Button>
+                   <Button bg='#000' _hover={{
+                  background: "#01011",
+    
+                }} color='#fff'>
+                  <Link href='/dashboard/user/create'>
+                  Create User
+                  </Link>
+                  </Button>
+                   
+                  </HStack>
+              </Flex>
      
   {/* component */}
   <section className="container  mx-auto  rounded-md  sm:px-5 lg:px-3">
@@ -137,15 +196,40 @@ export default function  UserManagment() {
                    {list?.created_at ? formatDateString(list?.created_at) : 'No Date Available'}
                   </td>
                   <td className="px-4 py-4 text-sm whitespace-nowrap">
-                    <div className="flex items-center gap-x-8">
-                 <Link  href='/dashboard/user/edit' className=" transition-colors duration-200 text-emerald-500  focus:outline-none" >
-                <FaUserEdit size={20}/>
+   {
+    trashList ? (
+                        <div className="flex items-center gap-x-8">
+                     
+                 <Link  href={`/dashboard/user/edit/${list.id}`} className=" transition-colors duration-200 text-emerald-500  focus:outline-none" >
+                <FaTrashRestore size={20}/>
                 </Link>
+                
+               
+                      <button className="text-red-600 transition-colors duration-200 dark:hover:text-red-500 dark:text-gray-300 hover:text-indigo-500 focus:outline-none">
+                        <div className="">
+
+                        
+                            <IoTrashBin size={18}/>
+                        
+                        </div>
+                      </button>
+                   
+                    </div>
+  ) :(
+                        <div className="flex items-center gap-x-8">
+                     
+                 <Link  href={`/dashboard/user/edit/${list.id}`} className=" transition-colors duration-200 text-emerald-500  focus:outline-none" >
+                <FaRegEdit size={20}/>
+                </Link>
+                
+               
                       <button className="text-red-600 transition-colors duration-200 dark:hover:text-red-500 dark:text-gray-300 hover:text-indigo-500 focus:outline-none">
                        <FaRegTrashAlt size={18}/>
                       </button>
-                     
+                   
                     </div>
+  )
+}
                   </td>
                 </tr>
 

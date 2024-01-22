@@ -40,14 +40,18 @@ export const getUser = async (): Promise<any> => {
     return response.data;
   } catch (error) {
     // Handle errors here
-    const errorResponse: ErrorResponse = error.response?.data || { message: "Unknown error" };
-    console.error("Error fetching user data:", errorResponse.message);
+       const errorResponse: ErrorResponse = error.response?.data || { message: "Unknown error" };
+console.error("Error fetching user data:", errorResponse.message);
     throw error; // Rethrow the error to handle it in the calling code
   }
 };
 
 export const createUser = async (userInfo:userInfo) =>{
  return await axiosInstance.post('admin/user_management',userInfo)
+}
+
+export const updateUser =async (userId:number,updatedUserInfo:userInfo) =>{
+return await axiosInstance.patch(`admin/user_management${userId}`,updatedUserInfo)
 }
 
 
