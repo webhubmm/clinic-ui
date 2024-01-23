@@ -1,6 +1,6 @@
 import { loginType } from "@/types/loginType";
 import { useMutation } from "@tanstack/react-query";
-import { createUser, login, register } from "./api";
+import { createUser, login, logout, register } from "./api";
 import { registerType } from "@/types/registerType";
 import { useRouter } from "next/navigation";
 import { useToast } from "@chakra-ui/react";
@@ -67,6 +67,27 @@ export const useRegister = () => {
         title: "Error",
         description: error.response.data.data[0],
         status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    },
+  });
+};
+
+export const useLogout = () => {
+  const router = useRouter();
+  const toast = useToast();
+  return useMutation({
+    mutationFn: (token: string) => logout(token),
+    onSuccess: () => {
+      router.push("/");
+      Cookies.remove("token");
+      Cookies.remove("username");
+      
+      toast({
+        title: "Logged Out",
+        description: "You are successfully logged out",
+        status: "success",
         duration: 9000,
         isClosable: true,
       });
