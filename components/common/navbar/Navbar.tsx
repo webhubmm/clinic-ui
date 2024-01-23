@@ -72,9 +72,9 @@ const NavBar = () => {
           </nav>
           <div className="items-center gap-8 hidden lg:flex">
             <Text color="text-neat-primary">1800-749-8000</Text>
-            <ButtonPrimary
-              placeholder="Book an appointment"
-              onClick={() => {}}></ButtonPrimary>
+            <Link href={"/signin"}><ButtonPrimary
+              placeholder="Sign In"
+              onClick={() => {}}></ButtonPrimary></Link>
           </div>
           <button
             onClick={() => setNav((prev) => !prev)}
