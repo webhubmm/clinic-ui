@@ -40,7 +40,6 @@ export default function SignIn() {
 
   const handleLoginSubmit: SubmitHandler<loginType> = (data: loginType) => {
     loginMutation.mutate(data);
-    // console.log('submitting')
   };
 
   return (
