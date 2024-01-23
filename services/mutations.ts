@@ -16,16 +16,14 @@ export const useLogin = () => {
   return useMutation({
     mutationFn: (loginInfo: loginType) => login(loginInfo),
     onSuccess: ({ data: response }) => {
-      // console.log(response.data);
       Cookies.set("token", response.data.token,{expires:7});
-      Cookies.set("user", JSON.stringify(response.data.user));
-
+      Cookies.set("username", JSON.stringify(response.data.user.name),{expires:7});
       const userRole = response.data.user.role;
       let redirectRoute;
-
+     
       switch (userRole) {
         case "admin":
-          redirectRoute = "/dashboard";
+          redirectRoute = "/dashboard";     
           break;
         case "staff":
           redirectRoute = "/dashboard/staff";
