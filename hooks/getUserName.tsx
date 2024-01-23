@@ -1,7 +1,10 @@
 import Cookies from "js-cookie";
 const getUserName = () => {
-  const username = JSON.parse(Cookies.get("username")?? "");
-  return username
+  const username = Cookies.get("username");
+  if(!username){
+    return null
+  }
+  return JSON.parse(username)
 };
 
 export default getUserName;

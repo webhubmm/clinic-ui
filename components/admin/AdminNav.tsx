@@ -1,5 +1,7 @@
+import getToken from "@/hooks/getToken";
 import getUserName from "@/hooks/getUserName";
 import getAuth from "@/hooks/getUserName";
+import { useLogout } from "@/services/mutations";
 import {
   BreadcrumbLink,
   BreadcrumbItem,
@@ -28,6 +30,13 @@ import { RiMenu3Fill } from "react-icons/ri";
 export default function AdminNav() {
 
   const username = getUserName()
+  const token = getToken()
+
+  const logoutMutation = useLogout();
+  
+  const logoutFn = () => {
+    logoutMutation.mutate(token as string)
+  }
 
   return (
     <Flex
@@ -62,9 +71,9 @@ export default function AdminNav() {
             <MenuGroup title="Profile">
               <MenuItem>
 
-              <span>
+              <button onClick={logoutFn}>
                 Log out
-              </span>
+              </button>
 
               </MenuItem>
               {/* <MenuItem> </MenuItem> */}
