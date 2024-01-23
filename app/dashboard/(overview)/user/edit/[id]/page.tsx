@@ -9,9 +9,10 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import Link from 'next/link';  
 import { UserCreateFormData } from '@/types/userType';
 import { useUserUpdate } from '@/services/mutations';
-export default function EditUser({params}:{
-  params:{id:number}
+export default function EditUser(params:{
+  params:{id:string}
 }) {
+  const {id} =params;
   console.log(params);
    const {
     register,

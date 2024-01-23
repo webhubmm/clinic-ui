@@ -15,4 +15,5 @@ const dashboardSlice = createSlice({
 });
 
 export const { setApiUserData } = dashboardSlice.actions;
+// export const getAllProducts = (state) => state.dashboardReucer.userList;
 export default dashboardSlice.reducer;

@@ -13,7 +13,7 @@ import { FaRegTrashAlt, FaRegEdit, FaTrashRestore } from "react-icons/fa";
 import { IoTrashBin } from "react-icons/io5";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import { getUser } from "@/services/api";
+import { forceDeleteUser, getUser } from "@/services/api";
 import { UserList } from "@/services/queries";
 import { userType } from "@/types/userType";
 import PulseLoader from "react-spinners/PulseLoader";
@@ -21,6 +21,9 @@ import { FaCaretDown } from "react-icons/fa";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setApiUserData } from "@/services/feature/dashboardUserSlice";
+import Image from "next/image";
+import { deleteUser } from '../../../../services/api';
+import { useDeleteUser, usePermentDeleteUser, useRestoreUser } from "@/services/mutations";
 interface RootState {
   dashboardData: {
     userList: userType; // Adjust the type accordingly
@@ -29,20 +32,44 @@ interface RootState {
 
 export default function UserManagment() {
   const [trashList, setTrashList] = useState(false);
+  
   // Redux state - getting user data
   const userData = useSelector(
     (state: RootState) => state.dashboardData.userList
   );
-  console.log("userData", userData);
-  const { users, isPending, isError } = UserList() as {
-    users: userType;
+  // console.log("userData", userData);
+  const  {data:users,isPending ,isError} = UserList() as {
+    data: userType;
     isPending: boolean;
     isError: any;
   };
 
+  // delete
+  const deleteUserMutation =useDeleteUser();
+  const forceUserMutation =usePermentDeleteUser();
+ const restoreUserMutation=useRestoreUser();
+
   const handleTrashList = () => {
     setTrashList((prev) => !prev);
   };
+
+  //  handle delete user
+  const handleDeleteUser =(id:number) =>{
+    console.log(id)
+ deleteUserMutation.mutate(id)
+  }
+
+  const handleForceDeleteUser =(id:number) =>{
+    // console.log(id)
+ forceUserMutation.mutate(id)
+  }
+
+  const handleRestoreUser =(id:number) =>{
+    // console.log(id)
+ restoreUserMutation.mutate(id)
+  }
+
+
 
   // console.log("users",users?.data);
   const formatDateString = (dateString: string): string => {
@@ -51,9 +78,9 @@ export default function UserManagment() {
       year: "numeric",
       month: "short",
       day: "numeric",
-      hour: "numeric",
-      minute: "numeric",
-      second: "numeric",
+      // hour: "numeric",
+      // minute: "numeric",
+      // second: "numeric",
     };
     return date.toLocaleString("en-US", options);
   };
@@ -212,13 +239,14 @@ export default function UserManagment() {
                                   href={`/dashboard/user/edit/${list.id}`}
                                   className=" transition-colors duration-200 text-emerald-500  focus:outline-none"
                                 >
-                                  <FaTrashRestore size={20} />
+                                  <button onClick={() =>handleRestoreUser(list.id)}>
+                                     <FaTrashRestore size={20} />
+                                  </button>
+                                 
                                 </Link>
 
-                                <button className="text-red-600 transition-colors duration-200 dark:hover:text-red-500 dark:text-gray-300 hover:text-indigo-500 focus:outline-none">
-                                  <div className="">
+                                <button className="text-red-600 transition-colors duration-200 dark:hover:text-red-500 dark:text-gray-300 hover:text-indigo-500 focus:outline-none" onClick={() =>handleForceDeleteUser(list.id)} >
                                     <IoTrashBin size={18} />
-                                  </div>
                                 </button>
                               </div>
                             ) : (
@@ -230,7 +258,7 @@ export default function UserManagment() {
                                   <FaRegEdit size={20} />
                                 </Link>
 
-                                <button className="text-red-600 transition-colors duration-200 dark:hover:text-red-500 dark:text-gray-300 hover:text-indigo-500 focus:outline-none">
+                                <button className="text-red-600 transition-colors duration-200 dark:hover:text-red-500 dark:text-gray-300 hover:text-indigo-500 focus:outline-none" onClick={() =>handleDeleteUser(list.id)}>
                                   <FaRegTrashAlt size={18} />
                                 </button>
                               </div>

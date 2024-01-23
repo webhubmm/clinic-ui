@@ -1,6 +1,6 @@
 import { loginType } from "@/types/loginType";
 import { useMutation } from "@tanstack/react-query";
-import { createUser, login, register } from "./api";
+import { createUser, deleteUser, login, register } from "./api";
 import { registerType } from "@/types/registerType";
 import { useRouter } from "next/navigation";
 import { useToast } from "@chakra-ui/react";
@@ -153,7 +153,6 @@ export const useUserUpdate = () => {
     onSuccess: async (data, variables) => {
       await queryClient.invalidateQueries({ queryKey: ["users"] });
 
-      await queryClient.invalidateQueries(["users", { id: variables.id }]);
 
       // Display a success message or perform any other necessary actions
       console.log("User updated successfully:", data);
@@ -170,6 +169,76 @@ export const useUserUpdate = () => {
         isClosable: true,
       });
     },
+  });
+};
+
+export const useDeleteUser =() =>{
+  const queryClient =useQueryClient();
+  const toast =useToast();
+  return useMutation({
+     mutationFn:(id:number) => deleteUser(id),
+     onSettled:async (data) =>{
+      await queryClient.invalidateQueries({ queryKey: ["users"] });
+
+      console.log(data);
+       toast({
+        title: "Success",
+        description: "Failed to update user. Please try again.",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+      
+     },
+
+     
+  })
+};
+
+
+export const usePermentDeleteUser =() =>{
+  const queryClient =useQueryClient();
+  const toast =useToast();
+  return useMutation({
+     mutationFn:(id:number) => deleteUser(id),
+     onSettled:async (data) =>{
+      await queryClient.invalidateQueries({ queryKey: ["users"] });
+
+      console.log(data);
+       toast({
+        title: "Delete Perment",
+        description: "Failed to update user. Please try again.",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+      
+     },
+
+     
+  })
+};
+
+export const useRestoreUser =() =>{
+  const queryClient =useQueryClient();
+  const toast =useToast();
+  return useMutation({
+     mutationFn:(id:number) => deleteUser(id),
+     onSettled:async (data) =>{
+      await queryClient.invalidateQueries({ queryKey: ["users"] });
+
+      console.log(data);
+       toast({
+        title: "Delete Perment",
+        description: "Failed to update user. Please try again.",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+      
+     },
+
+     
   });
 };
 // Admiin mutations start
