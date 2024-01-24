@@ -8,6 +8,7 @@ import {
   Stack,
   HStack,
   Input,
+  Alert
 } from "@chakra-ui/react";
 import { FaRegTrashAlt, FaRegEdit, FaTrashRestore } from "react-icons/fa";
 import { IoTrashBin } from "react-icons/io5";
@@ -24,13 +25,15 @@ import { setApiUserData } from "@/services/feature/dashboardUserSlice";
 import Image from "next/image";
 import { deleteUser } from '../../../../services/api';
 import { useDeleteUser, usePermentDeleteUser, useRestoreUser } from "@/services/mutations";
+import Swal from "sweetalert2";
 interface RootState {
   dashboardData: {
     userList: userType; // Adjust the type accordingly
   };
 }
 
-export default function UserManagment() {
+
+export default function UserManagement() {
   const [trashList, setTrashList] = useState(false);
   
   // Redux state - getting user data
@@ -56,17 +59,70 @@ export default function UserManagment() {
   //  handle delete user
   const handleDeleteUser =(id:number) =>{
     console.log(id)
- deleteUserMutation.mutate(id)
+    Swal.fire({
+   title: 'Are you sure delete?',
+   text: 'User will have Admin Privileges',
+   icon: 'warning',
+   showCancelButton: true,
+   confirmButtonColor: '#d33',
+   cancelButtonColor: '#3085d6',
+   confirmButtonText: ' Delete!'
+ }).then((result) => {
+   if (result.isConfirmed) {
+     deleteUserMutation.mutate(id);
+     Swal.fire(
+       'Deleted!',
+       'User has been deleted.',
+       'success'
+     )
+   }
+ })
   }
 
+  //  handle force delete user
   const handleForceDeleteUser =(id:number) =>{
-    // console.log(id)
- forceUserMutation.mutate(id)
+    console.log(id)
+    Swal.fire({
+   title: 'Are you sure?',
+   text: 'User will be permanently deleted',
+   icon: 'warning',
+   showCancelButton: true,
+   confirmButtonColor: '#d33',
+   cancelButtonColor: '#3085d6',
+   confirmButtonText: ' Sure_Delete!'
+ }).then((result) => {
+   if (result.isConfirmed) {
+     forceUserMutation.mutate(id);
+     Swal.fire(
+       'Forc Deleted!',
+       'User has been deleted.',
+       'success'
+     )
+   }
+ })
   }
 
+  //  handle restore user
   const handleRestoreUser =(id:number) =>{
-    // console.log(id)
- restoreUserMutation.mutate(id)
+    console.log(id)
+    Swal.fire({
+   title: 'Are you sure?',
+   text: 'User will be restored',
+   icon: 'warning',
+   showCancelButton: true,
+   confirmButtonColor: '#3085d6',
+   cancelButtonColor: '#d33',
+   confirmButtonText: ' Restore!'
+ }).then((result) => {
+   if (result.isConfirmed) {
+     restoreUserMutation.mutate(id);
+     Swal.fire(
+       'Restored!',
+       'User has been restored.',
+       'success'
+     )
+   }
+ })
   }
 
 
@@ -84,6 +140,8 @@ export default function UserManagment() {
     };
     return date.toLocaleString("en-US", options);
   };
+
+ 
   return (
     <Box mt="96px" paddingBottom="10px" bg={{ md: "#fff" }}>
       {/* <CreateUser /> */}
@@ -93,14 +151,20 @@ export default function UserManagment() {
         justifyContent="space-between"
         align="center"
       >
-        <Stack spacing={3}>
-          <Text fontSize="22px" mb="4px" fontWeight="700" lineHeight="100%">
+         <Stack spacing={3}>
+            <Text fontSize="22px" mb="4px" fontWeight="700" lineHeight="100%">
             User Table
           </Text>
+         
           <Box boxShadow="sm">
             <Input htmlSize={12} width="auto" placeholder="Search...." />
+             {/* <Text fontSize="16px" mb="4px" fontWeight="700" lineHeight="100%">
+            Total{users.data.total_count}
+          </Text> */}
           </Box>
         </Stack>
+      
+       
         <HStack spacing={3}>
           <Button
             minW="100px"
@@ -109,19 +173,24 @@ export default function UserManagment() {
               background: "#01011",
             }}
             color="#fff"
+           isDisabled={isPending}
+            
             onClick={handleTrashList}
           >
-            {trashList ? "  Back" : " Trash List"}
+            {isPending  ? "fetching..." :(trashList ? "  Back" : " Trash List")}
           </Button>
           <Button
-            bg="#000"
-            _hover={{
-              background: "#01011",
-            }}
-            color="#fff"
-          >
-            <Link href="/dashboard/user/create">Create User</Link>
-          </Button>
+  bg={isPending ? "#444" : "#000"}
+  _hover={{
+    background: isPending ? "#444" : "#01011",
+  }}
+  color="#fff"
+  isDisabled={isPending}
+>
+  <Link href="/dashboard/user/create">
+    {isPending  ? "fetching..." : "Create User"}
+  </Link>
+</Button>
         </HStack>
       </Flex>
 
@@ -235,15 +304,11 @@ export default function UserManagment() {
                           <td className="px-4 py-4 text-sm whitespace-nowrap">
                             {trashList ? (
                               <div className="flex items-center gap-x-8">
-                                <Link
-                                  href={`/dashboard/user/edit/${list.id}`}
-                                  className=" transition-colors duration-200 text-emerald-500  focus:outline-none"
-                                >
+                              
                                   <button onClick={() =>handleRestoreUser(list.id)}>
                                      <FaTrashRestore size={20} />
                                   </button>
                                  
-                                </Link>
 
                                 <button className="text-red-600 transition-colors duration-200 dark:hover:text-red-500 dark:text-gray-300 hover:text-indigo-500 focus:outline-none" onClick={() =>handleForceDeleteUser(list.id)} >
                                     <IoTrashBin size={18} />
@@ -259,7 +324,9 @@ export default function UserManagment() {
                                 </Link>
 
                                 <button className="text-red-600 transition-colors duration-200 dark:hover:text-red-500 dark:text-gray-300 hover:text-indigo-500 focus:outline-none" onClick={() =>handleDeleteUser(list.id)}>
-                                  <FaRegTrashAlt size={18} />
+           
+          <FaRegTrashAlt size={18} />
+                                  
                                 </button>
                               </div>
                             )}

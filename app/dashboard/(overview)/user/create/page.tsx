@@ -26,8 +26,15 @@ export default function UserCreate() {
   // console.log(list)
   const createUserMutation = useUserCreate();
 
-  const handleCreateUserSubmit: SubmitHandler<UserCreateFormData> = (data: UserCreateFormData) => {
-    createUserMutation.mutate(data);
+  const handleCreateUserSubmit: SubmitHandler<UserCreateFormData> = async (data: UserCreateFormData) => {
+        try {
+        await createUserMutation.mutate(data);
+      // Handle success or redirect here
+    } catch (error) {
+      // Handle error
+      console.log(error)
+    }
+
     // console.log(data)
   };
 

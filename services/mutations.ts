@@ -1,6 +1,6 @@
 import { loginType } from "@/types/loginType";
 import { useMutation } from "@tanstack/react-query";
-import { createUser, deleteUser, login, register } from "./api";
+import { createUser, deleteUser, forceDeleteUser, login, register, updateUser ,restoreDeleteUser} from "./api";
 import { registerType } from "@/types/registerType";
 import { useRouter } from "next/navigation";
 import { useToast } from "@chakra-ui/react";
@@ -21,6 +21,7 @@ export const useLogin = () => {
       Cookies.set("username", JSON.stringify(response.data.user.name), {
         expires: 7,
       });
+      console.log(response)
       const userRole = response.data.user.role;
       let redirectRoute;
 
@@ -122,7 +123,8 @@ export const useUserCreate = () => {
       toast({
         colorScheme: "green",
         position: "top-right",
-        title: "User created Success",
+        // title: "User created Success",
+        title: data.data.message,
         description: "We've created user account.",
         status: "success",
         duration: 9000,
@@ -135,7 +137,7 @@ export const useUserCreate = () => {
         position: "top-right",
         colorScheme: "red",
 
-        title: "What's Wrong",
+        title: data.data.message,
         description: "Plase Try Again.",
         // status: error.response.data.data[0],
         duration: 9000,
@@ -148,9 +150,13 @@ export const useUserCreate = () => {
 export const useUserUpdate = () => {
   const queryClient = useQueryClient();
   const toast = useToast();
+  const dispatch = useDispatch();
+
   return useMutation<void, Error, { id: number; userInfo: userInfo }>({
-    mutationFn: async ({ id, userInfo }) => updateUser(id, userInfo), // Adjust the updateUser function call
+    mutationFn:  ({ id, userInfo }) => updateUser(id, userInfo), // Adjust the updateUser function call
     onSuccess: async (data, variables) => {
+      dispatch(setApiUserData(data));
+
       await queryClient.invalidateQueries({ queryKey: ["users"] });
 
 
@@ -162,7 +168,7 @@ export const useUserUpdate = () => {
 
       // Use the toast function to show an error message
       toast({
-        title: "Error",
+        title: data.data.message,
         description: "Failed to update user. Please try again.",
         status: "error",
         duration: 9000,
@@ -177,17 +183,17 @@ export const useDeleteUser =() =>{
   const toast =useToast();
   return useMutation({
      mutationFn:(id:number) => deleteUser(id),
-     onSettled:async (data) =>{
+     onSuccess:async (data) =>{
       await queryClient.invalidateQueries({ queryKey: ["users"] });
 
       console.log(data);
-       toast({
-        title: "Success",
-        description: "Failed to update user. Please try again.",
-        status: "error",
-        duration: 9000,
-        isClosable: true,
-      });
+      //  toast({
+      //   title: `Delete ${data.data.message}`,
+      //   // description: "Failed to update user. Please try again.",
+      //   status: "error",
+      //   duration: 9000,
+      //   isClosable: true,
+      // });
       
      },
 
@@ -200,7 +206,7 @@ export const usePermentDeleteUser =() =>{
   const queryClient =useQueryClient();
   const toast =useToast();
   return useMutation({
-     mutationFn:(id:number) => deleteUser(id),
+     mutationFn:(id:number) => forceDeleteUser(id),
      onSettled:async (data) =>{
       await queryClient.invalidateQueries({ queryKey: ["users"] });
 
@@ -223,13 +229,13 @@ export const useRestoreUser =() =>{
   const queryClient =useQueryClient();
   const toast =useToast();
   return useMutation({
-     mutationFn:(id:number) => deleteUser(id),
+     mutationFn:(id:number) => restoreDeleteUser(id),
      onSettled:async (data) =>{
       await queryClient.invalidateQueries({ queryKey: ["users"] });
 
       console.log(data);
        toast({
-        title: "Delete Perment",
+        title: "Restore User",
         description: "Failed to update user. Please try again.",
         status: "error",
         duration: 9000,
