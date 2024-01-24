@@ -1,3 +1,7 @@
+import getToken from "@/hooks/getToken";
+import getUserName from "@/hooks/getUserName";
+import getAuth from "@/hooks/getUserName";
+import { useLogout } from "@/services/mutations";
 import {
   BreadcrumbLink,
   BreadcrumbItem,
@@ -24,6 +28,16 @@ MenuItem,
 import { RiMenu3Fill } from "react-icons/ri";
 
 export default function AdminNav() {
+
+  const username = getUserName()
+  const token = getToken()
+
+  const logoutMutation = useLogout();
+  
+  const logoutFn = () => {
+    logoutMutation.mutate(token as string)
+  }
+
   return (
     <Flex
       justifyContent={{base:'flex-end',md:"space-between"}}
@@ -50,16 +64,16 @@ export default function AdminNav() {
         
         <Menu flex='1'>
           <MenuButton  color="blue">
-                    <Avatar name="Leo" size={{base:'sm',md:'md'}} />
+                    <Avatar name={username} size={{base:'sm',md:'md'}} />
 
           </MenuButton>
           <MenuList>
             <MenuGroup title="Profile">
               <MenuItem>
 
-              <span>
+              <button onClick={logoutFn}>
                 Log out
-              </span>
+              </button>
 
               </MenuItem>
               {/* <MenuItem> </MenuItem> */}

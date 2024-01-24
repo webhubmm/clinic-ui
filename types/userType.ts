@@ -20,3 +20,13 @@ export interface userInfo {
     role: string
 
 }
+
+
+export interface UserCreateFormData {
+   name: string;
+  email: string;
+  phone: string;
+  password: string;
+  password_confirmation: string;
+  role: string;
+}

@@ -40,7 +40,6 @@ export default function SignIn() {
 
   const handleLoginSubmit: SubmitHandler<loginType> = (data: loginType) => {
     loginMutation.mutate(data);
-    // console.log('submitting')
   };
 
   return (
@@ -54,7 +53,7 @@ export default function SignIn() {
         <Link href="/">
           <Flex alignItems="center" gap={3}>
             <FaArrowLeft size={20} />
-            <span className="py-3">Back To Home</span>
+            <span className="py-3">Go To Home</span>
           </Flex>
         </Link>
         <Flex
