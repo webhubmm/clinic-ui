@@ -13,7 +13,7 @@ import { useParams } from 'next/navigation'
 import { updateUser } from '@/services/api';
 import { useQuery } from '@tanstack/react-query';
 
-export default function EditUser(params:{
+export default function EditUser({params}:{
   params:{id:string}
 }) {
   const {id} =params;
@@ -29,9 +29,10 @@ export default function EditUser(params:{
     data:users,
     isPending,isError
   } =useQuery({
-    queryKey:['users',id],
-    queryFn:() =>updateUser(id)
+    queryKey:['users'],
+    queryFn:(id) =>updateUser(id)
   })
+  console.log("users",users)
  const userUpdateMutation =useUserUpdate();
 
  const handelSubmitUpdateUser:SubmitHandler<UserCreateFormData> =  (updateData,id) =>{
