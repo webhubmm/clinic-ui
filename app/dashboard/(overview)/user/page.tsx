@@ -49,8 +49,8 @@ export default function UserManagement() {
 
   // delete
   const deleteUserMutation =useDeleteUser();
+  const restoreUserMutation=useRestoreUser();
   const forceUserMutation =usePermentDeleteUser();
- const restoreUserMutation=useRestoreUser();
 
   const handleTrashList = () => {
     setTrashList((prev) => !prev);
@@ -94,8 +94,8 @@ export default function UserManagement() {
    if (result.isConfirmed) {
      forceUserMutation.mutate(id);
      Swal.fire(
-       'Forc Deleted!',
-       'User has been deleted.',
+       ' Perment Deleted!',
+       'User has been permently deleted.',
        'success'
      )
    }
@@ -180,7 +180,7 @@ export default function UserManagement() {
             {isPending  ? "fetching..." :(trashList ? "  Back" : " Trash List")}
           </Button>
           <Button
-  bg={isPending ? "#444" : "#000"}
+    bg={isPending ? "#444" : "#000"}
   _hover={{
     background: isPending ? "#444" : "#01011",
   }}
@@ -209,7 +209,7 @@ export default function UserManagement() {
                       >
                         <div className="flex items-center gap-x-3">
                           <button className="flex items-center gap-x-2">
-                            <span>UserId</span>
+                        UserId
                           </button>
                         </div>
                       </th>
@@ -276,11 +276,12 @@ export default function UserManagement() {
                         <tr key={list.id}>
                           <td className="px-4 py-4 text-sm font-medium text-gray-700  whitespace-nowrap">
                             <div className="inline-flex items-center gap-x-3">
-                              <span>#{list.id}</span>
+                              <p>#{list.id}</p>
                             </div>
                           </td>
 
                           <td className="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
+                            {/* <Image src={list?.image || list?.name} alt={list.name && list.email} width={100} height={100}  /> */}
                             <h2 className="text-sm font-bold">{list?.name}</h2>
                           </td>
                           <td className="px-4 py-4 text-sm text-gray-500  whitespace-nowrap">

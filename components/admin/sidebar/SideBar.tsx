@@ -9,7 +9,7 @@ import {
   Stack,
   Spacer
 } from "@chakra-ui/react";
-import { FaHome, FaLock ,FaUser ,FaCodeBranch ,FaUsers ,FaAddressBook} from "react-icons/fa";
+import { FaHome, FaLock ,FaUser ,FaCodeBranch ,FaUsers ,FaAddressBook,FaCalendarDay} from "react-icons/fa";
 import { FaUserDoctor } from "react-icons/fa6";
 import { MdOutlineRateReview ,MdReport} from "react-icons/md";
 import { SiGoogleanalytics } from "react-icons/si";
@@ -58,12 +58,12 @@ const NavLinks = [
     path: "/dashboard/booking",
     icons: <FaAddressBook size={22} />,
   },
-   { id: 9, name: "Review Managment", path: "/dashboard/review", icons: <MdOutlineRateReview size={22} /> },
+   { id: 9, name: "Tooth Managment", path: "/dashboard/tooth", icons: <MdOutlineRateReview size={22} /> },
   {
     id: 10,
-    name: "Expensive Tracker",
-    path: "/dashboard/expensive",
-    icons: <SiGoogleanalytics size={20} />,
+    name: "Holiday Managment",
+    path: "/dashboard/holiday",
+    icons: <FaCalendarDay size={20} />,
   },
   {
     id: 11,

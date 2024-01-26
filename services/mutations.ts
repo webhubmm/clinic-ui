@@ -180,20 +180,13 @@ export const useUserUpdate = () => {
 
 export const useDeleteUser =() =>{
   const queryClient =useQueryClient();
-  const toast =useToast();
   return useMutation({
      mutationFn:(id:number) => deleteUser(id),
      onSuccess:async (data) =>{
       await queryClient.invalidateQueries({ queryKey: ["users"] });
 
       console.log(data);
-      //  toast({
-      //   title: `Delete ${data.data.message}`,
-      //   // description: "Failed to update user. Please try again.",
-      //   status: "error",
-      //   duration: 9000,
-      //   isClosable: true,
-      // });
+      
       
      },
 
@@ -204,20 +197,13 @@ export const useDeleteUser =() =>{
 
 export const usePermentDeleteUser =() =>{
   const queryClient =useQueryClient();
-  const toast =useToast();
   return useMutation({
      mutationFn:(id:number) => forceDeleteUser(id),
-     onSettled:async (data) =>{
+     onSuccess:async (data) =>{
       await queryClient.invalidateQueries({ queryKey: ["users"] });
 
       console.log(data);
-       toast({
-        title: "Delete Perment",
-        description: "Failed to update user. Please try again.",
-        status: "error",
-        duration: 9000,
-        isClosable: true,
-      });
+     
       
      },
 
@@ -227,20 +213,13 @@ export const usePermentDeleteUser =() =>{
 
 export const useRestoreUser =() =>{
   const queryClient =useQueryClient();
-  const toast =useToast();
   return useMutation({
      mutationFn:(id:number) => restoreDeleteUser(id),
-     onSettled:async (data) =>{
+     onSuccess:async (data) =>{
       await queryClient.invalidateQueries({ queryKey: ["users"] });
 
       console.log(data);
-       toast({
-        title: "Restore User",
-        description: "Failed to update user. Please try again.",
-        status: "error",
-        duration: 9000,
-        isClosable: true,
-      });
+      
       
      },
 

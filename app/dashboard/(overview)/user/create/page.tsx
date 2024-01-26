@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { useUserCreate } from '@/services/mutations';
 import {UserList } from "@/services/queries"
 import { UserCreateFormData, userType } from '@/types/userType';
+import ImageUpload from '@/components/admin/adminuser/ImageUpload';
 
 // Importing the user image
 // import UserImg from '@/public/assets/asset11.webp';
@@ -228,6 +229,11 @@ export default function UserCreate() {
                     required: 'Role is required',
                   })}
                 />
+              </GridItem>
+            </FormControl>
+             <FormControl>
+              <GridItem>
+              <ImageUpload />
               </GridItem>
             </FormControl>
           </Grid>
