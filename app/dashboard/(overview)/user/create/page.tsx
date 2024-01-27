@@ -2,7 +2,7 @@
 'use client';
 import { useState } from 'react';
 import { FaArrowLeft } from 'react-icons/fa';
-import { Grid, GridItem, Flex, Box, FormControl, FormLabel, Input, Button, FormErrorMessage,Text } from '@chakra-ui/react';
+import { Grid, GridItem, Flex, Box, FormControl, FormLabel, Input, Button, FormErrorMessage,Text,Spinner } from '@chakra-ui/react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import Link from 'next/link';
 import { useUserCreate } from '@/services/mutations';
@@ -28,6 +28,7 @@ export default function UserCreate() {
   const createUserMutation = useUserCreate();
 
   const handleCreateUserSubmit: SubmitHandler<UserCreateFormData> = async (data: UserCreateFormData) => {
+    console.log(data)
         try {
         await createUserMutation.mutate(data);
       // Handle success or redirect here
@@ -111,7 +112,7 @@ export default function UserCreate() {
                 </FormErrorMessage>
               </FormControl>
             
-             <FormControl>
+         <FormControl>
                 <GridItem>
                   <FormLabel
                     display="flex"
@@ -182,6 +183,8 @@ export default function UserCreate() {
                   {errors.password_confirmation && errors.password_confirmation.message}
                 </FormErrorMessage>
               </FormControl>
+
+            
             {/* ... (rest of the form fields) */}
  <FormControl>
               <GridItem>
@@ -233,7 +236,6 @@ export default function UserCreate() {
             </FormControl>
              <FormControl>
               <GridItem>
-              <ImageUpload />
               </GridItem>
             </FormControl>
           </Grid>
@@ -251,7 +253,7 @@ export default function UserCreate() {
                   isLoading={isSubmitting}
               disabled={isSubmitting}
               >
-                 {(isSubmitting && createUserMutation.isPending) ? "loading" :"Create"}
+                 {(isSubmitting || createUserMutation.isPending) ? <Spinner  /> :"Create"}
               </Button>
             </Flex>
           </FormControl>

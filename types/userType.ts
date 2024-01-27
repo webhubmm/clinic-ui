@@ -17,8 +17,8 @@ export interface userInfo {
     email: string;
     phone: string;
     password: string;
-    password_confirmation: string,
-    role: string
+    password_confirmation: string;
+    role: string;
 
 }
 

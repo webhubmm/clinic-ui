@@ -7,7 +7,7 @@ import { useToast } from "@chakra-ui/react";
 import { userInfo } from "@/types/userType";
 import Cookies from "js-cookie";
 import { useQueryClient } from "@tanstack/react-query";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setApiUserData } from "./feature/dashboardUserSlice";
 
 // Auth mutations start
@@ -107,7 +107,8 @@ export const useUserCreate = () => {
   const router = useRouter();
   const toast = useToast();
   const dispatch = useDispatch();
-
+  // const data =useSelector(state => state?.dashboardData.userList);
+//  console.log(data)
   return useMutation({
     mutationFn: (userInfo: userInfo) => createUser(userInfo),
     onMutate: () => {
@@ -151,24 +152,36 @@ export const useUserUpdate = () => {
   const queryClient = useQueryClient();
   const toast = useToast();
   const dispatch = useDispatch();
+  const router = useRouter();
+  return useMutation<void, Error, { id: number; updateData: userInfo }>({
+    mutationFn: ({id,updateData}:{id:number; updateData:userInfo} ) => updateUser({id, updateData}),
+    onMutate: () => {
+      // dispatch(setApiUserData(newUser));
+    // console.log(id,updateData);
+      console.log("mutate");
+      
+    },
+    onSuccess: async (data) => {
+      await queryClient.invalidateQueries({queryKey:["users"]});
 
-  return useMutation<void, Error, { id: number; userInfo: userInfo }>({
-    mutationFn:  ({ id, userInfo }) => updateUser(id, userInfo), // Adjust the updateUser function call
-    onSuccess: async (data, variables) => {
-      dispatch(setApiUserData(data));
+      router.push("/dashboard/user");
 
-      await queryClient.invalidateQueries({ queryKey: ["users"] });
-
-
-      // Display a success message or perform any other necessary actions
-      console.log("User updated successfully:", data);
+      // console.log("User updated successfully:", data);
+       toast({
+         colorScheme: "green",
+        position: "top-right",
+        title: "User updated successfully ",
+        // description: "Failed to update user. Please try again.",
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+      });
     },
     onError: (error) => {
       console.error("Error updating user:", error);
 
-      // Use the toast function to show an error message
       toast({
-        title: data.data.message,
+        title: "Update Failed",
         description: "Failed to update user. Please try again.",
         status: "error",
         duration: 9000,

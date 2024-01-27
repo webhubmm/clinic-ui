@@ -1,5 +1,5 @@
 'use client'
-import { Grid, GridItem, Flex, Box, FormControl, FormLabel, Input, Button, FormErrorMessage,Text } from '@chakra-ui/react';
+import { Grid, GridItem, Flex, Box, FormControl, FormLabel, Input, Button, FormErrorMessage,Text ,Spinner} from '@chakra-ui/react';
 
 import UserImg from '@/public/assets/asset 11.webp';
 import Image from 'next/image'
@@ -10,14 +10,14 @@ import Link from 'next/link';
 import { UserCreateFormData } from '@/types/userType';
 import { useUserUpdate } from '@/services/mutations';
 import { useParams } from 'next/navigation'
-import { updateUser } from '@/services/api';
+import { showList, updateUser } from '@/services/api';
 import { useQuery } from '@tanstack/react-query';
 
 export default function EditUser({params}:{
   params:{id:string}
 }) {
-  const {id} =params;
-  console.log(id);
+const  {id} =params;
+  // console.log(id);
    const {
     register,
     handleSubmit,
@@ -27,18 +27,25 @@ export default function EditUser({params}:{
 
   const {
     data:users,
-    isPending,isError
+    isLoading,isError,isPending
   } =useQuery({
     queryKey:['users'],
-    queryFn:(id) =>updateUser(id)
+    queryFn:() =>showList(id)
   })
-  console.log("users",users)
+  const showData =users?.data;
+  // console.log("usersedit",showData);
  const userUpdateMutation =useUserUpdate();
 
- const handelSubmitUpdateUser:SubmitHandler<UserCreateFormData> =  (updateData,id) =>{
-     userUpdateMutation.mutate({id,...updateData});
-  
- }
+ const handelSubmitUpdateUser:SubmitHandler<UserCreateFormData> = async (updateData) => {
+  // console.log("updateData",updateData,id);
+  try {
+    await userUpdateMutation.mutate({id,updateData});
+    // Handle success or redirect here
+  } catch (error) {
+    // Handle error
+    console.log(error);
+  }
+};
 
   return (
   <Box className='mt-[96px]' bg='#fff' borderRadius='10px' padding='10px' minH='100hv'>
@@ -50,7 +57,7 @@ export default function EditUser({params}:{
           </Flex>
         </Link>
       </Flex>
-      <Flex gap={5} justifyContent='center' alignItems='center'>
+      <Flex gap={5} justifyContent='center' alignItems='center' >
         <Box display={{ base: 'none', lg: 'block' }}> 
           {/* <Image src={UserImg} alt='userImg' width={300} height={300} sizes='95vw' style={{ width: '100%', height: 'auto' }} /> */}
         </Box>
@@ -74,8 +81,8 @@ export default function EditUser({params}:{
                     size="lg"
                     border='1px'
                     id='name'
-                    value={users?.data.user}
                     borderColor='gray'
+                    defaultValue={showData?.user?.name || ''}
                     {...register('name', {
                       required: 'Name is required',
                     })}
@@ -103,6 +110,8 @@ export default function EditUser({params}:{
                     border='1px'
                     borderColor='gray'
                     id="email"
+                    defaultValue={showData?.user?.email || ''}
+
                     {...register('email', {
                       required: 'Email is required',
                     })}
@@ -113,7 +122,7 @@ export default function EditUser({params}:{
                 </FormErrorMessage>
               </FormControl>
             
-             <FormControl>
+          {/* <FormControl>
                 <GridItem>
                   <FormLabel
                     display="flex"
@@ -138,7 +147,6 @@ export default function EditUser({params}:{
                     border='1px'
                     borderColor='gray'
                     id="password"
-
                     {...register('password', {
                       required: ' Password is required',
                       // validate: (value) => value === watch('password') || 'Passwords do not match',
@@ -184,7 +192,9 @@ export default function EditUser({params}:{
                 <FormErrorMessage>
                   {errors.password_confirmation && errors.password_confirmation.message}
                 </FormErrorMessage>
-              </FormControl>
+              </FormControl> */}
+
+            
             {/* ... (rest of the form fields) */}
  <FormControl>
               <GridItem>
@@ -204,6 +214,8 @@ export default function EditUser({params}:{
                   border='1px'
                   borderColor='gray'
                   id='phone'
+                    defaultValue={showData?.user?.phone || ''}
+
                   {...register('phone', {
                     required: 'Phone is required',
                   })}
@@ -228,10 +240,16 @@ export default function EditUser({params}:{
                   border='1px'
                   borderColor='gray'
                   id='role'
+                   defaultValue={showData?.user?.role || ''}
+
                   {...register('role', {
                     required: 'Role is required',
                   })}
                 />
+              </GridItem>
+            </FormControl>
+             <FormControl>
+              <GridItem>
               </GridItem>
             </FormControl>
           </Grid>
@@ -246,10 +264,10 @@ export default function EditUser({params}:{
                 mb='20px'
                 bg='#332941'
                 color='#fff'
-                  isLoading={isSubmitting}
+                  isLoading={isLoading}
               disabled={isSubmitting}
               >
-                 {(isSubmitting && userUpdateMutation.isPending) ? "loading" :"Update"}
+                 {(isSubmitting ||  userUpdateMutation.isPending) ?  <Spinner  /> :"Update"}
               </Button>
             </Flex>
           </FormControl>

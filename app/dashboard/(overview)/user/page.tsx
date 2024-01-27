@@ -21,7 +21,7 @@ import PulseLoader from "react-spinners/PulseLoader";
 import { FaCaretDown } from "react-icons/fa";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setApiUserData } from "@/services/feature/dashboardUserSlice";
+import {  setApiUserData, setUserSearch } from "@/services/feature/dashboardUserSlice";
 import Image from "next/image";
 import { deleteUser } from '../../../../services/api';
 import { useDeleteUser, usePermentDeleteUser, useRestoreUser } from "@/services/mutations";
@@ -35,22 +35,36 @@ interface RootState {
 
 export default function UserManagement() {
   const [trashList, setTrashList] = useState(false);
-  
+  const dispatch = useDispatch();
   // Redux state - getting user data
   const userData = useSelector(
     (state: RootState) => state.dashboardData.userList
   );
+
+  // for search user
+ const userSearch =useSelector( (state) => state.dashboardData.search
+ )
+
+ console.log(userSearch)
+
   // console.log("userData", userData);
-  const  {data:users,isPending ,isError} = UserList() as {
+  const  {data:users,isFetching,isLoading,isError} = UserList() as {
     data: userType;
-    isPending: boolean;
+    isFetching: boolean;
+    isLoading:boolean;
     isError: any;
   };
+
 
   // delete
   const deleteUserMutation =useDeleteUser();
   const restoreUserMutation=useRestoreUser();
   const forceUserMutation =usePermentDeleteUser();
+
+  // user search
+ const handleUserChange =(e: React.ChangeEvent<HTMLInputElement>) =>{
+   return dispatch(setUserSearch(e.target.value))
+ }
 
   const handleTrashList = () => {
     setTrashList((prev) => !prev);
@@ -157,7 +171,7 @@ export default function UserManagement() {
           </Text>
          
           <Box boxShadow="sm">
-            <Input htmlSize={12} width="auto" placeholder="Search...." />
+            <Input htmlSize={12} width="auto" placeholder="Search...." defaultValue={userSearch} onChange={handleUserChange} />
              {/* <Text fontSize="16px" mb="4px" fontWeight="700" lineHeight="100%">
             Total{users.data.total_count}
           </Text> */}
@@ -169,26 +183,27 @@ export default function UserManagement() {
           <Button
             minW="100px"
             bg={trashList ? "#332941" : "red"}
-            _hover={{
-              background: "#01011",
-            }}
+            // _hover={{
+            //   background: "#01011",
+            // }}
             color="#fff"
-           isDisabled={isPending}
-            
+           isDisabled={isFetching}
+          //  isLoading={isLoading || isFetching}
             onClick={handleTrashList}
           >
-            {isPending  ? "fetching..." :(trashList ? "  Back" : " Trash List")}
+           {trashList ? "  Back" : " Trash List"}
           </Button>
           <Button
-    bg={isPending ? "#444" : "#000"}
-  _hover={{
-    background: isPending ? "#444" : "#01011",
-  }}
+    bg= "#000"
+  // _hover={{
+  //   background:  : "#01011",
+  // }}
   color="#fff"
-  isDisabled={isPending}
+  // isLoading={isLoading || isFetching}
+  isDisabled={isFetching}
 >
   <Link href="/dashboard/user/create">
-    {isPending  ? "fetching..." : "Create User"}
+    {( isLoading || isFetching)  ? "loading..." : "Create User"}
   </Link>
 </Button>
         </HStack>
@@ -249,7 +264,7 @@ export default function UserManagement() {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900">
-                    {isPending && (
+                    {isFetching && (
                       <tr>
                         <td colSpan={6} className="text-center py-4 ">
                           <div className="flex justify-center items-center">
@@ -269,9 +284,9 @@ export default function UserManagement() {
                       </tr>
                     )}
 
-                    {!isPending &&
+                    {!isFetching &&
                       !isError &&
-                      users?.data?.users?.map((list: userType) => (
+                     users?.data?.users.filter((item:string) => item.name.toLowerCase().includes(String(userSearch).toLowerCase())).map((list: userType) => (
                         // console.log(list);
                         <tr key={list.id}>
                           <td className="px-4 py-4 text-sm font-medium text-gray-700  whitespace-nowrap">

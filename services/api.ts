@@ -66,9 +66,15 @@ export const createUser = async (userInfo: userInfo) => {
   });
 };
 
-export const updateUser = async (userId: number) => {
+
+
+export const updateUser = async ({id,updateData}:{
+  id:number;
+  updateData:userInfo;
+}) => {
+  console.log(id,updateData);
   return await axiosInstance.patch(
-    `admin/user_management${userId}`,
+    `admin/user_management/${id}`,updateData,
     
     {
       headers: {
@@ -77,7 +83,27 @@ export const updateUser = async (userId: number) => {
       },
     }
   );
+    // return response.data;
+
 };
+
+
+// show list
+export const showList = async (id: number) => {
+  try {
+    const res = await axiosInstance.get(`admin/user_management/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    // console.log('useedit',res)
+    return res.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 
 export const deleteUser = async(id:number) =>{
   return await axiosInstance.delete(
