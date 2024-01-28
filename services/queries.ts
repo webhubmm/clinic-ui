@@ -5,26 +5,24 @@ import { useToast } from '@chakra-ui/react';
 import { useDispatch } from "react-redux";
 import { setApiUserData } from "./feature/dashboardUserSlice";
 
-export function UserList() {
+export function UserList(page:number,pageSize:number) {
+  // console.log("page",page);
   const dispatch = useDispatch();
 
   return useQuery<userType>({
-    queryKey: ['users'],
-    queryFn: getUser,
+    queryKey: ['users',page],
+    queryFn:() =>getUser(page,pageSize),
+    keepPreviousData:true,
    
   });
 
   
 
-  // Rest of your component logic...
 
-  // return { users, isPending, isError };
 }
 
 
-// export function showUserList(){
-//    return use
-// }
+
 
 
 

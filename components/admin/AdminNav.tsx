@@ -1,6 +1,5 @@
 import getToken from "@/hooks/getToken";
 import getUserName from "@/hooks/getUserName";
-import getAuth from "@/hooks/getUserName";
 import { useLogout } from "@/services/mutations";
 import {
   BreadcrumbLink,
@@ -64,7 +63,8 @@ export default function AdminNav() {
         
         <Menu flex='1'>
           <MenuButton  color="blue">
-                    <Avatar name={username} size={{base:'sm',md:'md'}} />
+                     <Avatar name={username} size={{base:'sm',md:'md'}} />
+
 
           </MenuButton>
           <MenuList>
@@ -76,7 +76,6 @@ export default function AdminNav() {
               </button>
 
               </MenuItem>
-              {/* <MenuItem> </MenuItem> */}
             </MenuGroup>
            
           </MenuList>

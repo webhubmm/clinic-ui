@@ -72,9 +72,13 @@ const NavLinks = [
     icons: <MdReport size={20} />,
   },
 ];
-export default function SideBar({setIsSidebarOpen}) {
+export default function SideBar({setIsSidebarOpen}:{
+  setIsSidebarOpen:string
+}) {
   const pathname = usePathname();
   const isActive = (path) => path === pathname;
+    // const currentPath = window.location.pathname;
+
 
   return (
     <Flex
@@ -123,13 +127,13 @@ export default function SideBar({setIsSidebarOpen}) {
                   <Link
                     href={link.path}
                     className={
-                      isActive(link.path) ? "text-[blue] " : "transperent"
+                      isActive(link.path) ?  "text-[blue] " : "transperent"
                     }
                   >
-                    <HStack spacing="25px">
+                    <Flex  gap={5}>
                       {link.icons}
                       <Text>{link.name}</Text>
-                    </HStack>
+                    </Flex>
                   </Link>
                 </ListItem>
               );

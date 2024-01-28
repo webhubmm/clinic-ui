@@ -15,7 +15,7 @@ import ImageUpload from '@/components/admin/adminuser/ImageUpload';
 
 
 
-export default function HolidayCreate() {
+export default function UserCreate() {
   const {
     register,
     handleSubmit,

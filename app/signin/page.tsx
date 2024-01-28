@@ -53,7 +53,7 @@ export default function SignIn() {
         <Link href="/">
           <Flex alignItems="center" gap={3}>
             <FaArrowLeft size={20} />
-            <span className="py-3">Go To Home</span>
+            <p className="py-3">Go To Home</p>
           </Flex>
         </Link>
         <Flex
@@ -98,7 +98,7 @@ export default function SignIn() {
               borderRadius="16px"
               _hover="#332941">
               <FaGoogle size={20} />
-              <span className="ml-3">Sign in with Google</span>
+              <p className="ml-3">Sign in with Google</span>
             </Button>
             <form action="" onSubmit={handleSubmit(handleLoginSubmit)}>
               <FormControl>

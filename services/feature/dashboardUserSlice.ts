@@ -2,8 +2,9 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   userList: [],
-  page:0,
+  currentPage:1,
   search:[],
+  trashList:false,
 };
 
 const dashboardSlice = createSlice({
@@ -16,12 +17,16 @@ const dashboardSlice = createSlice({
     setUserSearch: (state, { payload }) => {
       state.search = payload;
     },
+    setUserPage:(state,{payload}) =>{
+      state.currentPage= payload
+    },
+      setUserTrashList:(state,{payload}) =>{
+      state.trashList= payload
+    }
   },
 });
 
-export const { setApiUserData,setUserSearch } = dashboardSlice.actions;
-// export const getAllProducts = (state) => state.dashboardReucer.userList;
+export const { setApiUserData,setUserSearch,setUserTrashList,setUserPage } = dashboardSlice.actions;
 export const getPageUserList = (state:any) => state.dashboardReucer.page;
-// export const getSearchUserList = (state:any) => state.dashboardReucer?.search;
 
 export default dashboardSlice.reducer;

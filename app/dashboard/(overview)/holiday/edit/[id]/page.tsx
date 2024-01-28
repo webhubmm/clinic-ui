@@ -13,7 +13,7 @@ import { useParams } from 'next/navigation'
 import { showList, updateUser } from '@/services/api';
 import { useQuery } from '@tanstack/react-query';
 
-export default function EditHoliday({params}:{
+export default function EditUser({params}:{
   params:{id:string}
 }) {
 const  {id} =params;

@@ -4,8 +4,6 @@ import { userInfo } from "@/types/userType";
 import axios, { AxiosResponse } from "axios";
 import Cookies from "js-cookie";
 
-// import { getToken } from '@/hooks/getToken';
-
 // console.log(token);
 const BASE_URL = "https://clinic.neattechmm.com/api/v1";
 
@@ -36,9 +34,11 @@ export const logout = async (token: string) => {
 // Auth APIs end
 
 // Admin API start
-export const getUser = async (): Promise<any> => {
+// start for usermanagment
+export const getUser = async (page:number,pageSize:number): Promise<number> => {
+  // console.log(page)
   try {
-    const response = await axiosInstance.get("admin/user_management", {
+    const response = await axiosInstance.get(`admin/user_management?page=${page}&pageSize=${pageSize}`, {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -48,11 +48,8 @@ export const getUser = async (): Promise<any> => {
     console.log(response.data);
     return response.data;
   } catch (error) {
-    // Handle errors here
-    const errorResponse: ErrorResponse = error.response?.data || {
-      message: "Unknown error",
-    };
-    console.error("Error fetching user data:", errorResponse.message);
+   
+    console.error("Error fetching user data:");
     throw error; // Rethrow the error to handle it in the calling code
   }
 };
@@ -72,7 +69,7 @@ export const updateUser = async ({id,updateData}:{
   id:number;
   updateData:userInfo;
 }) => {
-  console.log(id,updateData);
+  // console.log(id,updateData);
   return await axiosInstance.patch(
     `admin/user_management/${id}`,updateData,
     
@@ -141,5 +138,10 @@ export const forceDeleteUser = async(id:number) =>{
     }
   );
 };
+
+// end for usermanagment
+
+// for doctorMangment
+
 
 // Admin API end

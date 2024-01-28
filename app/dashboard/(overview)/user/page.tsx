@@ -14,18 +14,18 @@ import { FaRegTrashAlt, FaRegEdit, FaTrashRestore } from "react-icons/fa";
 import { IoTrashBin } from "react-icons/io5";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import { forceDeleteUser, getUser } from "@/services/api";
 import { UserList } from "@/services/queries";
 import { userType } from "@/types/userType";
 import PulseLoader from "react-spinners/PulseLoader";
-import { FaCaretDown } from "react-icons/fa";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {  setApiUserData, setUserSearch } from "@/services/feature/dashboardUserSlice";
+import {  setUserPage, setUserSearch ,setUserTrashList} from "@/services/feature/dashboardUserSlice";
 import Image from "next/image";
 import { deleteUser } from '../../../../services/api';
 import { useDeleteUser, usePermentDeleteUser, useRestoreUser } from "@/services/mutations";
 import Swal from "sweetalert2";
+import { ITEM_PER_PAGE } from "@/utils/constants";
+
 interface RootState {
   dashboardData: {
     userList: userType; // Adjust the type accordingly
@@ -34,26 +34,26 @@ interface RootState {
 
 
 export default function UserManagement() {
-  const [trashList, setTrashList] = useState(false);
+  // const [trashList, setTrashList] = useState(false);
   const dispatch = useDispatch();
   // Redux state - getting user data
   const userData = useSelector(
     (state: RootState) => state.dashboardData.userList
   );
+ 
+  const trash =useSelector((state:any) => state?.dashboardData.trashList)
+
+  const page =useSelector((state:any) => state?.dashboardData.currentPage)
 
   // for search user
- const userSearch =useSelector( (state) => state.dashboardData.search
+ const userSearch =useSelector( (state:any) => state?.dashboardData.search
  )
 
- console.log(userSearch)
+  const pageSize: number = ITEM_PER_PAGE;
 
-  // console.log("userData", userData);
-  const  {data:users,isFetching,isLoading,isError} = UserList() as {
-    data: userType;
-    isFetching: boolean;
-    isLoading:boolean;
-    isError: any;
-  };
+ const  {data:users,isLoading,isFetching,isError,isPreviousData,isSuccess
+ } = UserList(page ,pageSize) 
+//  console.log("userData", users);
 
 
   // delete
@@ -67,7 +67,7 @@ export default function UserManagement() {
  }
 
   const handleTrashList = () => {
-    setTrashList((prev) => !prev);
+    dispatch(setUserTrashList(!trash));
   };
 
   //  handle delete user
@@ -155,6 +155,7 @@ export default function UserManagement() {
     return date.toLocaleString("en-US", options);
   };
 
+  // const pageCount = Math.ceil(totalItems / pageSize);
  
   return (
     <Box mt="96px" paddingBottom="10px" bg={{ md: "#fff" }}>
@@ -165,52 +166,46 @@ export default function UserManagement() {
         justifyContent="space-between"
         align="center"
       >
-         <Stack spacing={3}>
+         <div  className='space-y-3'>
             <Text fontSize="22px" mb="4px" fontWeight="700" lineHeight="100%">
             User Table
           </Text>
          
           <Box boxShadow="sm">
-            <Input htmlSize={12} width="auto" placeholder="Search...." defaultValue={userSearch} onChange={handleUserChange} />
-             {/* <Text fontSize="16px" mb="4px" fontWeight="700" lineHeight="100%">
-            Total{users.data.total_count}
-          </Text> */}
+            <Input  minWidth='100px' placeholder="Search...." defaultValue={userSearch} onChange={handleUserChange} />
+            
           </Box>
-        </Stack>
+        </div>
       
        
-        <HStack spacing={3}>
+        <div    className=" md:flex gap-3  justify-center items-center ">
           <Button
-            minW="100px"
-            bg={trashList ? "#332941" : "red"}
-            // _hover={{
-            //   background: "#01011",
-            // }}
+            // minW="100px"
+            bg={trash ? "#332941" : "red"}
+           marginY={{base:'5px',md:"0pxx"}}
             color="#fff"
            isDisabled={isFetching}
-          //  isLoading={isLoading || isFetching}
             onClick={handleTrashList}
           >
-           {trashList ? "  Back" : " Trash List"}
+           {trash ? "  Back" : " Trash List"}
           </Button>
+  <Link href="/dashboard/user/create">
+
           <Button
     bg= "#000"
-  // _hover={{
-  //   background:  : "#01011",
-  // }}
+ 
   color="#fff"
-  // isLoading={isLoading || isFetching}
   isDisabled={isFetching}
 >
-  <Link href="/dashboard/user/create">
-    {( isLoading || isFetching)  ? "loading..." : "Create User"}
-  </Link>
+     Create User
 </Button>
-        </HStack>
+  </Link>
+
+        </div>
       </Flex>
 
       {/* component */}
-      <section className="container  mx-auto  rounded-md  sm:px-5 lg:px-3">
+     <section className="container  mx-auto  rounded-md  sm:px-5 lg:px-3">
         <div className="flex flex-col">
           <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
@@ -223,9 +218,7 @@ export default function UserManagement() {
                         className="py-3.5 px-4 text-md font-medium text-left rtl:text-right text-gray-500 "
                       >
                         <div className="flex items-center gap-x-3">
-                          <button className="flex items-center gap-x-2">
                         UserId
-                          </button>
                         </div>
                       </th>
                       <th
@@ -259,12 +252,12 @@ export default function UserManagement() {
                         <p className="ml-8">Date& Time</p>
                       </th>
                       <th scope="col" className="relative py-3.5 px-4">
-                        <span className="sr-only text-[#000]">Actions</span>
+                        <p className="sr-only text-[#000]">Actions</p>
                       </th>
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900">
-                    {isFetching && (
+                    {isLoading && (
                       <tr>
                         <td colSpan={6} className="text-center py-4 ">
                           <div className="flex justify-center items-center">
@@ -284,19 +277,18 @@ export default function UserManagement() {
                       </tr>
                     )}
 
-                    {!isFetching &&
+                    {!isLoading &&
                       !isError &&
-                     users?.data?.users.filter((item:string) => item.name.toLowerCase().includes(String(userSearch).toLowerCase())).map((list: userType) => (
+                     users?.data?.users?.filter((item:string) => item.name.toLowerCase().includes(String(userSearch).toLowerCase())).map((list: userType) => (
                         // console.log(list);
                         <tr key={list.id}>
                           <td className="px-4 py-4 text-sm font-medium text-gray-700  whitespace-nowrap">
                             <div className="inline-flex items-center gap-x-3">
-                              <p>#{list.id}</p>
+                              <p>{list.id}</p>
                             </div>
                           </td>
 
                           <td className="px-4 py-4 text-sm font-medium text-gray-700 whitespace-nowrap">
-                            {/* <Image src={list?.image || list?.name} alt={list.name && list.email} width={100} height={100}  /> */}
                             <h2 className="text-sm font-bold">{list?.name}</h2>
                           </td>
                           <td className="px-4 py-4 text-sm text-gray-500  whitespace-nowrap">
@@ -318,7 +310,7 @@ export default function UserManagement() {
                               : "No Date Available"}
                           </td>
                           <td className="px-4 py-4 text-sm whitespace-nowrap">
-                            {trashList ? (
+                            {trash ? (
                               <div className="flex items-center gap-x-8">
                               
                                   <button onClick={() =>handleRestoreUser(list.id)}>
@@ -341,7 +333,7 @@ export default function UserManagement() {
 
                                 <button className="text-red-600 transition-colors duration-200 dark:hover:text-red-500 dark:text-gray-300 hover:text-indigo-500 focus:outline-none" onClick={() =>handleDeleteUser(list.id)}>
            
-          <FaRegTrashAlt size={18} />
+                                 <FaRegTrashAlt size={18} />
                                   
                                 </button>
                               </div>
@@ -355,92 +347,33 @@ export default function UserManagement() {
             </div>
           </div>
         </div>
-        <div className="flex items-center justify-between mt-6">
-          <a
-            href="#"
-            className="flex items-center px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-black text-white border rounded-md gap-x-2 hover:bg-gray-100 bg-gray-900 dark:text-gray-200 bg-[#fff] dark:hover:bg-gray-800"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              stroke="currentColor"
-              className="w-5 h-5 rtl:-scale-x-100"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18"
-              />
-            </svg>
-            <span>previous</span>
-          </a>
-          <div className="items-center hidden md:flex gap-x-3">
-            <a
-              href="#"
-              className="px-2 py-1 text-sm text-blue-500 rounded-md dark:bg-gray-800 bg-blue-100/60"
-            >
-              1
-            </a>
-            <a
-              href="#"
-              className="px-2 py-1 text-sm text-gray-500 rounded-md dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100"
-            >
-              2
-            </a>
-            <a
-              href="#"
-              className="px-2 py-1 text-sm text-gray-500 rounded-md dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100"
-            >
-              3
-            </a>
-            <a
-              href="#"
-              className="px-2 py-1 text-sm text-gray-500 rounded-md dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100"
-            >
-              ...
-            </a>
-            <a
-              href="#"
-              className="px-2 py-1 text-sm text-gray-500 rounded-md dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100"
-            >
-              12
-            </a>
-            <a
-              href="#"
-              className="px-2 py-1 text-sm text-gray-500 rounded-md dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100"
-            >
-              13
-            </a>
-            <a
-              href="#"
-              className="px-2 py-1 text-sm text-gray-500 rounded-md dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100"
-            >
-              14
-            </a>
-          </div>
-          <a
-            href="#"
-            className="flex items-center px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-black text-white border rounded-md gap-x-2 hover:bg-gray-100 dark:bg-gray-900 dark:text-gray-200 bg-[#fff] dark:hover:bg-gray-800"
-          >
-            <span>Next</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              stroke="currentColor"
-              className="w-5 h-5 rtl:-scale-x-100"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"
-              />
-            </svg>
-          </a>
-        </div>
+ {
+  isSuccess ? (
+          <div className=" flex justify-between my-3">
+      <button
+        disabled={page === 1 || isPreviousData}
+        onClick={() =>dispatch(setUserPage(page-1))}
+        // onClick={() =>setPage(page-1)}
+        className=" px-3 py-2 bg-black text-white rounded-lg"
+      >
+        « Previous
+      </button>
+      <button className="px-2 py-2">Page {page}</button>
+      <button
+        disabled={page === Math.floor(users?.data?.total_count / pageSize ) || isPreviousData}
+        onClick={() =>dispatch(setUserPage(page+1))}
+        // onClick={() =>setPage(page+1)}
+         
+        className=" px-3 py-2 bg-black text-white rounded-lg"
+      >
+        Next »
+      </button>
+    </div>
+  ):(
+         <h1>Loading</h1>
+  )
+ }
+      
       </section>
     </Box>
   );
