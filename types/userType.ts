@@ -22,6 +22,12 @@ export interface userInfo {
 
 }
 
+export interface userBodyList {
+   page:number;
+   trash:boolean;
+   search:string;
+   
+}
 
 export interface UserCreateFormData {
    name: string;

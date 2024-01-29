@@ -2,9 +2,10 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   userList: [],
-  currentPage:1,
-  search:[],
-  trashList:false,
+  page:1,
+  per_page:10,
+  search:'',
+  trash:false,
 };
 
 const dashboardSlice = createSlice({
@@ -18,10 +19,10 @@ const dashboardSlice = createSlice({
       state.search = payload;
     },
     setUserPage:(state,{payload}) =>{
-      state.currentPage= payload
+      state.page= payload
     },
       setUserTrashList:(state,{payload}) =>{
-      state.trashList= payload
+      state.trash= payload
     }
   },
 });

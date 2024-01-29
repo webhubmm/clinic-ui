@@ -1,11 +1,11 @@
 'use client'
-import { Grid, GridItem, Flex, Box, FormControl, FormLabel, Input, Button, FormErrorMessage,Text ,Spinner} from '@chakra-ui/react';
+import { Select,Grid, GridItem, Flex, Box, FormControl, FormLabel, Input, Button, FormErrorMessage,Text ,Spinner} from '@chakra-ui/react';
 
 import UserImg from '@/public/assets/asset 11.webp';
 import Image from 'next/image'
 import { Textarea } from '@chakra-ui/react';
 import {  FaArrowLeft} from "react-icons/fa";
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import Link from 'next/link';  
 import { UserCreateFormData } from '@/types/userType';
 import { useUserUpdate } from '@/services/mutations';
@@ -17,9 +17,9 @@ export default function EditHoliday({params}:{
   params:{id:string}
 }) {
 const  {id} =params;
-  // console.log(id);
+  console.log(id);
    const {
-    register,
+    control,register,
     handleSubmit,
     formState: { errors, isSubmitting },
     watch,
@@ -57,7 +57,7 @@ const  {id} =params;
           </Flex>
         </Link>
       </Flex>
-       <Box   marginX='30px'>
+       <Box   marginX='30px' minW='50%'>
           
         <form onSubmit={handleSubmit(handelSubmitUpdateUser)} >
            {/* <FormControl flex='1'> */}
@@ -155,25 +155,25 @@ const  {id} =params;
                 <FormLabel display="flex" ms="4px" fontSize="sm" fontWeight="500" color="#000" mb="8px">
                   Role<Text color="#000">*</Text>
                 </FormLabel>
-                <Input
-                  isRequired={true}
-                  variant="auth"
-                  fontSize="sm"
-                  ms={{ base: '0px', md: '0px' }}
-                  type="text"
-                  placeholder="Enter Your Role"
-                  mb="20px"
-                  fontWeight="500"
-                  size="lg"
-                  border='1px'
-                  borderColor='gray'
-                  id='role'
-                   defaultValue={showData?.user?.role || ''}
-
-                  {...register('role', {
-                    required: 'Role is required',
-                  })}
-                />
+               
+                 <Controller
+          name="role"
+          control={control}
+          defaultValue={showData?.user?.role || ''}
+          rules={{ required: 'Role is required' }}
+          render={({ field }) => (
+            <Select
+              placeholder='Select Role'
+              size='lg'
+              {...field}
+            >
+              {/* You can customize the options as needed */}
+              <option value='admin'>admin</option>
+              <option value='staff'>staff</option>
+              <option value='user'>user</option>
+            </Select>
+          )}
+        />
               </GridItem>
             </FormControl>
              <FormControl>

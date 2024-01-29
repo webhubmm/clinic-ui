@@ -25,6 +25,7 @@ import { deleteUser } from '../../../../services/api';
 import { useDeleteUser, usePermentDeleteUser, useRestoreUser } from "@/services/mutations";
 import Swal from "sweetalert2";
 import { ITEM_PER_PAGE } from "@/utils/constants";
+import dashboardSlice from '../../../../services/feature/dashboardUserSlice';
 
 interface RootState {
   dashboardData: {
@@ -41,20 +42,20 @@ export default function UserManagement() {
     (state: RootState) => state.dashboardData.userList
   );
  
-  const trash =useSelector((state:any) => state?.dashboardData.trashList)
+  const trash =useSelector((state:any) => state?.dashboardData.trash)
 
-  const page =useSelector((state:any) => state?.dashboardData.currentPage)
+  const page =useSelector((state:any) => state?.dashboardData.page)
 
   // for search user
- const userSearch =useSelector( (state:any) => state?.dashboardData.search
+ const search =useSelector( (state:any) => state?.dashboardData.search
  )
 
-  const pageSize: number = ITEM_PER_PAGE;
+//  for page count
+ const per_page=useSelector((state:any) => state?.dashboardSlice?.per_page);
 
  const  {data:users,isLoading,isFetching,isError,isPreviousData,isSuccess
- } = UserList(page ,pageSize) 
+ } = UserList({page,per_page,trash,search}) 
 //  console.log("userData", users);
-
 
   // delete
   const deleteUserMutation =useDeleteUser();
@@ -117,7 +118,6 @@ export default function UserManagement() {
 
   //  handle restore user
   const handleRestoreUser =(id:number) =>{
-    console.log(id)
     Swal.fire({
    title: 'Are you sure?',
    text: 'User will be restored',
@@ -154,7 +154,7 @@ export default function UserManagement() {
     return date.toLocaleString("en-US", options);
   };
 
-  // const pageCount = Math.ceil(totalItems / pageSize);
+  // const pageCount = Math.ceil(totalItems / pageSize);  
  
   return (
     <Box mt="96px" paddingBottom="10px" bg={{ md: "#fff" }}>
@@ -170,7 +170,7 @@ export default function UserManagement() {
           </Text>
          
           <Box boxShadow="sm">
-            <Input  minWidth='100px' placeholder="Search...." defaultValue={userSearch} onChange={handleUserChange} />
+            <Input  minWidth='100px' placeholder="Search...." defaultValue={search} onChange={handleUserChange} />
             
           </Box>
         </div>
@@ -276,7 +276,7 @@ export default function UserManagement() {
                      
                     {!isLoading &&
                       !isError &&
-                     users?.data?.users?.filter((item:string) => item.name.toLowerCase().includes(String(userSearch).toLowerCase())).map((list: userType) => (
+                     users?.data?.users?.filter((item:string) => item.name.toLowerCase().includes(String(search).toLowerCase())).map((list: userType) => (
                         // console.log(list);
                         <tr key={list.id}>
                           <td className="px-4 py-4 text-sm font-medium text-gray-700  whitespace-nowrap">
@@ -371,7 +371,7 @@ export default function UserManagement() {
       </button>
       <button className="px-2 py-2">Page {page}</button>
       <button
-        disabled={page === Math.floor(users?.data?.total_count / pageSize ) || isPreviousData}
+        disabled={page === Math.ceil(users?.data?.total_count / per_page )    || isPreviousData}
         onClick={() =>dispatch(setUserPage(page+1))}
         // onClick={() =>setPage(page+1)}
          

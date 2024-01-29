@@ -1,6 +1,6 @@
 import { loginType } from "@/types/loginType";
 import { registerType } from "@/types/registerType";
-import { userInfo } from "@/types/userType";
+import { userBodyList, userInfo } from "@/types/userType";
 import axios, { AxiosResponse } from "axios";
 import Cookies from "js-cookie";
 
@@ -11,8 +11,7 @@ const axiosInstance = axios.create({
   baseURL: BASE_URL,
 });
 
-const token = Cookies.get('token');
-
+const token = Cookies.get("token");
 
 // Auth APIs start
 export const login = async (loginInfo: loginType) => {
@@ -35,22 +34,40 @@ export const logout = async (token: string) => {
 
 // Admin API start
 // start for usermanagment
-export const getUser = async (page:number,pageSize:number): Promise<number> => {
+export const getUser = async ({
+  page,
+  per_page,
+  trash,
+  search
+}: {
+  page: number;
+  per_page:number;
+  trash: boolean;
+  search: string;
+}) => {
+  console.log(page)
   try {
-    const response = await axiosInstance.get(`admin/user_management?page=${page}&pageSize=${pageSize}`, {
+    const response = await axiosInstance.get(`admin/user_management?page=${page}&per_page:${per_page}`, {
+     
       headers: {
         Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
+      },
+       data: {
+        // page,
+        // per_page,
+        trash,
+        search
       },
     });
-    // Use response.data directly, no need for .then(response => response.json())
+
     return response.data;
   } catch (error) {
-   
-    console.error("Error fetching user data:");
-    throw error; // Rethrow the error to handle it in the calling code
+    console.error('Error fetching user data:', error.response?.status, error.response?.data);
+    throw error;
   }
 };
+
 
 export const createUser = async (userInfo: userInfo) => {
   return await axiosInstance.post("admin/user_management", userInfo, {
@@ -61,16 +78,18 @@ export const createUser = async (userInfo: userInfo) => {
   });
 };
 
-
-
-export const updateUser = async ({id,updateData}:{
-  id:number;
-  updateData:userInfo;
+export const updateUser = async ({
+  id,
+  updateData,
+}: {
+  id: number;
+  updateData: userInfo;
 }) => {
   // console.log(id,updateData);
   return await axiosInstance.patch(
-    `admin/user_management/${id}`,updateData,
-    
+    `admin/user_management/${id}`,
+    updateData,
+
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -78,10 +97,8 @@ export const updateUser = async ({id,updateData}:{
       },
     }
   );
-    // return response.data;
-
+  // return response.data;
 };
-
 
 // show list
 export const userList = async (id: number) => {
@@ -99,36 +116,28 @@ export const userList = async (id: number) => {
   }
 };
 
-
-export const deleteUser = async(id:number) =>{
-  return await axiosInstance.delete(
-    `/admin/user_management/${id}`,
-     {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    }
-  );
+export const deleteUser = async (id: number) => {
+  return await axiosInstance.delete(`/admin/user_management/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  });
 };
 
-
-export const restoreUser = async(id:number) =>{
-  return await axiosInstance.get(
-    `/admin/user_management/restore/${id}`,
-     {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    }
-  );
+export const restoreUser = async (id: number) => {
+  return await axiosInstance.get(`/admin/user_management/restore/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  });
 };
 
-export const sureDeleteUser = async(id:number) =>{
+export const sureDeleteUser = async (id: number) => {
   return await axiosInstance.delete(
     `/admin/user_management/force_delete/${id}`,
-     {
+    {
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
@@ -140,6 +149,5 @@ export const sureDeleteUser = async(id:number) =>{
 // end for usermanagment
 
 // for doctorMangment
-
 
 // Admin API end

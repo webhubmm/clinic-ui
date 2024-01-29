@@ -98,7 +98,7 @@ export default function SignIn() {
               borderRadius="16px"
               _hover="#332941">
               <FaGoogle size={20} />
-              <p className="ml-3">Sign in with Google</span>
+              <p className="ml-3">Sign in with Google</p>
             </Button>
             <form action="" onSubmit={handleSubmit(handleLoginSubmit)}>
               <FormControl>

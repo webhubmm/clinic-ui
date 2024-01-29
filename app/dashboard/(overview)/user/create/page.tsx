@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { FaArrowLeft } from 'react-icons/fa';
 import { Grid, GridItem, Flex, Box, FormControl, FormLabel, Input, Button, FormErrorMessage,Text,Spinner } from '@chakra-ui/react';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { SubmitHandler, useForm,Controller } from 'react-hook-form';
 import Link from 'next/link';
 import { useUserCreate } from '@/services/mutations';
 import {UserList } from "@/services/queries"
@@ -12,12 +12,13 @@ import ImageUpload from '@/components/admin/adminuser/ImageUpload';
 
 // Importing the user image
 // import UserImg from '@/public/assets/asset11.webp';
+import { Select } from '@chakra-ui/select';
 
 
 
-export default function HolidayCreate() {
+export default function UserCreate() {
   const {
-    register,
+    control,register,
     handleSubmit,
     formState: { errors, isSubmitting },
     watch,
@@ -231,24 +232,24 @@ export default function HolidayCreate() {
                 <FormLabel display="flex" ms="4px" fontSize="sm" fontWeight="500" color="#000" mb="8px">
                   Role<Text color="#000">*</Text>
                 </FormLabel>
-                <Input
-                  isRequired={true}
-                  variant="auth"
-                  fontSize="sm"
-                  ms={{ base: '0px', md: '0px' }}
-                  type="text"
-                  placeholder="Enter Your Role"
-                  mb="20px"
-                  fontWeight="500"
-                  size="lg"
-                  border='1px'
-                  borderColor='gray'
-                  id='role'
-                  {...register('role', {
-                    required: 'Role is required',
-                  })}
-                />
-                    {errors.name && <Text color="red" fontSize="sm">{errors.name.message}</Text>}
+                         <Controller
+          name="role"
+          control={control}
+          // defaultValue={showData?.user?.role || ''}
+          rules={{ required: 'Role is required' }}
+          render={({ field }) => (
+            <Select
+              placeholder='Select Role'
+              size='lg'
+              {...field}
+            >
+              {/* You can customize the options as needed */}
+              <option value='admin'>admin</option>
+              <option value='staff'>staff</option>
+              <option value='user'>user</option>
+            </Select>
+          )}
+        />
 
               </GridItem>
             </FormControl>
