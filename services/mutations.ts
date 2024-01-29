@@ -1,6 +1,6 @@
 import { loginType } from "@/types/loginType";
 import { useMutation } from "@tanstack/react-query";
-import { createUser, deleteUser, forceDeleteUser, login, register, updateUser ,restoreDeleteUser} from "./api";
+import { createUser, deleteUser, sureDeleteUser, login, register, updateUser ,restoreUser} from "./api";
 import { registerType } from "@/types/registerType";
 import { useRouter } from "next/navigation";
 import { useToast } from "@chakra-ui/react";
@@ -21,7 +21,6 @@ export const useLogin = () => {
       Cookies.set("username", JSON.stringify(response.data.user.name), {
         expires: 7,
       });
-      console.log(response)
       const userRole = response.data.user.role;
       let redirectRoute;
 
@@ -211,7 +210,7 @@ export const useDeleteUser =() =>{
 export const usePermentDeleteUser =() =>{
   const queryClient =useQueryClient();
   return useMutation({
-     mutationFn:(id:number) => forceDeleteUser(id),
+     mutationFn:(id:number) => sureDeleteUser(id),
      onSuccess:async (data) =>{
       await queryClient.invalidateQueries({ queryKey: ["users"] });
 
@@ -227,7 +226,7 @@ export const usePermentDeleteUser =() =>{
 export const useRestoreUser =() =>{
   const queryClient =useQueryClient();
   return useMutation({
-     mutationFn:(id:number) => restoreDeleteUser(id),
+     mutationFn:(id:number) => restoreUser(id),
      onSuccess:async (data) =>{
       await queryClient.invalidateQueries({ queryKey: ["users"] });
 

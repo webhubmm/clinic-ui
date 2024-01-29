@@ -50,11 +50,10 @@ export default function HolidayCreate() {
           </Flex>
         </Link>
       </Flex>
-      <Flex gap={5} justifyContent='center' alignItems='center'>
-        <Box display={{ base: 'none', lg: 'block' }}> 
-        </Box>
+      <Box   marginX='30px'>
+        
         <form onSubmit={handleSubmit(handleCreateUserSubmit)} >
-           <FormControl flex='1'>
+           {/* <FormControl flex='1'> */}
              <Grid templateColumns={{ base: '1fr', md: '1fr 1fr' }} gap={3}>
                <FormControl>
                  <GridItem>
@@ -258,7 +257,6 @@ export default function HolidayCreate() {
               </GridItem>
             </FormControl>
           </Grid>
-            <Flex justifyContent='flex-end'>
               <Button
                 type='submit'
                 fontSize='sm'
@@ -274,11 +272,10 @@ export default function HolidayCreate() {
               >
                  {(isSubmitting || createUserMutation.isPending) ? <Spinner  /> :"Create"}
               </Button>
-            </Flex>
-          </FormControl>
+          {/* </FormControl> */}
         </form>
        
-      </Flex>
+      </Box>
        
     </Box>
   );

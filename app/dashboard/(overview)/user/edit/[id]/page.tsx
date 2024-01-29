@@ -10,7 +10,7 @@ import Link from 'next/link';
 import { UserCreateFormData } from '@/types/userType';
 import { useUserUpdate } from '@/services/mutations';
 import { useParams } from 'next/navigation'
-import { showList, updateUser } from '@/services/api';
+import { userList, updateUser } from '@/services/api';
 import { useQuery } from '@tanstack/react-query';
 
 export default function EditHoliday({params}:{
@@ -30,7 +30,7 @@ const  {id} =params;
     isLoading,isError,isPending
   } =useQuery({
     queryKey:['users'],
-    queryFn:() =>showList(id)
+    queryFn:() =>userList(id)
   })
   const showData =users?.data;
   // console.log("usersedit",showData);
@@ -53,16 +53,14 @@ const  {id} =params;
         <Link href='/dashboard/user' passHref>
           <Flex alignItems='center' gap={5} >
             <FaArrowLeft size={20} />
-            <p className='py-3'>Back To UserLists</p>
+            <p className='py-3'>Back </p>
           </Flex>
         </Link>
       </Flex>
-      <Flex gap={5} justifyContent='center' alignItems='center' >
-        <Box display={{ base: 'none', lg: 'block' }}> 
-          {/* <Image src={UserImg} alt='userImg' width={300} height={300} sizes='95vw' style={{ width: '100%', height: 'auto' }} /> */}
-        </Box>
-        <form onSubmit={handleSubmit(handelSubmitUpdateUser)}>
-           <FormControl flex='1'>
+       <Box   marginX='30px'>
+          
+        <form onSubmit={handleSubmit(handelSubmitUpdateUser)} >
+           {/* <FormControl flex='1'> */}
              <Grid templateColumns={{ base: '1fr', md: '1fr 1fr' }} gap={3}>
                <FormControl>
                  <GridItem>
@@ -200,10 +198,10 @@ const  {id} =params;
                  {(isSubmitting ||  userUpdateMutation.isPending) ?  <Spinner  /> :"Update"}
               </Button>
             </Flex>
-          </FormControl>
+          {/* </FormControl> */}
         </form>
        
-      </Flex>
+      </Box>
     </Box>
   )
 }

@@ -36,7 +36,6 @@ export const logout = async (token: string) => {
 // Admin API start
 // start for usermanagment
 export const getUser = async (page:number,pageSize:number): Promise<number> => {
-  // console.log(page)
   try {
     const response = await axiosInstance.get(`admin/user_management?page=${page}&pageSize=${pageSize}`, {
       headers: {
@@ -45,7 +44,6 @@ export const getUser = async (page:number,pageSize:number): Promise<number> => {
       },
     });
     // Use response.data directly, no need for .then(response => response.json())
-    console.log(response.data);
     return response.data;
   } catch (error) {
    
@@ -86,7 +84,7 @@ export const updateUser = async ({id,updateData}:{
 
 
 // show list
-export const showList = async (id: number) => {
+export const userList = async (id: number) => {
   try {
     const res = await axiosInstance.get(`admin/user_management/${id}`, {
       headers: {
@@ -115,8 +113,8 @@ export const deleteUser = async(id:number) =>{
 };
 
 
-export const restoreDeleteUser = async(id:number) =>{
-  return await axiosInstance.delete(
+export const restoreUser = async(id:number) =>{
+  return await axiosInstance.get(
     `/admin/user_management/restore/${id}`,
      {
       headers: {
@@ -127,7 +125,7 @@ export const restoreDeleteUser = async(id:number) =>{
   );
 };
 
-export const forceDeleteUser = async(id:number) =>{
+export const sureDeleteUser = async(id:number) =>{
   return await axiosInstance.delete(
     `/admin/user_management/force_delete/${id}`,
      {

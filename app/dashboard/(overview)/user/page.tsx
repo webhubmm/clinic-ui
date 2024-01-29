@@ -72,7 +72,6 @@ export default function UserManagement() {
 
   //  handle delete user
   const handleDeleteUser =(id:number) =>{
-    console.log(id)
     Swal.fire({
    title: 'Are you sure delete?',
    text: 'User will have Admin Privileges',
@@ -94,7 +93,7 @@ export default function UserManagement() {
   }
 
   //  handle force delete user
-  const handleForceDeleteUser =(id:number) =>{
+  const handleSureDeleteUser =(id:number) =>{
     console.log(id)
     Swal.fire({
    title: 'Are you sure?',
@@ -159,7 +158,6 @@ export default function UserManagement() {
  
   return (
     <Box mt="96px" paddingBottom="10px" bg={{ md: "#fff" }}>
-      {/* <CreateUser /> */}
       <Flex
         p={{ md: "25px" }}
         mb={{ base: "15px", md: "8px" }}
@@ -176,7 +174,6 @@ export default function UserManagement() {
             
           </Box>
         </div>
-      
        
         <div    className=" md:flex gap-3  justify-center items-center ">
           <Button
@@ -276,7 +273,7 @@ export default function UserManagement() {
                         </td>
                       </tr>
                     )}
-
+                     
                     {!isLoading &&
                       !isError &&
                      users?.data?.users?.filter((item:string) => item.name.toLowerCase().includes(String(userSearch).toLowerCase())).map((list: userType) => (
@@ -318,7 +315,7 @@ export default function UserManagement() {
                                   </button>
                                  
 
-                                <button className="text-red-600 transition-colors duration-200 dark:hover:text-red-500 dark:text-gray-300 hover:text-indigo-500 focus:outline-none" onClick={() =>handleForceDeleteUser(list.id)} >
+                                <button className="text-red-600 transition-colors duration-200 dark:hover:text-red-500 dark:text-gray-300 hover:text-indigo-500 focus:outline-none" onClick={() =>handleSureDeleteUser(list.id)} >
                                     <IoTrashBin size={18} />
                                 </button>
                               </div>
@@ -338,6 +335,20 @@ export default function UserManagement() {
                                 </button>
                               </div>
                             )}
+                             {/* <div className="flex items-center gap-x-8">
+                                <Link
+                                  href={`/dashboard/user/edit/${list.id}`}
+                                  className=" transition-colors duration-200 text-emerald-500  focus:outline-none"
+                                >
+                                  <FaRegEdit size={20} />
+                                </Link>
+
+                                <button className="text-red-600 transition-colors duration-200 dark:hover:text-red-500 dark:text-gray-300 hover:text-indigo-500 focus:outline-none" onClick={() =>handleDeleteUser(list.id)}>
+           
+                                 <FaRegTrashAlt size={18} />
+                                  
+                                </button>
+                              </div> */}
                           </td>
                         </tr>
                       ))}

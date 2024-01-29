@@ -21,7 +21,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${montserrat.variable} font-neat`}>
+      <body className={`${montserrat.variable} font-neat`} suppressHydrationWarning={true}>
         <Providers>
           
           <main>{children}</main>
