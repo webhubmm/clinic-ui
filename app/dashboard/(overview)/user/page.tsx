@@ -1,14 +1,9 @@
 "use client";
-// import CreateUser from "@/components/admin/adminuser/CreateUser";
 import {
   Flex,
   Text,
   Button,
   Box,
-  Stack,
-  HStack,
-  Input,
-  Alert
 } from "@chakra-ui/react";
 import { FaRegTrashAlt, FaRegEdit, FaTrashRestore } from "react-icons/fa";
 import { IoTrashBin } from "react-icons/io5";
@@ -20,12 +15,8 @@ import PulseLoader from "react-spinners/PulseLoader";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {  setUserPage, setUserSearch ,setUserTrashList} from "@/services/feature/dashboardUserSlice";
-import Image from "next/image";
-import { deleteUser } from '../../../../services/api';
 import { useDeleteUser, usePermentDeleteUser, useRestoreUser } from "@/services/mutations";
 import Swal from "sweetalert2";
-import { ITEM_PER_PAGE } from "@/utils/constants";
-import dashboardSlice from '../../../../services/feature/dashboardUserSlice';
 
 interface RootState {
   dashboardData: {
@@ -381,7 +372,7 @@ export default function UserManagement() {
       </button>
     </div>
   ):(
-         <h1>Loading</h1>
+         <></>
   )
  }
       

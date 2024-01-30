@@ -6,12 +6,7 @@ import {
 } from "@chakra-ui/react";
 import SideBar from "@/components/admin/sidebar/SideBar";
 import AdminNavbar from "@/components/admin/AdminNav";
-import type { Metadata } from "next";
 import { useState } from "react";
-// export const metadata: Metadata = {
-//   title: "Admin Dashbaord",
-//   description: "Admin Dashbaord for clinic",
-// };
 import { IoIosArrowBack } from "react-icons/io";
 import { RiMenu3Fill } from "react-icons/ri";
 
@@ -26,7 +21,7 @@ const handleSidebarToggle = () => {
   setIsSidebarOpen((prev) => (prev === 'open' ? 'close' : 'open'));
 };
   return (
-    <main className=" bg-[#f4f7fe]" >
+    <main className=" bg-[#f4f7fe]" suppressHydrationWarning={true}>
       <button
         className={`fixed top-7 z-[999] lg:hidden ${
           isSidebarOpen === 'open' ? 'left-6  top-4' : 'top-[18px] sm:top-[15px] left-5'

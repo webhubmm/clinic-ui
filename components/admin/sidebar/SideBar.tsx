@@ -73,10 +73,10 @@ const NavLinks = [
   },
 ];
 export default function SideBar({setIsSidebarOpen}:{
-  setIsSidebarOpen:string
+  setIsSidebarOpen: string | any
 }) {
   const pathname = usePathname();
-  const isActive = (path) => path === pathname;
+  const isActive = (path : any) => path === pathname;
     // const currentPath = window.location.pathname;
 
 
