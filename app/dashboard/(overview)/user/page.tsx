@@ -1,72 +1,133 @@
 "use client";
-// import CreateUser from "@/components/admin/adminuser/CreateUser";
 import {
   Flex,
   Text,
   Button,
   Box,
-  Stack,
-  HStack,
   Input,
 } from "@chakra-ui/react";
 import { FaRegTrashAlt, FaRegEdit, FaTrashRestore } from "react-icons/fa";
 import { IoTrashBin } from "react-icons/io5";
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
-import { forceDeleteUser, getUser } from "@/services/api";
 import { UserList } from "@/services/queries";
 import { userType } from "@/types/userType";
 import PulseLoader from "react-spinners/PulseLoader";
-import { FaCaretDown } from "react-icons/fa";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setApiUserData } from "@/services/feature/dashboardUserSlice";
-import Image from "next/image";
-import { deleteUser } from '../../../../services/api';
+import {  setUserPage, setUserSearch ,setUserTrashList} from "@/services/feature/dashboardUserSlice";
 import { useDeleteUser, usePermentDeleteUser, useRestoreUser } from "@/services/mutations";
+import Swal from "sweetalert2";
+
 interface RootState {
   dashboardData: {
     userList: userType; // Adjust the type accordingly
   };
 }
 
-export default function UserManagment() {
-  const [trashList, setTrashList] = useState(false);
-  
+
+export default function UserManagement() {
+  // const [trashList, setTrashList] = useState(false);
+  const dispatch = useDispatch();
   // Redux state - getting user data
   const userData = useSelector(
     (state: RootState) => state.dashboardData.userList
   );
-  // console.log("userData", userData);
-  const  {data:users,isPending ,isError} = UserList() as {
-    data: userType;
-    isPending: boolean;
-    isError: any;
-  };
+ 
+  const trash =useSelector((state:any) => state?.dashboardData.trash)
+
+  const page =useSelector((state:any) => state?.dashboardData.page)
+
+  // for search user
+ const search =useSelector( (state:any) => state?.dashboardData.search
+ )
+
+//  for page count
+ const per_page=useSelector((state:any) => state?.dashboardSlice?.per_page);
+
+ const  {data:users,isLoading,isFetching,isError,isPreviousData,isSuccess
+ } = UserList({page,per_page,trash,search}) 
+//  console.log("userData", users);
 
   // delete
   const deleteUserMutation =useDeleteUser();
+  const restoreUserMutation=useRestoreUser();
   const forceUserMutation =usePermentDeleteUser();
- const restoreUserMutation=useRestoreUser();
+
+  // user search
+ const handleUserChange =(e: React.ChangeEvent<HTMLInputElement>) =>{
+   return dispatch(setUserSearch(e.target.value))
+ }
 
   const handleTrashList = () => {
-    setTrashList((prev) => !prev);
+    dispatch(setUserTrashList(!trash));
   };
 
   //  handle delete user
   const handleDeleteUser =(id:number) =>{
+    Swal.fire({
+   title: 'Are you sure delete?',
+   text: 'User will have Admin Privileges',
+   icon: 'warning',
+   showCancelButton: true,
+   confirmButtonColor: '#d33',
+   cancelButtonColor: '#3085d6',
+   confirmButtonText: ' Delete!'
+ }).then((result) => {
+   if (result.isConfirmed) {
+     deleteUserMutation.mutate(id);
+     Swal.fire(
+       'Deleted!',
+       'User has been deleted.',
+       'success'
+     )
+   }
+ })
+  }
+
+  //  handle force delete user
+  const handleSureDeleteUser =(id:number) =>{
     console.log(id)
- deleteUserMutation.mutate(id)
+    Swal.fire({
+   title: 'Are you sure?',
+   text: 'User will be permanently deleted',
+   icon: 'warning',
+   showCancelButton: true,
+   confirmButtonColor: '#d33',
+   cancelButtonColor: '#3085d6',
+   confirmButtonText: ' Sure_Delete!'
+ }).then((result) => {
+   if (result.isConfirmed) {
+     forceUserMutation.mutate(id);
+     Swal.fire(
+       ' Perment Deleted!',
+       'User has been permently deleted.',
+       'success'
+     )
+   }
+ })
   }
 
-  const handleForceDeleteUser =(id:number) =>{
-    // console.log(id)
- forceUserMutation.mutate(id)
-  }
-
+  //  handle restore user
   const handleRestoreUser =(id:number) =>{
-    // console.log(id)
- restoreUserMutation.mutate(id)
+    Swal.fire({
+   title: 'Are you sure?',
+   text: 'User will be restored',
+   icon: 'warning',
+   showCancelButton: true,
+   confirmButtonColor: '#3085d6',
+   cancelButtonColor: '#d33',
+   confirmButtonText: ' Restore!'
+ }).then((result) => {
+   if (result.isConfirmed) {
+     restoreUserMutation.mutate(id);
+     Swal.fire(
+       'Restored!',
+       'User has been restored.',
+       'success'
+     )
+   }
+ })
   }
 
 
@@ -84,49 +145,56 @@ export default function UserManagment() {
     };
     return date.toLocaleString("en-US", options);
   };
+
+  // const pageCount = Math.ceil(totalItems / pageSize);  
+ 
   return (
     <Box mt="96px" paddingBottom="10px" bg={{ md: "#fff" }}>
-      {/* <CreateUser /> */}
       <Flex
         p={{ md: "25px" }}
         mb={{ base: "15px", md: "8px" }}
         justifyContent="space-between"
         align="center"
       >
-        <Stack spacing={3}>
-          <Text fontSize="22px" mb="4px" fontWeight="700" lineHeight="100%">
+         <div  className='space-y-3'>
+            <Text fontSize="22px" mb="4px" fontWeight="700" lineHeight="100%">
             User Table
           </Text>
+         
           <Box boxShadow="sm">
-            <Input htmlSize={12} width="auto" placeholder="Search...." />
+            <Input  minWidth='100px' placeholder="Search...." defaultValue={search} onChange={handleUserChange} />
+            
           </Box>
-        </Stack>
-        <HStack spacing={3}>
+        </div>
+       
+        <div    className=" md:flex gap-3  justify-center items-center ">
           <Button
-            minW="100px"
-            bg={trashList ? "#332941" : "red"}
-            _hover={{
-              background: "#01011",
-            }}
+            // minW="100px"
+            bg={trash ? "#332941" : "red"}
+           marginY={{base:'5px',md:"0pxx"}}
             color="#fff"
+           isDisabled={isFetching}
             onClick={handleTrashList}
           >
-            {trashList ? "  Back" : " Trash List"}
+           {trash ? "  Back" : " Trash List"}
           </Button>
+  <Link href="/dashboard/user/create">
+
           <Button
-            bg="#000"
-            _hover={{
-              background: "#01011",
-            }}
-            color="#fff"
-          >
-            <Link href="/dashboard/user/create">Create User</Link>
-          </Button>
-        </HStack>
+    bg= "#000"
+ 
+  color="#fff"
+  isDisabled={isFetching}
+>
+     Create User
+</Button>
+  </Link>
+
+        </div>
       </Flex>
 
       {/* component */}
-      <section className="container  mx-auto  rounded-md  sm:px-5 lg:px-3">
+     <section className="container  mx-auto  rounded-md  sm:px-5 lg:px-3">
         <div className="flex flex-col">
           <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
             <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
@@ -139,9 +207,7 @@ export default function UserManagment() {
                         className="py-3.5 px-4 text-md font-medium text-left rtl:text-right text-gray-500 "
                       >
                         <div className="flex items-center gap-x-3">
-                          <button className="flex items-center gap-x-2">
-                            <span>UserId</span>
-                          </button>
+                        UserId
                         </div>
                       </th>
                       <th
@@ -175,12 +241,12 @@ export default function UserManagment() {
                         <p className="ml-8">Date& Time</p>
                       </th>
                       <th scope="col" className="relative py-3.5 px-4">
-                        <span className="sr-only text-[#000]">Actions</span>
+                        <p className="sr-only text-[#000]">Actions</p>
                       </th>
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200 dark:divide-gray-700 dark:bg-gray-900">
-                    {isPending && (
+                    {isLoading && (
                       <tr>
                         <td colSpan={6} className="text-center py-4 ">
                           <div className="flex justify-center items-center">
@@ -199,15 +265,15 @@ export default function UserManagment() {
                         </td>
                       </tr>
                     )}
-
-                    {!isPending &&
+                     
+                    {!isLoading &&
                       !isError &&
-                      users?.data?.users?.map((list: userType) => (
+                     users?.data?.users?.filter((item:string) => item.name.toLowerCase().includes(String(search).toLowerCase())).map((list: userType) => (
                         // console.log(list);
                         <tr key={list.id}>
                           <td className="px-4 py-4 text-sm font-medium text-gray-700  whitespace-nowrap">
                             <div className="inline-flex items-center gap-x-3">
-                              <span>#{list.id}</span>
+                              <p>{list.id}</p>
                             </div>
                           </td>
 
@@ -233,19 +299,15 @@ export default function UserManagment() {
                               : "No Date Available"}
                           </td>
                           <td className="px-4 py-4 text-sm whitespace-nowrap">
-                            {trashList ? (
+                            {trash ? (
                               <div className="flex items-center gap-x-8">
-                                <Link
-                                  href={`/dashboard/user/edit/${list.id}`}
-                                  className=" transition-colors duration-200 text-emerald-500  focus:outline-none"
-                                >
+                              
                                   <button onClick={() =>handleRestoreUser(list.id)}>
                                      <FaTrashRestore size={20} />
                                   </button>
                                  
-                                </Link>
 
-                                <button className="text-red-600 transition-colors duration-200 dark:hover:text-red-500 dark:text-gray-300 hover:text-indigo-500 focus:outline-none" onClick={() =>handleForceDeleteUser(list.id)} >
+                                <button className="text-red-600 transition-colors duration-200 dark:hover:text-red-500 dark:text-gray-300 hover:text-indigo-500 focus:outline-none" onClick={() =>handleSureDeleteUser(list.id)} >
                                     <IoTrashBin size={18} />
                                 </button>
                               </div>
@@ -259,10 +321,26 @@ export default function UserManagment() {
                                 </Link>
 
                                 <button className="text-red-600 transition-colors duration-200 dark:hover:text-red-500 dark:text-gray-300 hover:text-indigo-500 focus:outline-none" onClick={() =>handleDeleteUser(list.id)}>
-                                  <FaRegTrashAlt size={18} />
+           
+                                 <FaRegTrashAlt size={18} />
+                                  
                                 </button>
                               </div>
                             )}
+                             {/* <div className="flex items-center gap-x-8">
+                                <Link
+                                  href={`/dashboard/user/edit/${list.id}`}
+                                  className=" transition-colors duration-200 text-emerald-500  focus:outline-none"
+                                >
+                                  <FaRegEdit size={20} />
+                                </Link>
+
+                                <button className="text-red-600 transition-colors duration-200 dark:hover:text-red-500 dark:text-gray-300 hover:text-indigo-500 focus:outline-none" onClick={() =>handleDeleteUser(list.id)}>
+           
+                                 <FaRegTrashAlt size={18} />
+                                  
+                                </button>
+                              </div> */}
                           </td>
                         </tr>
                       ))}
@@ -272,92 +350,33 @@ export default function UserManagment() {
             </div>
           </div>
         </div>
-        <div className="flex items-center justify-between mt-6">
-          <a
-            href="#"
-            className="flex items-center px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-black text-white border rounded-md gap-x-2 hover:bg-gray-100 bg-gray-900 dark:text-gray-200 bg-[#fff] dark:hover:bg-gray-800"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              stroke="currentColor"
-              className="w-5 h-5 rtl:-scale-x-100"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6.75 15.75L3 12m0 0l3.75-3.75M3 12h18"
-              />
-            </svg>
-            <span>previous</span>
-          </a>
-          <div className="items-center hidden md:flex gap-x-3">
-            <a
-              href="#"
-              className="px-2 py-1 text-sm text-blue-500 rounded-md dark:bg-gray-800 bg-blue-100/60"
-            >
-              1
-            </a>
-            <a
-              href="#"
-              className="px-2 py-1 text-sm text-gray-500 rounded-md dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100"
-            >
-              2
-            </a>
-            <a
-              href="#"
-              className="px-2 py-1 text-sm text-gray-500 rounded-md dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100"
-            >
-              3
-            </a>
-            <a
-              href="#"
-              className="px-2 py-1 text-sm text-gray-500 rounded-md dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100"
-            >
-              ...
-            </a>
-            <a
-              href="#"
-              className="px-2 py-1 text-sm text-gray-500 rounded-md dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100"
-            >
-              12
-            </a>
-            <a
-              href="#"
-              className="px-2 py-1 text-sm text-gray-500 rounded-md dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100"
-            >
-              13
-            </a>
-            <a
-              href="#"
-              className="px-2 py-1 text-sm text-gray-500 rounded-md dark:hover:bg-gray-800 dark:text-gray-300 hover:bg-gray-100"
-            >
-              14
-            </a>
-          </div>
-          <a
-            href="#"
-            className="flex items-center px-5 py-2 text-sm text-gray-700 capitalize transition-colors duration-200 bg-black text-white border rounded-md gap-x-2 hover:bg-gray-100 dark:bg-gray-900 dark:text-gray-200 bg-[#fff] dark:hover:bg-gray-800"
-          >
-            <span>Next</span>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth="1.5"
-              stroke="currentColor"
-              className="w-5 h-5 rtl:-scale-x-100"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"
-              />
-            </svg>
-          </a>
-        </div>
+ {
+  isSuccess ? (
+          <div className=" flex justify-between my-3">
+      <button
+        disabled={page === 1 || isPreviousData}
+        onClick={() =>dispatch(setUserPage(page-1))}
+        // onClick={() =>setPage(page-1)}
+        className=" px-3 py-2 bg-black text-white rounded-lg"
+      >
+        « Previous
+      </button>
+      <button className="px-2 py-2">Page {page}</button>
+      <button
+        disabled={page === Math.ceil(users?.data?.total_count / per_page )    || isPreviousData}
+        onClick={() =>dispatch(setUserPage(page+1))}
+        // onClick={() =>setPage(page+1)}
+         
+        className=" px-3 py-2 bg-black text-white rounded-lg"
+      >
+        Next »
+      </button>
+    </div>
+  ):(
+         <></>
+  )
+ }
+      
       </section>
     </Box>
   );

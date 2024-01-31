@@ -61,12 +61,12 @@ const SignUp = () => {
                 borderRadius="16px"
                 _hover="#332941">
                 <FaGoogle size={20} />
-                <span className="ml-3">Sign in with Google</span>
+                <p className="ml-3">Sign in with Google</span>
               </Button>
             </div>
             <div className="flex items-center">
               <div className="flex-grow border-t border-gray-500"></div>
-              <span className="mx-4 text-gray-500">OR</span>
+              <p className="mx-4 text-gray-500">OR</span>
               <div className="flex-grow border-t border-gray-500"></div>
             </div>
             <form

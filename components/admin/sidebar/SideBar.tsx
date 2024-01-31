@@ -9,7 +9,7 @@ import {
   Stack,
   Spacer
 } from "@chakra-ui/react";
-import { FaHome, FaLock ,FaUser ,FaCodeBranch ,FaUsers ,FaAddressBook} from "react-icons/fa";
+import { FaHome, FaLock ,FaUser ,FaCodeBranch ,FaUsers ,FaAddressBook,FaCalendarDay} from "react-icons/fa";
 import { FaUserDoctor } from "react-icons/fa6";
 import { MdOutlineRateReview ,MdReport} from "react-icons/md";
 import { SiGoogleanalytics } from "react-icons/si";
@@ -22,59 +22,19 @@ import { IoIosArrowBack } from "react-icons/io";
 const NavLinks = [
   { id: 1, name: "Home", path: "/dashboard", icons: <FaHome size={20} /> },
   {
-    id: 2,
-    name: "Data Tables",
-    path: "/dashboard/table",
-    icons: <SiGoogleanalytics size={20} />,
-  },
-  {
     id: 3,
     name: "User Managment",
     path: "/dashboard/user",
     icons: <FaUsers size={22} />,
   },
-  {
-    id: 4,
-    name: "Branch Managment",
-    path: "/dashboard/branch",
-    icons: <FaCodeBranch size={20} />,
-  },
-  {
-    id: 5,
-    name: "Staff Panel Features ",
-    path: "/dashboard/staff",
-    icons: <FaUser size={20} />,
-  },
-  { id: 6, name: "Packages Management", path: "/dashboard/packages", icons: <FiPackage size={22} /> },
-  {
-    id: 7,
-    name: "Doctor Management",
-    path: "/dashboard/doctor",
-    icons: <FaUserDoctor size={20} />,
-  },
-  {
-    id: 8,
-    name: "Booking Managment",
-    path: "/dashboard/booking",
-    icons: <FaAddressBook size={22} />,
-  },
-   { id: 9, name: "Review Managment", path: "/dashboard/review", icons: <MdOutlineRateReview size={22} /> },
-  {
-    id: 10,
-    name: "Expensive Tracker",
-    path: "/dashboard/expensive",
-    icons: <SiGoogleanalytics size={20} />,
-  },
-  {
-    id: 11,
-    name: "Report ",
-    path: "/dashboard/report",
-    icons: <MdReport size={20} />,
-  },
 ];
-export default function SideBar({setIsSidebarOpen}) {
+export default function SideBar({setIsSidebarOpen}:{
+  setIsSidebarOpen: string | any
+}) {
   const pathname = usePathname();
-  const isActive = (path) => path === pathname;
+  const isActive = (path : any) => path === pathname;
+    // const currentPath = window.location.pathname;
+
 
   return (
     <Flex
@@ -123,13 +83,13 @@ export default function SideBar({setIsSidebarOpen}) {
                   <Link
                     href={link.path}
                     className={
-                      isActive(link.path) ? "text-[blue] " : "transperent"
+                      isActive(link.path) ?  "text-[blue] " : "transperent"
                     }
                   >
-                    <HStack spacing="25px">
+                    <Flex  gap={5}>
                       {link.icons}
                       <Text>{link.name}</Text>
-                    </HStack>
+                    </Flex>
                   </Link>
                 </ListItem>
               );

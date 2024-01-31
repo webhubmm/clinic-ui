@@ -1,6 +1,6 @@
 import { loginType } from "@/types/loginType";
 import { registerType } from "@/types/registerType";
-import { userInfo } from "@/types/userType";
+import { userBodyList, userInfo } from "@/types/userType";
 import axios, { AxiosResponse } from "axios";
 import Cookies from "js-cookie";
 
@@ -12,14 +12,6 @@ const axiosInstance = axios.create({
 });
 
 const token = Cookies.get("token");
-// Set Authorization header using Axios interceptor
-// axiosInstance.interceptors.request.use((config) => {
-//   // const token ="eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiIzIiwianRpIjoiMzc3MzBjMjY3N2FhYjUxOGUyNTRjYWFjZGQ5YmQxNWNlMDIxYzIxZDI3MmI0NWUxN2VlY2MwNDVhYTg4NTA0YjJmMjVmYTQxNmE2YzZiOTAiLCJpYXQiOjE3MDU3NDM0NTUuODM4NTIzLCJuYmYiOjE3MDU3NDM0NTUuODM4NTMzLCJleHAiOjE3MjE0NjgyNTUuODI4OTgzLCJzdWIiOiIxMDIiLCJzY29wZXMiOltdfQ.iXbIEakZlXwgf8dEhIVhtvPCpcXOJS5AYT8LagTCzQ1cxlWYSnALunl-YsvJ6dXBx2M50peW9lrqe-rmdwbF4QouYakWf8F0-cXv4AQW1oyWCF8r7628sUaGYfpOAtVE09cNy3t32n8Vni-pYgSYDACL2DnZUUnUnuc8nfJdyPjo8w5GyafdLMA4XaLNTSLklmk55yDc7pfXSObxkaR37xVEBWKSrPqJ1O9Gss0etn98WsAx_3hZU5lMw7mr-cmStESKcxa47oRusIgsmGhe1GHFhAG36JIY9KvMOxeF2O4MZ8x8ioS8pUEbAID4onYp_hB1dUmdD8wXZw86ujRrB_h7hYFo5LPBp6hX7eYz8JCaqyXiv3BmG6WkEddKwVdAWhv_y1fHwuVPKguavK60xR23XSar9CisDqdX2W0AmK_BQ793SG16HTvF-ReBI8C0kUFMgaoAAz9q-xBIXI3JkIbhAoAHicMdUPayGcN_WYY3Vq0HV5G3_UYA10Mn4wsSxUwWRGEsMHSVR3C3AkGMAw7CrDXKOsieJr_QNnWp57082DXTSmIsHZ6iSWDMVUPK8tFGBtdegiSnkndNv2EwUnQTJToveDTnZPd9V5bZ1F1o2pr1drs6FLN-iPG-A51SMWoXUkf7DWtQO0Uhm8XeX6eWHZN0lJpNAOaP_Ww1RE8";
-//   if (token) {
-//     config.headers.Authorization = `Bearer ${token}`;
-//   }
-//   return config;
-// });
 
 // Auth APIs start
 export const login = async (loginInfo: loginType) => {
@@ -41,26 +33,41 @@ export const logout = async (token: string) => {
 // Auth APIs end
 
 // Admin API start
-export const getUser = async (): Promise<any> => {
+// start for usermanagment
+export const getUser = async ({
+  page,
+  per_page,
+  trash,
+  search
+}: {
+  page: number;
+  per_page:number;
+  trash: boolean;
+  search: string;
+}) => {
+  console.log(page)
   try {
-    const response = await axiosInstance.get("admin/user_management", {
+    const response = await axiosInstance.get(`admin/user_management?page=${page}&per_page:${per_page}`, {
+     
       headers: {
         Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
+      },
+       data: {
+        // page,
+        // per_page,
+        trash,
+        search
       },
     });
-    // Use response.data directly, no need for .then(response => response.json())
-    console.log(response.data);
+
     return response.data;
   } catch (error) {
-    // Handle errors here
-    const errorResponse: ErrorResponse = error.response?.data || {
-      message: "Unknown error",
-    };
-    console.error("Error fetching user data:", errorResponse.message);
-    throw error; // Rethrow the error to handle it in the calling code
+    console.error('Error fetching user data:', error.response?.status, error.response?.data);
+    throw error;
   }
 };
+
 
 export const createUser = async (userInfo: userInfo) => {
   return await axiosInstance.post("admin/user_management", userInfo, {
@@ -71,10 +78,65 @@ export const createUser = async (userInfo: userInfo) => {
   });
 };
 
-export const updateUser = async (userId: number, updatedUserInfo: userInfo) => {
+export const updateUser = async ({
+  id,
+  updateData,
+}: {
+  id: number;
+  updateData: userInfo;
+}) => {
+  // console.log(id,updateData);
   return await axiosInstance.patch(
-    `admin/user_management${userId}`,
-    updatedUserInfo,
+    `admin/user_management/${id}`,
+    updateData,
+
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  // return response.data;
+};
+
+// show list
+export const userList = async (id: number) => {
+  try {
+    const res = await axiosInstance.get(`admin/user_management/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    // console.log('useedit',res)
+    return res.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const deleteUser = async (id: number) => {
+  return await axiosInstance.delete(`/admin/user_management/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  });
+};
+
+export const restoreUser = async (id: number) => {
+  return await axiosInstance.get(`/admin/user_management/restore/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+  });
+};
+
+export const sureDeleteUser = async (id: number) => {
+  return await axiosInstance.delete(
+    `/admin/user_management/force_delete/${id}`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -84,41 +146,8 @@ export const updateUser = async (userId: number, updatedUserInfo: userInfo) => {
   );
 };
 
-export const deleteUser = async(id:number) =>{
-  return await axiosInstance.delete(
-    `/admin/user_management/${id}`,
-     {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    }
-  );
-};
+// end for usermanagment
 
-
-export const restoreDeleteUser = async(id:number) =>{
-  return await axiosInstance.delete(
-    `/admin/user_management/restore/${id}`,
-     {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    }
-  );
-};
-
-export const forceDeleteUser = async(id:number) =>{
-  return await axiosInstance.delete(
-    `/admin/user_management/force_delete/${id}`,
-     {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-    }
-  );
-};
+// for doctorMangment
 
 // Admin API end

@@ -4,6 +4,7 @@ export interface userType {
    email: string;
     phone: string;
    role: string;
+   image?:string | null;
    email_verified_at: any;
    deleted_at: any;
    created_at: string;
@@ -16,11 +17,17 @@ export interface userInfo {
     email: string;
     phone: string;
     password: string;
-    password_confirmation: string,
-    role: string
+    password_confirmation: string;
+    role: string;
 
 }
 
+export interface userBodyList {
+   page:number;
+   trash:boolean;
+   search:string;
+   
+}
 
 export interface UserCreateFormData {
    name: string;

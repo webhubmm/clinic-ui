@@ -1,35 +1,51 @@
 'use client'
-import { Grid, GridItem, Flex, Box, FormControl, FormLabel, Input, Button, FormErrorMessage,Text } from '@chakra-ui/react';
+import { Select,Grid, GridItem, Flex, Box, FormControl, FormLabel, Input, Button, FormErrorMessage,Text ,Spinner} from '@chakra-ui/react';
 
 import UserImg from '@/public/assets/asset 11.webp';
 import Image from 'next/image'
 import { Textarea } from '@chakra-ui/react';
 import {  FaArrowLeft} from "react-icons/fa";
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { Controller, SubmitHandler, useForm } from 'react-hook-form';
 import Link from 'next/link';  
 import { UserCreateFormData } from '@/types/userType';
 import { useUserUpdate } from '@/services/mutations';
-export default function EditUser(params:{
+import { useParams } from 'next/navigation'
+import { userList, updateUser } from '@/services/api';
+import { useQuery } from '@tanstack/react-query';
+
+export default function EditHoliday({params}:{
   params:{id:string}
 }) {
-  const {id} =params;
-  console.log(params);
+const  {id} =params;
+  console.log(id);
    const {
-    register,
+    control,register,
     handleSubmit,
     formState: { errors, isSubmitting },
     watch,
   } = useForm<UserCreateFormData>();
 
+  const {
+    data:users,
+    isLoading,isError,isPending
+  } =useQuery({
+    queryKey:['users'],
+    queryFn:() =>userList(id)
+  })
+  const showData =users?.data;
+  // console.log("usersedit",showData);
  const userUpdateMutation =useUserUpdate();
 
- const handelSubmitUpdateUser:SubmitHandler<UserCreateFormData> = async (data) =>{
-   try{
-  await userUpdateMutation.mutateAsync({id:Number(id),userInfo:data});
-   } catch(error) {
-    console.error(('Error updating user', error))
-   }
- }
+ const handelSubmitUpdateUser:SubmitHandler<UserCreateFormData> = async (updateData) => {
+  // console.log("updateData",updateData,id);
+  try {
+    await userUpdateMutation.mutate({id,updateData});
+    // Handle success or redirect here
+  } catch (error) {
+    // Handle error
+    console.log(error);
+  }
+};
 
   return (
   <Box className='mt-[96px]' bg='#fff' borderRadius='10px' padding='10px' minH='100hv'>
@@ -37,16 +53,14 @@ export default function EditUser(params:{
         <Link href='/dashboard/user' passHref>
           <Flex alignItems='center' gap={5} >
             <FaArrowLeft size={20} />
-            <span className='py-3'>Back To UserLists</span>
+            <p className='py-3'>Back </p>
           </Flex>
         </Link>
       </Flex>
-      <Flex gap={5} justifyContent='center' alignItems='center'>
-        <Box display={{ base: 'none', lg: 'block' }}> 
-          {/* <Image src={UserImg} alt='userImg' width={300} height={300} sizes='95vw' style={{ width: '100%', height: 'auto' }} /> */}
-        </Box>
-        <form onSubmit={handleSubmit(handelSubmitUpdateUser)}>
-           <FormControl flex='1'>
+       <Box   marginX='30px' minW='50%'>
+          
+        <form onSubmit={handleSubmit(handelSubmitUpdateUser)} >
+           {/* <FormControl flex='1'> */}
              <Grid templateColumns={{ base: '1fr', md: '1fr 1fr' }} gap={3}>
                <FormControl>
                  <GridItem>
@@ -66,6 +80,7 @@ export default function EditUser(params:{
                     border='1px'
                     id='name'
                     borderColor='gray'
+                    defaultValue={showData?.user?.name || ''}
                     {...register('name', {
                       required: 'Name is required',
                     })}
@@ -93,6 +108,8 @@ export default function EditUser(params:{
                     border='1px'
                     borderColor='gray'
                     id="email"
+                    defaultValue={showData?.user?.email || ''}
+
                     {...register('email', {
                       required: 'Email is required',
                     })}
@@ -103,77 +120,9 @@ export default function EditUser(params:{
                 </FormErrorMessage>
               </FormControl>
             
-             <FormControl>
-                <GridItem>
-                  <FormLabel
-                    display="flex"
-                    ms="4px"
-                    fontSize="sm"
-                    fontWeight="500"
-                    color="#000"
-                    mb="8px"
-                  >
-                     Password<Text color="#000">*</Text>
-                  </FormLabel>
-                  <Input
-                    isRequired={true}
-                    variant="auth"
-                    fontSize="sm"
-                    ms={{ base: '0px', md: '0px' }}
-                    type="password"
-                    placeholder="Enter Your Password"
-                    mb="20px"
-                    fontWeight="500"
-                    size="lg"
-                    border='1px'
-                    borderColor='gray'
-                    id="password"
-                    {...register('password', {
-                      required: ' Password is required',
-                      // validate: (value) => value === watch('password') || 'Passwords do not match',
-                    })}
-                  />
-                </GridItem>
-                <FormErrorMessage>
-                  {errors.password && errors.password.message}
-                </FormErrorMessage>
-              </FormControl>
+        
 
-               <FormControl>
-                <GridItem>
-                  <FormLabel
-                    display="flex"
-                    ms="4px"
-                    fontSize="sm"
-                    fontWeight="500"
-                    color="#000"
-                    mb="8px"
-                  >
-                    Confirm Password<Text color="#000">*</Text>
-                  </FormLabel>
-                  <Input
-                    isRequired={true}
-                    variant="auth"
-                    fontSize="sm"
-                    ms={{ base: '0px', md: '0px' }}
-                    type="password"
-                    placeholder="Confirm Your Password"
-                    mb="20px"
-                    fontWeight="500"
-                    size="lg"
-                    border='1px'
-                    borderColor='gray'
-                    id="password_confirmation"
-                    {...register('password_confirmation', {
-                      required: 'Confirm Password is required',
-                      validate: (value) => value === watch('password') || 'Passwords do not match',
-                    })}
-                  />
-                </GridItem>
-                <FormErrorMessage>
-                  {errors.password_confirmation && errors.password_confirmation.message}
-                </FormErrorMessage>
-              </FormControl>
+            
             {/* ... (rest of the form fields) */}
  <FormControl>
               <GridItem>
@@ -193,6 +142,8 @@ export default function EditUser(params:{
                   border='1px'
                   borderColor='gray'
                   id='phone'
+                    defaultValue={showData?.user?.phone || ''}
+
                   {...register('phone', {
                     required: 'Phone is required',
                   })}
@@ -204,23 +155,29 @@ export default function EditUser(params:{
                 <FormLabel display="flex" ms="4px" fontSize="sm" fontWeight="500" color="#000" mb="8px">
                   Role<Text color="#000">*</Text>
                 </FormLabel>
-                <Input
-                  isRequired={true}
-                  variant="auth"
-                  fontSize="sm"
-                  ms={{ base: '0px', md: '0px' }}
-                  type="text"
-                  placeholder="Enter Your Role"
-                  mb="20px"
-                  fontWeight="500"
-                  size="lg"
-                  border='1px'
-                  borderColor='gray'
-                  id='role'
-                  {...register('role', {
-                    required: 'Role is required',
-                  })}
-                />
+               
+                 <Controller
+          name="role"
+          control={control}
+          defaultValue={showData?.user?.role || ''}
+          rules={{ required: 'Role is required' }}
+          render={({ field }) => (
+            <Select
+              placeholder='Select Role'
+              size='lg'
+              {...field}
+            >
+              {/* You can customize the options as needed */}
+              <option value='admin'>admin</option>
+              <option value='staff'>staff</option>
+              <option value='user'>user</option>
+            </Select>
+          )}
+        />
+              </GridItem>
+            </FormControl>
+             <FormControl>
+              <GridItem>
               </GridItem>
             </FormControl>
           </Grid>
@@ -235,16 +192,16 @@ export default function EditUser(params:{
                 mb='20px'
                 bg='#332941'
                 color='#fff'
-                  isLoading={isSubmitting}
+                  isLoading={isLoading}
               disabled={isSubmitting}
               >
-                 {(isSubmitting && createUserMutation.isPending) ? "loading" :"Update"}
+                 {(isSubmitting ||  userUpdateMutation.isPending) ?  <Spinner  /> :"Update"}
               </Button>
             </Flex>
-          </FormControl>
+          {/* </FormControl> */}
         </form>
        
-      </Flex>
+      </Box>
     </Box>
   )
 }

@@ -3,4 +3,4 @@ const getToken = () => {
   return Cookies.get("token");
 }
 
-export default getToken 
+export default getToken ;

@@ -1,7 +1,6 @@
 // 'use client';
 import { Card,Flex,Text,Button,Select ,HStack,Stack,option} from "@chakra-ui/react";
 import Link from "next/link";
-// import { useRouter } from "next/navigation";
 import { FaCaretDown } from "react-icons/fa";
 
 export default function CreateUser() {
