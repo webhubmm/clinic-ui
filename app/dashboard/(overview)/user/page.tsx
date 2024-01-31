@@ -4,6 +4,7 @@ import {
   Text,
   Button,
   Box,
+  Input,
 } from "@chakra-ui/react";
 import { FaRegTrashAlt, FaRegEdit, FaTrashRestore } from "react-icons/fa";
 import { IoTrashBin } from "react-icons/io5";

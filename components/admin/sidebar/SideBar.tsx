@@ -22,54 +22,10 @@ import { IoIosArrowBack } from "react-icons/io";
 const NavLinks = [
   { id: 1, name: "Home", path: "/dashboard", icons: <FaHome size={20} /> },
   {
-    id: 2,
-    name: "Data Tables",
-    path: "/dashboard/table",
-    icons: <SiGoogleanalytics size={20} />,
-  },
-  {
     id: 3,
     name: "User Managment",
     path: "/dashboard/user",
     icons: <FaUsers size={22} />,
-  },
-  {
-    id: 4,
-    name: "Branch Managment",
-    path: "/dashboard/branch",
-    icons: <FaCodeBranch size={20} />,
-  },
-  {
-    id: 5,
-    name: "Staff Panel Features ",
-    path: "/dashboard/staff",
-    icons: <FaUser size={20} />,
-  },
-  { id: 6, name: "Packages Management", path: "/dashboard/packages", icons: <FiPackage size={22} /> },
-  {
-    id: 7,
-    name: "Doctor Management",
-    path: "/dashboard/doctor",
-    icons: <FaUserDoctor size={20} />,
-  },
-  {
-    id: 8,
-    name: "Booking Managment",
-    path: "/dashboard/booking",
-    icons: <FaAddressBook size={22} />,
-  },
-   { id: 9, name: "Tooth Managment", path: "/dashboard/tooth", icons: <MdOutlineRateReview size={22} /> },
-  {
-    id: 10,
-    name: "Holiday Managment",
-    path: "/dashboard/holiday",
-    icons: <FaCalendarDay size={20} />,
-  },
-  {
-    id: 11,
-    name: "Report ",
-    path: "/dashboard/report",
-    icons: <MdReport size={20} />,
   },
 ];
 export default function SideBar({setIsSidebarOpen}:{
