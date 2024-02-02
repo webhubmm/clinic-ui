@@ -72,13 +72,17 @@ const NavBar = () => {
           </nav>
           <div className="items-center gap-8 hidden lg:flex">
             <Text color="text-neat-primary">1800-749-8000</Text>
-            <Link href={"/signin"}><ButtonPrimary
-              placeholder="Sign In"
-              onClick={() => {}}></ButtonPrimary></Link>
+            <Link href={"/login"}>
+              <ButtonPrimary
+                placeholder="Sign In"
+                onClick={() => {}}
+              ></ButtonPrimary>
+            </Link>
           </div>
           <button
             onClick={() => setNav((prev) => !prev)}
-            className="block rounded bg-gray-100 p-2.5 text-gray-600 transition hover:text-gray-600/75 lg:hidden">
+            className="block rounded bg-gray-100 p-2.5 text-gray-600 transition hover:text-gray-600/75 lg:hidden"
+          >
             <p className="sr-only">Toggle menu</p>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -86,7 +90,8 @@ const NavBar = () => {
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
-              strokeWidth="2">
+              strokeWidth="2"
+            >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"

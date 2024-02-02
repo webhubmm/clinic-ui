@@ -9,7 +9,8 @@ export default function Home() {
       <Banner
         left="2359 Still StreetKenton, OH 43326"
         right="Working hours: Mon - Fri - 09:00 am - 06:00 pm
-            "></Banner>
+            "
+      ></Banner>
       <NavBar />
       <main>
         <Hero />

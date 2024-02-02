@@ -1,31 +1,38 @@
-import type { Metadata } from "next";
-import { Inter, Montserrat } from "next/font/google";
-import "./globals.css";
-import Providers from "./provider";
-import Banner from "@/components/common/banner/Banner";
-import NavBar from "@/components/common/navbar/Navbar";
-export const metadata: Metadata = {
-  title: "Dental Clinic",
-  description: "Developed by Neat Tech",
-};
+"use client";
+import { Provider as ReduxProvider } from "react-redux";
+import ThemeWrapper from "../layout/ThemeWrapper";
 
-const montserrat = Montserrat({
-  subsets: ["latin"],
-  variable: "--font-montserrat",
-});
+import { store } from "../store";
+import Provider from "../providers/ChakraProvider";
+import { usePathname } from "next/navigation";
+import HomeWrapper from "@/layout/HomeWrapper";
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const pathname = usePathname();
+  const avaliablePath =
+    pathname.includes("/dashboard") || pathname.includes("/dashboard/user");
+
   return (
-    <html lang="en">
-      <body className={`${montserrat.variable} font-neat`} suppressHydrationWarning={true}>
-        <Providers>
-          <main>{children}</main>
-        </Providers>
-      </body>
-    </html>
+    <ReduxProvider store={store}>
+      <html lang="en">
+        <head>
+          <title>Dental Clinic</title>
+          <meta name="Neat Tech" content="Developed By Neat Tech" />
+        </head>
+        <body suppressHydrationWarning={true}>
+          <Provider>
+            {avaliablePath ? (
+              <ThemeWrapper>{children}</ThemeWrapper>
+            ) : (
+              <HomeWrapper>{children}</HomeWrapper>
+            )}
+          </Provider>
+        </body>
+      </html>
+    </ReduxProvider>
   );
 }

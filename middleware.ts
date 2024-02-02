@@ -1,15 +1,25 @@
-import { NextResponse } from 'next/server';
-import { NextRequest } from 'next/server';
-
-const dashboardRoutes = '/dashboard';
-
-export default function authMiddleware(req: NextRequest) {
-  const isAuthenticated = req.cookies.get("token");
-
-  if (!isAuthenticated && req.nextUrl.pathname.startsWith(dashboardRoutes)) {
-    const absoluteURL = new URL('/', req.nextUrl.origin);
-    return NextResponse.redirect(absoluteURL.toString());
-  }
-
-  return NextResponse.next();
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+//  import { getAuth } from './store'
+// This function can be marked `async` if using `await` inside
+export function middleware(request: NextRequest) {
+  // const checkAuth = getAuth();
+  // if(checkAuth === null){
+  // return NextResponse.redirect(new URL('/login', request.url))
+  // }
+  // console.log("request :>> ", request.cookies);
 }
+
+// See "Matching Paths" below to learn more
+export const config = {
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     */
+    "/((?!api|_next/static|_next/image|favicon.ico).*)",
+  ],
+};
