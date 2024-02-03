@@ -40,8 +40,7 @@ export const theme = extendTheme({
           tertiary: "#000e25",
           pearlwhite: "#f6faff",
         },
+    brand: {},
   },
-   
   
-
 });

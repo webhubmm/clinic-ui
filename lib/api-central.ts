@@ -18,14 +18,17 @@ export async function centralApi(
       : { ...data };
 
   try {
-    const response = await fetch(`${config.apiBaseUrl}${API[endpoint]}`, {
-      method: entry,
-      headers: {
-        // Authorization: `Bearer ${accesToken}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(finalObj),
-    });
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}${API[endpoint]}`,
+      {
+        method: entry,
+        headers: {
+          Authorization: `Bearer ${accesToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(finalObj),
+      }
+    );
     const data = await response.json();
     if (data === undefined || data === null) {
       return;
