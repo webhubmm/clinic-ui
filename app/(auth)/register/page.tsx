@@ -9,41 +9,44 @@ import {
   InputRightElement,
 } from "@chakra-ui/react";
 import { Input } from "@chakra-ui/react";
-import { setCookie } from "cookies-next";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
 import { useToast } from "@chakra-ui/react";
 import { Text } from "@chakra-ui/react";
 import { AiFillEyeInvisible, AiFillEye } from "react-icons/ai";
 import Link from "next/link";
-import { UserLogin } from "@/lib/login";
-import { getAuth, getToken } from "@/lib/auth";
-import { isValidEmail } from "@/utils/validation";
 
-interface FormState {
-  email: string;
-  password: string;
-}
+import { isValidEmail, isValidPhoneNumber } from "@/utils/validation";
+import { RegisterType } from "@/types/registerType";
+import { userRegister } from "@/lib/register";
 
 interface ShowHideType {
   show: boolean;
   setShow: (value: any) => void;
 }
 
-const Login = () => {
+interface CPShowHideType {
+  CPshow: boolean;
+  setCPShow: (value: any) => void;
+}
+
+const Register = () => {
   const pathname = usePathname();
   const router = useRouter();
-  const [form, setform] = useState<FormState>({
+  const [registerForm, setRegisterForm] = useState<RegisterType>({
+    name: "",
     email: "",
+    phone: "",
     password: "",
+    password_confirmation: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const [show, setShow] = useState(false);
-  // const [errorText , setErrorText] = useState('')
+  const [CPshow, setCPShow] = useState(false);
   const toast = useToast();
 
   const formFillingFun = (type: string, value: string) => {
-    setform({ ...form, [type]: value });
+    setRegisterForm({ ...registerForm, [type]: value });
   };
 
   const toastFun = (
@@ -63,48 +66,34 @@ const Login = () => {
 
   //Email && PW Validation
 
-  const validEmail = isValidEmail(form.email);
-  const validPassword = form.password.length >= 6;
+  const isDisabled =
+    registerForm.password !== registerForm.password_confirmation ||
+    !isValidPhoneNumber(registerForm.phone);
+
+  const validEmail = isValidEmail(registerForm.email);
+  const validPassword = registerForm.password.length >= 8;
   const validSituation = validEmail && validPassword;
 
-  useEffect(() => {
-    const checkAuth = getAuth();
-    const accessToken = getToken();
-    if (checkAuth === null || accessToken === undefined) {
-      router.push("/login");
-    } else if (pathname === "/login" && checkAuth !== null) {
-      const userRole = checkAuth.data.user.role;
-      if (userRole === "admin") router.push("/dashboard");
-      else if (userRole === "staff") router.push("/dashboard/staff");
-      else if (userRole === "user") router.push("/");
-      else router.push("/");
-    }
-  }, []);
-
-  const LoginFunc = async () => {
+  const RegisterFun = async () => {
     setIsLoading(true);
     if (!validSituation) {
       toastFun(
         "Error",
-        "Wrong Email Pattern , Password must greater than 6 characters ",
+        "Wrong Email Pattern , Password must greater than 8 characters ",
         "error"
       );
       setIsLoading(false);
       return null;
     }
-    const res = await UserLogin(form);
+    const res = await userRegister(registerForm);
     if (res.code === 400) {
-      toastFun("Error", res.message, "error");
+      toastFun("Error", res.data, "error");
       setIsLoading(false);
     }
     if (res.code === 200) {
       toastFun("Success", res.message, "success");
-      setCookie("access_token", res.data.token);
-      const userRole = res.data.user.role;
-      if (userRole === "admin") router.push("/dashboard");
-      else if (userRole === "staff") router.push("/dashboard/staff");
-      else if (userRole === "user") router.push("/");
-      else router.push("/");
+      setIsLoading(false);
+      router.push("/login");
     }
     setIsLoading(false);
   };
@@ -153,8 +142,22 @@ const Login = () => {
               userSelect={"none"}
               mb={5}
             >
-              Login to Dental Clinic
+              Register to Dental Clinic
             </Text>
+
+            <FormControl mb={3}>
+              <FormLabel color={"gray"} userSelect={"none"}>
+                Name
+              </FormLabel>
+              <Input
+                placeholder="Name"
+                size="md"
+                color={"black"}
+                mb={"0.8rem"}
+                _placeholder={{ color: "#6e7581" }}
+                onChange={(e) => formFillingFun("name", e.target.value)}
+              />
+            </FormControl>
 
             <FormControl mb={3}>
               <FormLabel color={"gray"} userSelect={"none"}>
@@ -165,10 +168,25 @@ const Login = () => {
                 size="md"
                 color={"black"}
                 mb={"0.8rem"}
-                _placeholder={{ color: "white" }}
+                _placeholder={{ color: "#6e7581" }}
                 onChange={(e) => formFillingFun("email", e.target.value)}
               />
             </FormControl>
+
+            <FormControl mb={3}>
+              <FormLabel color={"gray"} userSelect={"none"}>
+                Phone No.
+              </FormLabel>
+              <Input
+                placeholder="Only Myanmar Phone Number"
+                size="md"
+                color={"black"}
+                mb={"0.8rem"}
+                _placeholder={{ color: "#6e7581" }}
+                onChange={(e) => formFillingFun("phone", e.target.value)}
+              />
+            </FormControl>
+
             <FormControl mb={3}>
               <FormLabel color={"gray"} userSelect={"none"}>
                 Password
@@ -183,14 +201,38 @@ const Login = () => {
                   size="md"
                   color={"black"}
                   mb={"0.8rem"}
-                  _placeholder={{ color: "white" }}
+                  _placeholder={{ color: "#6e7581" }}
                   onChange={(e) => formFillingFun("password", e.target.value)}
                 />
               </InputGroup>
             </FormControl>
+
+            <FormControl mb={3}>
+              <FormLabel color={"gray"} userSelect={"none"}>
+                Confirm Password
+              </FormLabel>
+              <InputGroup>
+                <InputRightElement>
+                  <ConfirmPwShowHideFun CPshow={CPshow} setCPShow={setCPShow} />
+                </InputRightElement>
+                <Input
+                  type={CPshow ? "text" : "password"}
+                  placeholder="Confirm Password"
+                  size="md"
+                  color={"black"}
+                  mb={"0.8rem"}
+                  _placeholder={{ color: "#6e7581" }}
+                  onChange={(e) =>
+                    formFillingFun("password_confirmation", e.target.value)
+                  }
+                />
+              </InputGroup>
+            </FormControl>
+
             <Box display={"flex"} justifyContent={"center"} mt={5}>
               <Button
                 isLoading={isLoading}
+                isDisabled={isDisabled}
                 loadingText="Loading"
                 width={"100%"}
                 variant="solid"
@@ -203,15 +245,15 @@ const Login = () => {
                   bgColor: "#5cd1e9",
                 }}
                 transitionDuration={"500ms"}
-                onClick={LoginFunc}
+                onClick={RegisterFun}
               >
-                Login
+                Register
               </Button>
             </Box>
             <Box display={"flex"} mt={6}>
-              <Text mr={3}>Not registered yet?</Text>
-              <Link href={"/register"}>
-                <Text color={"#05b9de"}>Create an Account</Text>
+              <Text mr={3}>Already have an account</Text>
+              <Link href={"/login"}>
+                <Text color={"#05b9de"}>Login</Text>
               </Link>
             </Box>
           </Box>
@@ -221,7 +263,7 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;
 
 function PwShowHideFun({ show, setShow }: ShowHideType) {
   return (
@@ -231,6 +273,24 @@ function PwShowHideFun({ show, setShow }: ShowHideType) {
       ) : (
         <AiFillEyeInvisible
           onClick={() => setShow(true)}
+          className=" cursor-pointer"
+        />
+      )}
+    </>
+  );
+}
+
+function ConfirmPwShowHideFun({ CPshow, setCPShow }: CPShowHideType) {
+  return (
+    <>
+      {CPshow ? (
+        <AiFillEye
+          onClick={() => setCPShow(false)}
+          className=" cursor-pointer"
+        />
+      ) : (
+        <AiFillEyeInvisible
+          onClick={() => setCPShow(true)}
           className=" cursor-pointer"
         />
       )}

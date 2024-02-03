@@ -12,11 +12,6 @@ const breakpoints = {
 export const theme = extendTheme({
   breakpoints,
   colors: {
-    brand: {
-      logInBgColor: "#fff",
-      logInTextColor: "white",
-      danger: "#BF3131",
-      hoverDanger: "#7D0A0A",
-    },
+    brand: {},
   },
 });

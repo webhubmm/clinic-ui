@@ -1,4 +1,3 @@
-("use cleint");
 import { CookieValueTypes, setCookie } from "cookies-next";
 import { centralApi } from "../api-central";
 import { saveAuth } from "../auth";

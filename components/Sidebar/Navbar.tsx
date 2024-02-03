@@ -12,6 +12,8 @@ import {
 import { CiMenuFries } from "react-icons/ci";
 import CustomModal from "../Custom/CustomModal";
 import { useRouter } from "next/navigation";
+import { getToken, removeAuth } from "@/lib/auth";
+import { UserLogout } from "@/lib/logout";
 
 interface Props {
   onShowSidebar: VoidFunction;
@@ -21,7 +23,10 @@ interface Props {
 const Navbar = ({ showSidebarButton = true, onShowSidebar }: Props) => {
   const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const accessToken = getToken();
   const logOutFun = () => {
+    if (accessToken) UserLogout(accessToken);
+    removeAuth();
     router.push("/login");
   };
 

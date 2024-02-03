@@ -20,6 +20,7 @@ export async function centralApi(
       {
         method: entry,
         headers: {
+          Authorization: `Bearer ${accesToken}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(finalObj),
