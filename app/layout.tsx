@@ -20,6 +20,7 @@ export default function RootLayout({
     pathname.includes("/dashboard") || pathname.includes("/dashboard/user");
 
     const loginPath = pathname.includes("/login") || pathname.includes("/register");
+   
   return (
     <ReduxProvider store={store}>
       <html lang="en">
@@ -33,20 +34,22 @@ export default function RootLayout({
               <ThemeWrapper>{children}</ThemeWrapper>
             ) : (
               <HomeWrapper>
-                {!loginPath ? (
+                {!loginPath && (
                   <>
                   <Banner left="2359 Still StreetKenton, OH 43326"
         right="Working hours: Mon - Fri - 09:00 am - 06:00 pm">
 
                   </Banner>
                 <NavBar />
-                  <Box minHeight="70vh">
-                    {children}
-                    </Box>
-                <Footer />
+                 
+               
                 </>
-                ) : (
-                  {children} 
+                )}
+                 {/* <Box minHeight="70vh"> */}
+                    {children}
+                    {/* </Box> */}
+                         {!loginPath && (
+                   <Footer />
                 )}
                 </HomeWrapper>
             )}

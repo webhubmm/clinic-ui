@@ -30,7 +30,7 @@ export default function Footer() {
   ];
   return (
     <Box bg="neat.tertiary" paddingY='50px'>
-       <Container maxW='container.lg'>
+       <Container maxW='container.xl'>
          <Box>
            <Grid templateColumns='repeat(5, 1fr)' gap='10'>
               <GridItem>

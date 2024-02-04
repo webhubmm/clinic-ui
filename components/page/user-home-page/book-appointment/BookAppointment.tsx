@@ -15,7 +15,7 @@
   import Image from "next/image";
   const BookAppointment = () => {
     return (
-      <Box color="neat.pearlwhite" paddingY='40px' position='relative'>
+      <Box color="neat.pearlwhite" paddingY='50px' position='relative'>
         <Container maxW='container.xl'>
           <Box  display='flex' justifyContent='space-between' gap='10'
           >
@@ -47,7 +47,7 @@
                 </Box>
               </Card>
 
-              <Card padding='40px' borderRadius='15px' boxShadow='md' marginTop='100px' maxW='xl'>
+              <Card padding='40px' borderRadius='15px' boxShadow='md' marginTop='80px' maxW='xl'>
                 <Box 
                 // display='grid'
                 className="space-y-8"

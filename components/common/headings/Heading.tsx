@@ -2,10 +2,15 @@ import React from "react";
 
 interface HeadingProp {
   children: string;
+  color:string;
 }
 
-const Heading = ({ children }: HeadingProp) => {
-  return <h1 className=" text-3xl md:text-4xl font-bold">{children}</h1>;
+const Heading = ({ children,color }: HeadingProp) => {
+  return (
+    <Heading color={color}>
+      {children}
+    </Heading>
+  );
 };
 
 export default Heading;
