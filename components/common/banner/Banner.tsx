@@ -1,6 +1,5 @@
 import React from "react";
-import Container from "../container/Container";
-import TextSmall from "../text/TextSmall";
+import { Box ,Text,Container} from "@chakra-ui/react";
 
 interface BannerProp {
   left: string;
@@ -9,14 +8,20 @@ interface BannerProp {
 
 const Banner = ({ left, right }: BannerProp) => {
   return (
-    <div className="  bg-neat-secondary text-white p-2 hidden lg:block">
-      <Container>
-        <div className="flex justify-between items-center">
-          <TextSmall>{left}</TextSmall>
-          <TextSmall>{right}</TextSmall>
-        </div>
+    <Box  color="white" padding='8px' bg="neat.secondary" display={{sm:"none",lg:'block'}}
+    //  className="  bg-neat-secondary text-white p-2 hidden lg:block"
+     >
+      <Container maxW='container.xl' >
+        <Box  display='flex' 
+        justifyContent='space-between'
+        alignItems="center"
+        // className="flex justify-between items-center"
+        >
+          <Text>{left}</Text>
+          <Text>{right}</Text>
+        </Box>
       </Container>
-    </div>
+    </Box>
   );
 };
 

@@ -1,18 +1,35 @@
 "use client";
+import { Button } from "@chakra-ui/react";
 import React from "react";
 
 interface ButtonProp {
   placeholder: string;
   onClick?: () => void;
+  
 }
 
 const ButtonSecondary = ({ placeholder, onClick }: ButtonProp) => {
   return (
-    <button
+    <Button
       onClick={onClick}
-      className=" border-2 font-bold border-neat-secondary text-neat-secondary rounded-full px-5 py-2 md:px-8 md:py-3  hover:bg-neat-secondary hover:text-white transition-colors duration-150">
+
+      
+      fontWeight='bold'
+      color="neat.secondary"
+      size="lg"
+      border='2px'
+      borderColor='neat.secondary'
+      paddingY={{sm:'0.5rem',md:'15px'}}
+      paddingX={{sm:"20px",md:"32px"}}
+      borderRadius="25px"
+      _hover={{bg:"neat.secondary",borderColor:'neat.secondary',color:"brands.logInTextColor"
+    ,
+    transitionDuration: '150ms',
+    transitionTimingFunction: "ease-in"
+  }}
+      >
       {placeholder}
-    </button>
+    </Button>
   );
 };
 

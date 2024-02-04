@@ -1,21 +1,15 @@
-import Banner from "@/components/common/banner/Banner";
-import NavBar from "@/components/common/navbar/Navbar";
-import BookAppointment from "@/components/user-home-page/book-appointment/BookAppointment";
-import Hero from "@/components/user-home-page/hero/Hero";
+import { Box, Container } from "@chakra-ui/react";
+import NavBar from "@/components/common/navbar/NavBar";
+import Hero from "@/components/page/user-home-page/hero/Hero";
+import BookAppointment from "@/components/page/user-home-page/book-appointment/BookAppointment";
 
 export default function Home() {
   return (
-    <>
-      <Banner
-        left="2359 Still StreetKenton, OH 43326"
-        right="Working hours: Mon - Fri - 09:00 am - 06:00 pm
-            "
-      ></Banner>
-      <NavBar />
-      <main>
-        <Hero />
-        <BookAppointment />
-      </main>
-    </>
+    <Box bg='neat.pearlwhite'>
+      <Hero />
+      <Box >
+         <BookAppointment />
+      </Box>
+    </Box>
   );
 }
