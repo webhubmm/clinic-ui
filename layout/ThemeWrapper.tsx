@@ -57,8 +57,7 @@ const ThemeWrapper = ({ children }: { children: React.ReactNode }) => {
           />
 
           <Box
-            px={{ base: "0", md: 10 }}
-            py={{ base: "0", md: 10 }}
+            p={{ base: 2, md: 5 }}
             ml={checkingPathAndNavigationButton ? 0 : 0}
           >
             {children}

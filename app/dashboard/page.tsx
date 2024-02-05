@@ -9,7 +9,7 @@ import MiniStatistics from "@/components/admin/MiniStatistics";
 
 const Dashboard = () => {
   return (
-    <Box mt="90px">
+    <Box>
       <>
         <Text fontSize={20} mb={10} fontWeight={500}>
           Dashboard

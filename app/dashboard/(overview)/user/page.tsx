@@ -159,6 +159,7 @@ const UserManagement = () => {
             py={2}
             borderRadius={4}
             width={"100%"}
+            textAlign={'center'}
             fontSize="0.9em"
             textTransform="capitalize"
             variant="solid"
@@ -180,10 +181,11 @@ const UserManagement = () => {
                 handleEditModal(row.original);
               }}
               sx={{
-                bgColor: "#5cd1e9",
+                bgColor: "#5c90e9",
                 transitionDuration: "500ms",
+                color: "white",
                 _hover: {
-                  bgColor: "#05b9de",
+                  bgColor: "#185aca",
                 },
               }}
             >
@@ -226,7 +228,7 @@ const UserManagement = () => {
                 onChange={handleChangeSearch}
               />
               <Button
-                ml={3}
+                ml={1}
                 onClick={() => {
                   FetchGetAllUserListFun();
                   setCredentialObj({ ...credentialObj, search: "" });
@@ -246,6 +248,7 @@ const UserManagement = () => {
                 </Button>
               ) : (
                 <Button
+                  colorScheme={'red'}
                   onClick={() => {
                     setCredentialObj({ ...credentialObj, trash: true });
                   }}
@@ -254,7 +257,7 @@ const UserManagement = () => {
                 </Button>
               )}
 
-              <Button ml={4} onClick={handleCreateModal}>
+              <Button colorScheme={'blue'} ml={4} onClick={handleCreateModal}>
                 Create
               </Button>
             </Box>
