@@ -1,7 +1,7 @@
 "use client";
 
 import { Box, Center, Container, Text, Heading, Stack, Wrap } from "@chakra-ui/react";
-import HeroImg from "@/public/assets/asset 5.webp";
+import HeroImg from "@/public/assets/contactForm.png";
 import Image from "next/image";
 import dantxLogo from "@/public/assets/asset 6.svg";
 import ButtonPrimary from "@/components/common/button/ButtonPrimary";

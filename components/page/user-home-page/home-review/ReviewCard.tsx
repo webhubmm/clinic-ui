@@ -4,10 +4,10 @@ import revieImgOne from '@/public/assets/revireimg.png';
 interface reviewProps {
     title:string;
     imagesH:string;
-        desc:string;
-        img:string;
-        name:string;
-        city:string;
+    desc:string;
+    img:string;
+    name:string;
+    city:string;
 }
 export default function ReviewCard({item}:{
     item:reviewProps

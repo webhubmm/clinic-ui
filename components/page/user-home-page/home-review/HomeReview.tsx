@@ -41,7 +41,7 @@ const reviewList =[
 ]
 export default function HomeReview() {
   return (
-     <Box marginY='8rem' bg='neat.pearlwhite'>
+     <Box paddingTop='6rem' paddingBottom='16rem' bg='neat.pearlwhite'>
         <Container maxW='container.xl'>
          <Box display='flex' flexDir='column'  gap='5' justifyContent='center' alignItems='center'>
            <Text color='neat.primary' fontWeight='600'>

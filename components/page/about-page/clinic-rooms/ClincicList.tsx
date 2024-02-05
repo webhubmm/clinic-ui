@@ -1,5 +1,6 @@
 import { Box, Card, Flex, Heading, Stack, Text } from "@chakra-ui/react";
 import Image from "next/image";
+import { FaCircleCheck } from "react-icons/fa6";
 
 interface ListProps {
    

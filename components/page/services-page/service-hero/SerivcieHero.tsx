@@ -1,9 +1,10 @@
 
 import { Box, Center, Container, Text, Heading, Stack, Wrap } from "@chakra-ui/react";
-import AboutImg from "@/public/assets/about_hero im.png";
+// import AboutImg from "@/public/assets/about_hero im.png";
+import servicesImg from '@/public/assets/servicesHero.png';
 import Image from "next/image";
 import HeroCommon from "@/components/common/commonHero/HeroCommon";
-export default function AboutHero() {
+export default function ServicesHero() {
   return (
       <Box overflow='hidden'>
 
@@ -23,12 +24,10 @@ export default function AboutHero() {
        
         >
           <Box position='relative' >
-            <Image src={AboutImg} alt="hero img" objectFit="cover" width={600} height={400} sizes='50vw' />
+            <Image src={servicesImg} alt="hero img" objectFit="cover" width={600} height={400} sizes='50vw' />
             </Box>
-             <HeroCommon  title="About Us" description="
-             Our dental team has years of experience and is dedicated to providing dental care.
-
-" placeholder="Contact Us"/>
+             <HeroCommon  title="Services" description="
+             Your smile is one of your most valuable assets, and keeping it clean." placeholder="Contact Us"/>
         </Box>
       </Container>
       </Box>

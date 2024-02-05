@@ -6,6 +6,8 @@ import HomeDentalServices from "@/components/page/user-home-page/homeDental/Home
 import HomeDentalProvide from "@/components/page/user-home-page/home-dental-provide/HomeDentalProvide";
 import HomeOnlineServices from "@/components/page/user-home-page/online-home-services/HomeOnlineServices";
 import HomeReview from "@/components/page/user-home-page/home-review/HomeReview";
+import HomeOurService from "@/components/page/user-home-page/home-our-service/HomeOurService";
+import HomeBlogShow from "@/components/page/user-home-page/blog-show/HomeBlogShow";
 
 export default function Home() {
   return (
@@ -16,6 +18,8 @@ export default function Home() {
       <HomeDentalProvide />
       <HomeOnlineServices />
       <HomeReview />
+      <HomeOurService />
+      <HomeBlogShow />
     </Box>
   );
 }

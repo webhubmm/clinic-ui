@@ -13,6 +13,7 @@
   import { Box, Card, Circle, Container, Heading, Stack, Text, VStack } from "@chakra-ui/react";
   import ButtonSecondary from "@/components/common/button/ButtonSecondary";
   import Image from "next/image";
+import FormCommon from "@/components/common/form/FormCommon";
   const BookAppointment = () => {
     return (
       <Box color="neat.pearlwhite" paddingY='50px' position='relative'>
@@ -101,7 +102,8 @@
             // position='absolute'  top={-15} right="20"
             >
               <Card padding='40px' borderRadius="15px">
-                <Box display='grid' gap='5'
+                <FormCommon />
+                {/* <Box display='grid' gap='5'
                 >
                   <Box 
                   color='neat.secondary'
@@ -185,7 +187,7 @@
                     </Box>
                     </Box> 
                   </form>
-                </Box>
+                </Box> */}
               </Card>
             </Box>
           </Box>
