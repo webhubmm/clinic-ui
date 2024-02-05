@@ -1237,14 +1237,14 @@
 
 "@tanstack/react-table@^8.11.6":
   version "8.11.8"
-  resolved "https://registry.yarnpkg.com/@tanstack/react-table/-/react-table-8.11.8.tgz#4eef4a2d91116ca51c8c9b2f00b455d8d99886c7"
+  resolved "https://registry.npmjs.org/@tanstack/react-table/-/react-table-8.11.8.tgz"
   integrity sha512-NEwvIq4iSiDQozEyvbdiSdCOiLa+g5xHmdEnvwDb98FObcK6YkBOkRrs/CNqrKdDy+/lqoIllIWHk+M80GW6+g==
   dependencies:
     "@tanstack/table-core" "8.11.8"
 
 "@tanstack/table-core@8.11.8":
   version "8.11.8"
-  resolved "https://registry.yarnpkg.com/@tanstack/table-core/-/table-core-8.11.8.tgz#7f46c31894249dbb57e43ad95c80e891236a895f"
+  resolved "https://registry.npmjs.org/@tanstack/table-core/-/table-core-8.11.8.tgz"
   integrity sha512-DECHvtq4YW4U/gqg6etup7ydt/RB1Bi1pJaMpHUXl65ooW1d71Nv7BzD66rUdHrBSNdyiW3PLTPUQlpXjAgDeA==
 
 "@types/cookie@^0.6.0":
@@ -2432,6 +2432,11 @@ file-entry-cache@^6.0.1:
   integrity sha512-7Gps/XWymbLk2QLYK4NzpMOrYjMhdIxXuIvy2QBsLE6ljuodKvdkWs/cpyJJ3CVIVpH0Oi1Hvg1ovbMzLdFBBg==
   dependencies:
     flat-cache "^3.0.4"
+
+filepond-plugin-file-encode@^2.1.14:
+  version "2.1.14"
+  resolved "https://registry.npmjs.org/filepond-plugin-file-encode/-/filepond-plugin-file-encode-2.1.14.tgz"
+  integrity sha512-uWHCyO9ZwMSime025TCRN7/Nay4+MvTh6DLjzV7i9BaAZ1FOvK1sACLydyjv0rL82rabyTSFEG0M1dA2nnshWg==
 
 filepond@^4.30.6:
   version "4.30.6"

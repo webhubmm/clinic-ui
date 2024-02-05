@@ -8,26 +8,8 @@ import { Text, Flex, SimpleGrid } from "@chakra-ui/react";
 import MiniStatistics from "@/components/admin/MiniStatistics";
 
 const Dashboard = () => {
-  // const router = useRouter();
-  // const pathname = usePathname();
-  // useEffect(() => {
-  //   const checkAuth = getAuth();
-
-  //   console.log("checkAuth :: ", checkAuth);
-  //   const accessToken = getToken();
-  //   if (
-  //     checkAuth === null ||
-  //     checkAuth?.status === 1 ||
-  //     accessToken === undefined
-  //   ) {
-  //     router.push("./login");
-  //   } else if (pathname === "/login" && checkAuth !== null) {
-  //     router.push("/");
-  //   }
-  // }, [pathname]);
-  console.log("hello");
   return (
-    <Box mt="90px">
+    <Box>
       <>
         <Text fontSize={20} mb={10} fontWeight={500}>
           Dashboard

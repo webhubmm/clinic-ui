@@ -21,6 +21,25 @@ const ThemeWrapper = ({ children }: { children: React.ReactNode }) => {
   const checkingPathAndNavigationButton =
     avaliablePath && !variants?.navigationButton;
 
+  useEffect(() => {
+    const checkAuth = getAuth();
+    const accessToken = getToken();
+
+    const userRole = checkAuth?.data.user.role;
+
+    if (checkAuth === null || accessToken === undefined) {
+      router.push("/login");
+    } else if (pathname === "/login" && checkAuth !== null) {
+      if (userRole === "admin") router.push("/dashboard");
+      else if (userRole === "staff") router.push("/dashboard/staff");
+      else if (userRole === "user") router.push("/");
+      else router.push("/");
+    }
+    if (userRole === "admin" || userRole === "staff") {
+      router.push("/dashboard");
+    } else if (userRole === "user") router.push("/");
+  }, []);
+
   const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
   return (
     <>
@@ -38,8 +57,7 @@ const ThemeWrapper = ({ children }: { children: React.ReactNode }) => {
           />
 
           <Box
-            px={{ base: "0", md: 10 }}
-            py={{ base: "0", md: 10 }}
+            p={{ base: 2, md: 5 }}
             ml={checkingPathAndNavigationButton ? 0 : 0}
           >
             {children}

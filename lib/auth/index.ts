@@ -1,6 +1,7 @@
+import { config } from "@/config/config";
 import { deleteCookie, getCookie, setCookie } from "cookies-next";
 import CryptoJS from "crypto-js";
-const hashTrigger = process.env.NEXT_PUBLIC_HASHCODE as string;
+const hashTrigger = config.hashTrigger;
 // console.log("hashTrigger ::: ", hashTrigger);
 const AuthStoreName = "auth";
 
@@ -22,12 +23,10 @@ const _encryptedSave = ({ value, storageName }: AcceptedEncrypted) => {
 const _decryptedExecute = (value: string) => {
   if (typeof window !== "undefined") {
     const data = getCookie(value);
-    // console.log("data ::: ", data);
     if (data === null || data === undefined) {
       return null;
     }
     const bytes = CryptoJS.AES.decrypt(data, hashTrigger);
-    // console.log("bytes :>> ", bytes);
     const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
     return decryptedData;
   }
