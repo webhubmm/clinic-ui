@@ -18,9 +18,9 @@ export const changeFormatDateStringArr = (resultdata: UserManagementType[]) => {
 };
 
 export const badgeColorChange = (value: string) => {
-  if (value === "user") return "grey";
-  if (value === "staff") return "green";
-  if (value === "admin") return "red";
+  if (value === "user") return "#009911";
+  if (value === "staff") return "#222299";
+  if (value === "admin") return "#993311";
 };
 
 export const getBase64 = (file: any, cb: any) => {
