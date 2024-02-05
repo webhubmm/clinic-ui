@@ -24,16 +24,21 @@ const ThemeWrapper = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const checkAuth = getAuth();
     const accessToken = getToken();
+
+    const userRole = checkAuth?.data.user.role;
+
     if (checkAuth === null || accessToken === undefined) {
       router.push("/login");
     } else if (pathname === "/login" && checkAuth !== null) {
-      const userRole = checkAuth.data.user.role;
       if (userRole === "admin") router.push("/dashboard");
       else if (userRole === "staff") router.push("/dashboard/staff");
       else if (userRole === "user") router.push("/");
       else router.push("/");
     }
-  }, [pathname]);
+    if (userRole === "admin" || userRole === "staff") {
+      router.push("/dashboard");
+    } else if (userRole === "user") router.push("/");
+  }, []);
 
   const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
   return (

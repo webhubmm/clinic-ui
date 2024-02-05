@@ -36,7 +36,7 @@ const CustomModal = ({
     <>
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
         <ModalOverlay />
-        <ModalContent width={{ base: "95%", sm: "90%", md: "50%", lg: "40%" }}>
+        <ModalContent minW={{ base: "95%", sm: "90%", md: "50%", lg: "40%" }}>
           <ModalHeader>{modalTitle}</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
@@ -51,10 +51,15 @@ const CustomModal = ({
             </Button>
             <Button
               variant="solid"
-              bgColor={"brand.danger"}
-              color={"brand.logInBgColor"}
               onClick={actionFun}
-              _hover={{ bgColor: "brand.hoverDanger" }}
+              sx={{
+                bgColor: "#EE5D50",
+                color: "white",
+                transitionDuration: "500ms",
+                _hover: {
+                  bgColor: "#E31A1A",
+                },
+              }}
             >
               {actionText}
             </Button>

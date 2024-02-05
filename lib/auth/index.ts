@@ -1,6 +1,7 @@
+import { config } from "@/config/config";
 import { deleteCookie, getCookie, setCookie } from "cookies-next";
 import CryptoJS from "crypto-js";
-const hashTrigger = process.env.NEXT_PUBLIC_HASHCODE as string;
+const hashTrigger = config.hashTrigger;
 // console.log("hashTrigger ::: ", hashTrigger);
 const AuthStoreName = "auth";
 

@@ -20,7 +20,7 @@ import {
   TableContainer,
   Divider,
 } from "@chakra-ui/react";
-import { IoIosArrowBack , IoIosArrowForward} from "react-icons/io";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 interface TableProps<T> {
   data?: T | undefined;
   columns: ColumnDef<T, React.ReactNode>[];
@@ -76,7 +76,7 @@ const CustomTable: React.FC<TableProps<any>> = ({
               onClick={table.previousPage}
               className="paginationButton"
             >
-            <IoIosArrowBack />
+              <IoIosArrowBack />
             </button>
             <span>{`page ${
               table.getState().pagination.pageIndex + 1
