@@ -161,7 +161,6 @@ const UserManagement = () => {
             width={"100%"}
             textAlign={'center'}
             fontSize="0.9em"
-            textTransform=""
             variant="solid"
           >
             {row.original.role}
