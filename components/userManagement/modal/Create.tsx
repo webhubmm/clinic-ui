@@ -44,11 +44,7 @@ const UserManagementCreateModal: React.ForwardRefRenderFunction<
     password: "",
     password_confirmation: "",
     role: "",
-    note: "",
-    age: "",
-    blood_type: "",
     image: "",
-    gender: "",
     token: accessToken,
   });
 
@@ -177,47 +173,23 @@ const UserManagementCreateModal: React.ForwardRefRenderFunction<
                 <option value="user">User</option>
               </Select>
             </FormControl>
-            <FormControl mt={4}>
-              <FormLabel>Note</FormLabel>
-              <Input
-                type="text"
-                name="note"
-                value={formData.note}
-                onChange={handleInputChange}
-              />
-            </FormControl>
-            <FormControl mt={4}>
-              <FormLabel>Age</FormLabel>
-              <Input
-                type="text"
-                name="age"
-                value={formData.age}
-                onChange={handleInputChange}
-              />
-            </FormControl>
-            <FormControl mt={4}>
-              <FormLabel>Blood Type</FormLabel>
-              <Input
-                type="text"
-                name="blood_type"
-                value={formData.blood_type}
-                onChange={handleInputChange}
-              />
-            </FormControl>
-            <FormControl mt={4}>
-              <FormLabel>Gender</FormLabel>
-              <Select
-                value={formData.gender}
-                onChange={(e) => handleGenderChange(e)}
-              >
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-              </Select>
-            </FormControl>
-
             <FilePondUploader onFileChange={handleFileChange} />
 
-            <Button float="inline-end" type="submit" colorScheme="blue" mt={4}>
+            <Button
+              float="inline-end"
+              type="submit"
+              colorScheme="blue"
+              mt={4}
+              sx={{
+                bgColor: "#5c90e9",
+                transitionDuration: "500ms",
+                color: "white",
+                _hover: {
+                  bgColor: "#185aca",
+                },
+                mb: 3,
+              }}
+            >
               Create
             </Button>
           </form>

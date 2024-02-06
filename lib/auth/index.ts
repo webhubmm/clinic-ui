@@ -21,14 +21,18 @@ const _encryptedSave = ({ value, storageName }: AcceptedEncrypted) => {
 };
 
 const _decryptedExecute = (value: string) => {
-  if (typeof window !== "undefined") {
-    const data = getCookie(value);
-    if (data === null || data === undefined) {
-      return null;
+  try {
+    if (typeof window !== "undefined") {
+      const data = getCookie(value);
+      if (data === null || data === undefined) {
+        return null;
+      }
+      const bytes = CryptoJS.AES.decrypt(data, hashTrigger);
+      const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
+      return decryptedData;
     }
-    const bytes = CryptoJS.AES.decrypt(data, hashTrigger);
-    const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
-    return decryptedData;
+  } catch (error) {
+    removeAuth();
   }
 };
 

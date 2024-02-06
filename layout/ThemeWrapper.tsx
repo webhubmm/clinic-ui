@@ -24,15 +24,18 @@ const ThemeWrapper = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const checkAuth = getAuth();
     const accessToken = getToken();
-    if (checkAuth === null || accessToken === undefined) {
+    if (
+      checkAuth === null ||
+      accessToken === undefined ||
+      checkAuth.code === 400 ||
+      checkAuth === undefined
+    ) {
       router.push("/login");
-    } else if (pathname === "/login" && checkAuth !== null) {
-      const userRole = checkAuth.data.user.role;
-      if (userRole === "admin") router.push("/dashboard");
-      else if (userRole === "staff") router.push("/dashboard/staff");
-      else if (userRole === "user") router.push("/");
-      else router.push("/");
     }
+
+    const userRole = checkAuth?.data.user.role;
+    if (userRole === "staff") router.push("/dashboard/staff");
+    else if (userRole === "user") router.push("/");
   }, [pathname]);
 
   const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);

@@ -146,7 +146,21 @@ const UserManagementEditModal: React.ForwardRefRenderFunction<
               />
             </FormControl>
 
-            <Button float="inline-end" type="submit" colorScheme="blue" mt={4}>
+            <Button
+              float="inline-end"
+              type="submit"
+              colorScheme="blue"
+              mt={4}
+              sx={{
+                bgColor: "#5c90e9",
+                transitionDuration: "500ms",
+                color: "white",
+                _hover: {
+                  bgColor: "#185aca",
+                },
+                mb: 3,
+              }}
+            >
               Submit
             </Button>
           </form>

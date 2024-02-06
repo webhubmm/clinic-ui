@@ -42,19 +42,33 @@ export const GetAllUserList = async ({
   token,
 }: GetUserType) => {
   try {
-    console.log("search :: ", search);
-    const response = await fetch(
-      `${config.apiBaseUrl}/admin/user_management?page=${page}&per_page=${per_page}&search=${search}`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-    const data = await response.json();
-    return data;
+    if (trash === false) {
+      const response = await fetch(
+        `${config.apiBaseUrl}/admin/user_management?page=${page}&per_page=${per_page}&search=${search}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const data = await response.json();
+      return data;
+    } else if (trash === true) {
+      const response = await fetch(
+        `${config.apiBaseUrl}/admin/user_management?page=${page}&per_page=${per_page}&trash=${trash}&search=${search}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const data = await response.json();
+      return data;
+    }
   } catch (error) {
     console.log("error :: ", error);
     throw error;
@@ -122,6 +136,46 @@ export const userDelete = async (
     `${process.env.NEXT_PUBLIC_API_URL}/admin/user_management/${id}`,
     {
       method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  const data = await response.json();
+  return data;
+};
+
+export const userForceDelete = async (
+  { id }: DelObjType,
+  token: CookieValueTypes
+) => {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/admin/user_management/force_delete/${id}`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  const data = await response.json();
+  return data;
+};
+
+//Restore User
+interface RestoreObjType {
+  id: string;
+}
+export const userRestore = async (
+  { id }: RestoreObjType,
+  token: CookieValueTypes
+) => {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/admin/user_management/restore/${id}`,
+    {
+      method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
