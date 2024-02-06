@@ -1,8 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  //    future: {
-  //   webpack5: true,
-  // },
+  experimental: {
+    images: {
+        allowFutureImage: true
+    }
+  },
 }
 
 module.exports = nextConfig

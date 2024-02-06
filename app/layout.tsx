@@ -6,12 +6,12 @@ import { store } from "../store";
 import Provider from "../providers/ChakraProvider";
 import { usePathname, useRouter } from "next/navigation";
 import HomeWrapper from "@/layout/HomeWrapper";
-import NavBar from "@/components/common/navbar/NavBar";
 import Banner from "@/components/common/banner/Banner";
 import Footer from "@/components/common/footer/Footer";
 import { Box } from "@chakra-ui/react"
 import { useEffect } from "react";
 import { getAuth, getToken } from "@/lib/auth";
+import UserNavBar from "@/components/common/navbar/NavBar";
 
 export default function RootLayout({
   children,
@@ -20,7 +20,7 @@ export default function RootLayout({
 }) {
   const pathname = usePathname();
   const avaliablePath = pathname.includes("/dashboard");
-
+  const avaliableNav= pathname.includes('/login' || '/register') 
   return (
     <ReduxProvider store={store}>
       <html lang="en">
@@ -33,7 +33,23 @@ export default function RootLayout({
             {avaliablePath ? (
               <ThemeWrapper>{children}</ThemeWrapper>
             ) : (
-              <HomeWrapper>{children}</HomeWrapper>
+              <HomeWrapper>
+                {
+                  !avaliableNav && (
+                    <>
+                     <Banner left="2359 Still StreetKenton, OH 43326"
+        right="Working hours: Mon - Fri - 09:00 am - 06:00 pm">
+
+                  </Banner>
+                  <UserNavBar />
+                    </>
+                  )
+                }
+                {children}
+                {
+                  !avaliableNav && <Footer />
+                }
+                </HomeWrapper>
             )}
           </Provider>
         </body>

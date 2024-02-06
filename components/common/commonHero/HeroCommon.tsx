@@ -13,11 +13,14 @@ interface HeroProps {
 export default function HeroCommon({title,description,placeholder}:HeroProps) {
   return (
           <Box  display='grid' gap='10'
-           maxW='lg'>
-            <Stack direction='column' spacing={10} color='brands.logInTextColor' 
+           maxW={{sm:'md',lg:'lg'}}
+           paddingTop={{sm:'3rem',md:'5rem',lg:'0px'}}
+          
+           >
+            <Stack direction='column' spacing={{sm:5,lg:10}} color='brands.logInTextColor' 
             >
-               <Box display='grid' gap='3'>
-                <Heading fontSize='50px' fontWeight='bold' >{title}</Heading>
+               <Box display='grid' gap='3' maxW={{sm:'xs',md:'lg'}}>
+                <Heading fontSize={{sm:'40px',md:'50px'}} fontWeight='bold' >{title}</Heading>
               <Text fontSize='19px' fontWeight='500' lineHeight={2} >
                {description}
               </Text>

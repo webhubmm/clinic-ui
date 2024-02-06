@@ -12,7 +12,7 @@ const ButtonPrimary = ({ placeholder, onClick }: ButtonProp) => {
     <Button
       onClick={onClick}
       fontWeight='bold'
-      color="white"
+      color="brands.logInTextColor"
       size="lg"
       border='2px'
       borderColor='neat.primary'

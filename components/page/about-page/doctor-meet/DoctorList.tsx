@@ -5,6 +5,7 @@ import docImgThree from "@/public/assets/doctor_three_team ca.png";
 import docImgFour from "@/public/assets/doctor_four_team ca.png";
 import Image from "next/image";
 import DoctorCard from "./DoctorCard";
+import ContainerBox from "@/components/common/container/Container";
 const doctorList = [
   {
     id: 23,
@@ -33,8 +34,9 @@ const doctorList = [
 ];
 export default function DoctorList() {
   return (
-    <Box bg="white" paddingY="6rem">
-      <Container maxW="container.xl">
+    <Box bg="brands.logInTextColor" paddingY="6rem">
+      {/* <Container maxW="container.xl"> */}
+      <ContainerBox>
         <Box
           display="flex"
           flexDir="column"
@@ -47,15 +49,15 @@ export default function DoctorList() {
           </Text>
           <Heading color="neat.secondary">Meet our dentists</Heading>
         </Box>
-        <Box display='flex' justifyContent='space-between' gap='8'>
+        <Box display={{sm:'grid',lg:'flex'}} gridTemplateColumns={{sm:'repeat(1fr)',md:'repeat(2,1fr)'}} justifyContent={{sm:'center',lg:'space-between'}} gap={{sm:'5',md:'8'}}>
             {
               doctorList?.map((item,index) =>(
                 <DoctorCard item={item} key={item.id+index}/>
               ))
             }
         </Box>
-
-      </Container>
+</ContainerBox>
+      {/* </Container> */}
     </Box>
   );
 }

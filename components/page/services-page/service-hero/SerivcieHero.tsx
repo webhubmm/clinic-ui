@@ -23,8 +23,12 @@ export default function ServicesHero() {
         alignItems="center"
        
         >
-          <Box position='relative' >
-            <Image src={servicesImg} alt="hero img" objectFit="cover" width={600} height={400} sizes='50vw' />
+           <Box position='relative' width={{sm:'100%',md:'80%',lg:'60%'}} height='100%'>
+            <Image src={servicesImg} alt="service hero img"   
+            width="0"
+           height="0"
+           sizes="100vw"
+            className="w-full h-auto" />
             </Box>
              <HeroCommon  title="Services" description="
              Your smile is one of your most valuable assets, and keeping it clean." placeholder="Contact Us"/>

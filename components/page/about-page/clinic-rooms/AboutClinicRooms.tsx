@@ -10,6 +10,7 @@ export default function AboutClinicRooms() {
         <Box position="relative">
           <Box
             display="flex"
+            flexDir={{sm:'column',lg:'row'}}
             gap="3"
             justifyContent="space-evenly"
             alignItems="center"
@@ -22,7 +23,8 @@ export default function AboutClinicRooms() {
                 height={300}
               />
             </Box>
-            <Stack maxW="lg" spacing={8}>
+
+            <Stack maxW={{sm:'md',md:"lg"}} spacing={8}>
               <Text color="neat.primary" fontWeight="600">
                 Our clinics
               </Text>

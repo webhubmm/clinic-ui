@@ -3,13 +3,16 @@ import Image from 'next/image'
 import React from 'react'
 import aboutActionImg from "@/public/assets/aboutshow_for you.png";
 import ButtonPrimary from '@/components/common/button/ButtonPrimary';
+import ContainerBox from "@/components/common/container/Container";
+
 export default function AboutShowAction() {
   return (
      <Box bg='brands.logInBgColor' paddingY='6rem'>
-     <Container maxW='container.xl'>
+     <ContainerBox>
+      
       <Box >  
-        <Box display='flex' gap='5' justifyContent='space-between'>
-          <Stack maxW='lg' spacing={12}>
+        <Box display='flex' flexDir={{sm:'column-reverse',lg:'row'}} gap='5' justifyContent='space-between' alignItems={{sm:"center",lg:'start'}}>
+          <Stack maxW={{sm:'md',md:'lg'}} spacing={12}>
             <Box display='grid' gap='3'> 
                 <Text color='neat.primary' fontWeight='600'>
            Healthy teeth and gums
@@ -41,8 +44,7 @@ export default function AboutShowAction() {
 
         </Box>
      </Box>
-        
-     </Container>
+        </ContainerBox>
     </Box>
   )
 }

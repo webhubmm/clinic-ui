@@ -16,28 +16,29 @@ export default function FormCommon() {
                     Get your dental health back on track with us
                   </Text>
                   <form action="" 
-                  // className="space-y-5"
                   >
                   <Box color='gray' display='grid' gap='5'>
                     <Box 
-                    display="flex" justifyContent='space-between'
-                    gap='10'
+                    display={{sm:'grid',md:"flex"}} justifyContent={{lg:'space-between'}}
+                    gap={{sm:'5',md:'10'}}
                     >
-                      <Box>
+                      <Box width='100%'>
                         <FormControl>
                           <Input
                             type="text"
                             placeholder="First Name"
                             padding={8}
+                            width='100%'
                           />
                         </FormControl>
                       </Box>
-                      <Box>
+                      <Box width='100%'>
                         <FormControl>
                           <Input
                             type="text"
                             placeholder="Last Name"
                             padding={8}
+                            width='100%'
                           />
                         </FormControl>
                       </Box>

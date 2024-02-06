@@ -1,14 +1,15 @@
 "use client";
-import { Box, Container,Text ,List,ListItem,Circle} from "@chakra-ui/react";
+import { Box,Text ,List,ListItem,Circle} from "@chakra-ui/react";
 import Image from "next/image";
 import dantxLogo from "@/public/assets/asset 6.svg";
 import { usePathname } from "next/navigation";
 import ButtonPrimary from "../button/ButtonPrimary";
 import Link from "next/link";
 import { FaPhoneAlt } from "react-icons/fa";
+import { CiMenuFries } from "react-icons/ci";
+import ContainerBox from "../container/Container";
 
-
-export default function NavBar() {
+export default function UserNavBar() {
     const navLinks = [
     {
       name: "Home",
@@ -37,11 +38,13 @@ export default function NavBar() {
     pathname === url ? "neat.primary" : "neat.secondary";
 
   return (
-    <Box bg='brands.logInTextColor'>
-       <Container maxW='container.xl' >
-        <Box display='flex' alignItems="center"  justifyContent='space-between' height={28}>
+    <Box bg='brands.logInTextColor' position={{sm:'sticky',lg:'static'}} top='0' zIndex={60} boxShadow="sm">
+       {/* <Container maxW={{sm:'container.sm',md:'container.md',xl:'container.xl',lg:'container.xl'}} > */}
+       <ContainerBox>
+         <Box paddingY={{sm:"18px",lg:"28px"}}  >
+        <Box display='flex' alignItems="center"  justifyContent='space-between'  >
 
-       <Box  display="flex" gap='3' alignItems='center'>
+  <Box  display='flex'alignItems='center' gap='3'>
           <Image src={dantxLogo} alt="Dentex Logo" width={30} height={30} />
          <Text color='neat.secondary' fontSize='25px' fontWeight='bold'>
             Dentex
@@ -49,7 +52,7 @@ export default function NavBar() {
        </Box>
         
        
-             <Box>
+             <Box display={{sm:'none',xl:'inline-block'}}>
               <List  display="flex" alignItems='center' justifyContent='space-around' gap='20' fontSize='lg' fontWeight='600' >
                  {
                    navLinks?.map((link,index) =>(
@@ -64,7 +67,7 @@ export default function NavBar() {
 
                 </List>
              </Box>
-             <Box display='flex' gap='8' alignItems='center'>
+             <Box display={{sm:'none',xl:'flex'}} gap='8' alignItems='center'>
                 <Box display='flex' gap='3' alignItems='center'> 
               <Circle size='35px' bg='neat.primary' color='white'>
                 <FaPhoneAlt />
@@ -82,9 +85,14 @@ export default function NavBar() {
               ></ButtonPrimary>
             </Link>
              </Box>
+             <Box display={{sm:'block',lg:'none'}}>
+                  <CiMenuFries size={25}/>
+             </Box> 
+    </Box>
+     
         
         </Box>
-    </Container>
+    </ContainerBox>
   </Box>
   )
 }

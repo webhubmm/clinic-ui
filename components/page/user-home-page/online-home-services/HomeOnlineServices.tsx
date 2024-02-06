@@ -3,18 +3,18 @@ import Image from "next/image";
 import { FaCircleCheck } from "react-icons/fa6";
 import homeThreeImg from '@/public/assets/homeThrre.png';
 import ButtonPrimary from "@/components/common/button/ButtonPrimary";
+import ContainerBox from "@/components/common/container/Container";
+
 export default function HomeOnlineServices() {
   return (
-     <Box>
     <Box 
      bgImage= "url('../assets/asset 38.webp')"
      bgPosition="center"
     bgRepeat="no-repeat"
-    // height='600px'
     >
-        <Container maxW='container.xl'>
-       <Box display='flex'  justifyContent='space-evenly' alignItems='center' height='120vh' >
-        <Box maxW="lg"  display='grid' gap='10'>
+        <ContainerBox>
+       <Box display='flex' flexDir={{sm:'column-reverse',lg:'row'}} justifyContent='space-evenly' alignItems='center' height={{lg:'100vh'}}  gap='5'>
+        <Box maxW={{sm:'md',lg:"lg"}} display='grid' gap={{sm:'5',lg:'10'}} alignItems='center' justifyItems='center'>
             <Text color='brands.logInTextColor' fontWeight='600'>
                 Need online support?
 
@@ -29,7 +29,7 @@ export default function HomeOnlineServices() {
                     <Box color="neat.primary">
                       <FaCircleCheck size={20} />
                     </Box>
-                    <Text as="span" color="white" fontWeight="500">
+                    <Text as="span" color="brands.logInTextColor" fontWeight="500">
                      Stay connected with our online doctors
 
                     </Text>
@@ -39,7 +39,7 @@ export default function HomeOnlineServices() {
                     <Box color="neat.primary">
                       <FaCircleCheck size={20} />
                     </Box>
-                    <Text as="span" color="white" fontWeight="500">
+                    <Text as="span" color="brands.logInTextColor" fontWeight="500">
                      Help you achieve optimal oral health
                      </Text>
             </Flex>
@@ -47,7 +47,7 @@ export default function HomeOnlineServices() {
                     <Box color="neat.primary">
                       <FaCircleCheck size={20} />
                     </Box>
-                    <Text as="span" color="white" fontWeight="500">
+                    <Text as="span" color="brands.logInTextColor" fontWeight="500">
                      We offer a comprehensive range of services
                     </Text>
                </Flex>
@@ -59,12 +59,17 @@ export default function HomeOnlineServices() {
                   </ButtonPrimary>
                 </Box>  
         </Box>
-         <Box position='relative'>
-            <Image src={homeThreeImg} alt="technology image" width={500} height={500}/>
+         <Box position='relative' width={{sm:'80%',md:'50%'}} >
+            <Image src={homeThreeImg} alt="technology image" 
+            width="0"
+           height="0"
+           sizes="100vw"
+            className="w-full h-auto"
+           />
          </Box>
        </Box>
-     </Container>
-    </Box>
+       </ContainerBox>
+     {/* </Container> */}
     </Box>
   )
 }

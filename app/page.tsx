@@ -11,7 +11,7 @@ import HomeBlogShow from "@/components/page/user-home-page/blog-show/HomeBlogSho
 
 export default function Home() {
   return (
-    <Box bg="neat.pearlwhite">
+    <Box>
       <Hero />
       <BookAppointment />
       <HomeDentalServices />
