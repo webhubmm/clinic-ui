@@ -78,14 +78,18 @@ const UserManagement = () => {
     search: "",
     token: accessToken,
   });
-  const [trash, setTrash] = useState(true);
+  const [trash, setTrash] = useState(false);
   const [isRestoreLoading, setIsRestoreLoading] = useState(false);
 
   const toast = useToast();
 
   useEffect(() => {
     FetchGetAllUserListFun();
-  }, [pagination, trash]);
+  }, [pagination]);
+
+  useEffect(() => {
+    onPaginationChange({ pageSize: 10, pageIndex: 0 });
+  }, [trash]);
 
   const toastFun = (
     condition: string,
@@ -239,25 +243,42 @@ const UserManagement = () => {
       {
         id: "actions",
         cell: ({ row }: CellContext<UserManagementType, React.ReactNode>) => (
-          <Flex gap={3}>
-            {trash ? (
-              <Button
-                onClick={() => {
-                  handleRestore(row.original);
-                }}
-                sx={{
-                  bgColor: "#5c90e9",
-                  transitionDuration: "500ms",
-                  color: "white",
-                  _hover: {
-                    bgColor: "#185aca",
-                  },
-                }}
-              >
-                <FaTrashRestore />
-              </Button>
-            ) : (
-              <Button
+          <>
+            {
+              trash ? (
+                <Flex gap={3}>
+                <Button
+                  onClick={() => {
+                    handleRestore(row.original);
+                  }}
+                  sx={{
+                    bgColor: "#5c90e9",
+                    transitionDuration: "500ms",
+                    color: "white",
+                    _hover: {
+                      bgColor: "#185aca",
+                    },
+                  }}
+                >
+                  <FaTrashRestore />
+                </Button>
+                <Button
+                  onClick={() => handleForceDelete(row.original)}
+                  sx={{
+                    bgColor: "#EE5D50",
+                    color: "white",
+                    transitionDuration: "500ms",
+                    _hover: {
+                      bgColor: "#E31A1A",
+                    },
+                  }}
+                >
+                  <FaTrash />
+                </Button>
+              </Flex>    
+              ) : (
+                <Flex gap={3}>
+                <Button
                 onClick={() => {
                   handleEditModal(row.original);
                 }}
@@ -271,42 +292,30 @@ const UserManagement = () => {
                 }}
               >
                 <FaRegEdit />
-              </Button>
-            )}
-            {trash ? (
-              <Button
-                onClick={() => handleForceDelete(row.original)}
-                sx={{
-                  bgColor: "#EE5D50",
-                  color: "white",
-                  transitionDuration: "500ms",
-                  _hover: {
-                    bgColor: "#E31A1A",
-                  },
-                }}
-              >
-                <FaTrash />
-              </Button>
-            ) : (
-              <Button
-                onClick={() => handleDelete(row.original)}
-                sx={{
-                  bgColor: "#EE5D50",
-                  color: "white",
-                  transitionDuration: "500ms",
-                  _hover: {
-                    bgColor: "#E31A1A",
-                  },
-                }}
-              >
-                <FaRegTrashAlt />
-              </Button>
-            )}
-          </Flex>
+                </Button>
+                <Button
+                  onClick={() => handleDelete(row.original)}
+                  sx={{
+                    bgColor: "#EE5D50",
+                    color: "white",
+                    transitionDuration: "500ms",
+                    _hover: {
+                      bgColor: "#E31A1A",
+                    },
+                  }}
+                >
+                  <FaRegTrashAlt />
+                </Button>
+              </Flex>
+              )
+            }
+              
+              
+          </>
         ),
       },
     ],
-    []
+    [trash]
   );
 
   return (

@@ -9,7 +9,7 @@ import { centralApi } from "../api-central";
 export interface GetUserType {
   page?: number;
   per_page?: number;
-  trash?: boolean;
+  trash?: boolean | number;
   search?: string;
   token: CookieValueTypes;
 }
@@ -42,33 +42,19 @@ export const GetAllUserList = async ({
   token,
 }: GetUserType) => {
   try {
-    if (trash === false) {
-      const response = await fetch(
-        `${config.apiBaseUrl}/admin/user_management?page=${page}&per_page=${per_page}&search=${search}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const data = await response.json();
-      return data;
-    } else if (trash === true) {
-      const response = await fetch(
-        `${config.apiBaseUrl}/admin/user_management?page=${page}&per_page=${per_page}&trash=${trash}&search=${search}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-      const data = await response.json();
-      return data;
-    }
+    if(trash) trash = 0
+    const response = await fetch(
+      `${config.apiBaseUrl}/admin/user_management?page=${page}&per_page=${per_page}&trash=${trash}&search=${search}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const data = await response.json();
+    return data;
   } catch (error) {
     console.log("error :: ", error);
     throw error;
