@@ -21,23 +21,17 @@ import {
   FaAngleDoubleLeft,
   FaTrash,
 } from "react-icons/fa";
-
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import usePagination from "@/hooks/usePagination";
 import {
   GetAllUserList,
-  GetAllUserListFun,
   GetUserType,
   userDelete,
   userForceDelete,
   userRestore,
 } from "@/lib/userManagement";
 import { getToken } from "@/lib/auth";
-import {
-  badgeColorChange,
-  changeFormatDateStringArr,
-  formatDateString,
-} from "@/utils/changes";
+import { badgeColorChange, changeFormatDateStringArr } from "@/utils/changes";
 import Loading from "@/components/Custom/Loading";
 import UserManagementCreateModal, {
   MyModalRef,
@@ -47,10 +41,18 @@ import UserManagementEditModal, {
 } from "@/components/userManagement/modal/Edit";
 import CustomModal from "@/components/Custom/CustomModal";
 import RestoreModal from "@/components/userManagement/modal/Restore";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import {
+  setDeleteLoading,
+  setFetchLoading,
+  setInit,
+  setSearch,
+  setTotal_count,
+  setTrash,
+  setUserData,
+} from "@/store/slices/globalSlice";
 
 const UserManagement = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [userList, setUserList] = useState<UserManagementType[]>([]);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: isRestoreOpen,
@@ -62,8 +64,7 @@ const UserManagement = () => {
     onOpen: onForceDeleteOpen,
     onClose: onForceDeleteClose,
   } = useDisclosure();
-  const { limit, onPaginationChange, skip, pagination } = usePagination();
-  const [totalCount, setTotalCount] = useState<number | undefined>();
+  const { onPaginationChange, pagination } = usePagination();
   const [userDataForDelete, setUserDataForDelete] = useState<string | null>(
     null
   );
@@ -74,13 +75,13 @@ const UserManagement = () => {
     string | null
   >(null);
   const accessToken = getToken();
-  const [credentialObj, setCredentialObj] = useState<GetUserType>({
-    search: "",
-    token: accessToken,
-  });
-  const [trash, setTrash] = useState(false);
   const [isRestoreLoading, setIsRestoreLoading] = useState(false);
-
+  const dispatch = useAppDispatch();
+  const { credential, userData } = useAppSelector((state) => state.globalSlice);
+  const trash = useAppSelector((state) => state.globalSlice.credential.trash);
+  const { total_count, isFetchLoading } = useAppSelector(
+    (state) => state.globalSlice
+  );
   const toast = useToast();
 
   useEffect(() => {
@@ -89,6 +90,7 @@ const UserManagement = () => {
 
   useEffect(() => {
     onPaginationChange({ pageSize: 10, pageIndex: 0 });
+    dispatch(setSearch(""));
   }, [trash]);
 
   const toastFun = (
@@ -106,8 +108,8 @@ const UserManagement = () => {
     });
   };
 
-  const pageCount = totalCount
-    ? Math.ceil(totalCount / pagination.pageSize)
+  const pageCount = total_count
+    ? Math.ceil(total_count / pagination.pageSize)
     : 0;
 
   const createModalRef = useRef<MyModalRef>(null);
@@ -126,7 +128,7 @@ const UserManagement = () => {
   };
 
   const handleChangeSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCredentialObj({ ...credentialObj, search: e.target.value });
+    dispatch(setSearch(e.target.value));
   };
 
   const handleDelete = (user: UserManagementType) => {
@@ -135,17 +137,16 @@ const UserManagement = () => {
   };
 
   const deleteComfirmFun = async () => {
+    dispatch(setDeleteLoading(true));
     if (userDataForDelete) {
       const delobj = { id: userDataForDelete };
       const result = await userDelete(delobj, accessToken);
-      console.log("result from deleteComfirmFun :: ", result);
       if (result.code === 200) toastFun("Success", result.message, "success");
       if (result.status === 400) toastFun("Error", result.message, "error");
       onClose();
+      dispatch(setDeleteLoading(false));
       FetchGetAllUserListFun();
     }
-
-    return;
   };
 
   const handleRestore = (user: UserManagementType) => {
@@ -154,6 +155,7 @@ const UserManagement = () => {
   };
 
   const restoreComfirmFun = async () => {
+    dispatch(setDeleteLoading(true));
     setIsRestoreLoading(true);
     if (userDataForRestore) {
       const restoreobj = { id: userDataForRestore };
@@ -162,10 +164,10 @@ const UserManagement = () => {
       if (result.code === 200) toastFun("Success", result.message, "success");
       if (result.status === 400) toastFun("Error", result.message, "error");
       onRestoreClose();
+      setIsRestoreLoading(false);
+      dispatch(setDeleteLoading(false));
       FetchGetAllUserListFun();
     }
-    setIsRestoreLoading(false);
-    return;
   };
 
   const handleForceDelete = (user: UserManagementType) => {
@@ -174,17 +176,16 @@ const UserManagement = () => {
   };
 
   const forceDeleteComfirmFun = async () => {
+    dispatch(setDeleteLoading(true));
     if (userDataForDelete) {
       const delobj = { id: userDataForDelete };
       const result = await userForceDelete(delobj, accessToken);
-      console.log("result from deleteComfirmFun :: ", result);
       if (result.code === 200) toastFun("Success", result.message, "success");
       if (result.status === 400) toastFun("Error", result.message, "error");
       onForceDeleteClose();
+      dispatch(setDeleteLoading(false));
       FetchGetAllUserListFun();
     }
-
-    return;
   };
 
   const FetchGetAllUserListFun = async () => {
@@ -192,12 +193,14 @@ const UserManagement = () => {
       page: pagination.pageIndex + 1,
       per_page: pagination.pageSize,
     };
-    setIsLoading(true);
-    const result = await GetAllUserList({ ...credentialObj, trash, ...obj });
+    dispatch(setFetchLoading(true));
+    const result = await GetAllUserList({ ...credential, ...obj });
     const resultWithChangeDate = changeFormatDateStringArr(result.data.users);
-    setUserList(resultWithChangeDate);
-    setTotalCount(result.data.total_count);
-    setIsLoading(false);
+    dispatch(setUserData(resultWithChangeDate));
+    dispatch(setInit(true));
+    dispatch(setTotal_count(result.data.total_count));
+    dispatch(setUserData(resultWithChangeDate));
+    dispatch(setFetchLoading(false));
   };
 
   const columns = useMemo<ColumnDef<UserManagementType, React.ReactNode>[]>(
@@ -244,9 +247,8 @@ const UserManagement = () => {
         id: "actions",
         cell: ({ row }: CellContext<UserManagementType, React.ReactNode>) => (
           <>
-            {
-              trash ? (
-                <Flex gap={3}>
+            {trash ? (
+              <Flex gap={3}>
                 <Button
                   onClick={() => {
                     handleRestore(row.original);
@@ -275,23 +277,23 @@ const UserManagement = () => {
                 >
                   <FaTrash />
                 </Button>
-              </Flex>    
-              ) : (
-                <Flex gap={3}>
+              </Flex>
+            ) : (
+              <Flex gap={3}>
                 <Button
-                onClick={() => {
-                  handleEditModal(row.original);
-                }}
-                sx={{
-                  bgColor: "#5c90e9",
-                  transitionDuration: "500ms",
-                  color: "white",
-                  _hover: {
-                    bgColor: "#185aca",
-                  },
-                }}
-              >
-                <FaRegEdit />
+                  onClick={() => {
+                    handleEditModal(row.original);
+                  }}
+                  sx={{
+                    bgColor: "#5c90e9",
+                    transitionDuration: "500ms",
+                    color: "white",
+                    _hover: {
+                      bgColor: "#185aca",
+                    },
+                  }}
+                >
+                  <FaRegEdit />
                 </Button>
                 <Button
                   onClick={() => handleDelete(row.original)}
@@ -307,10 +309,7 @@ const UserManagement = () => {
                   <FaRegTrashAlt />
                 </Button>
               </Flex>
-              )
-            }
-              
-              
+            )}
           </>
         ),
       },
@@ -319,79 +318,79 @@ const UserManagement = () => {
   );
 
   return (
-    <Box>
-      {isLoading ? (
-        <Loading />
-      ) : (
-        <Box>
-          <Text fontSize={"30px"} fontWeight={"bold"}>
-            User Table
-          </Text>
-          <Box display={"flex"}>
-            <Box display={"flex"} width={{ base: "90%", md: "50%", lg: "35%" }}>
-              <Input
-                variant="outline"
-                placeholder="Search"
-                onChange={handleChangeSearch}
-              />
-              <Button
-                ml={1}
-                onClick={() => {
-                  FetchGetAllUserListFun();
-                  setCredentialObj({ ...credentialObj, search: "" });
-                }}
-              >
-                <FaSistrix />
-              </Button>
-            </Box>
-            <Box display={"flex"} justifyContent={"flex-end"} width={"100%"}>
-              {trash ? (
-                <Button
-                  onClick={() => {
-                    setTrash(false);
-                  }}
-                >
-                  <FaAngleDoubleLeft />
-                </Button>
-              ) : (
-                <Button
-                  colorScheme={"red"}
-                  onClick={() => {
-                    setTrash(true);
-                  }}
-                >
-                  Trash List
-                </Button>
-              )}
-
-              <Button
-                colorScheme={"blue"}
-                ml={4}
-                onClick={handleCreateModal}
-                sx={{
-                  bgColor: "#5c90e9",
-                  transitionDuration: "500ms",
-                  color: "white",
-                  _hover: {
-                    bgColor: "#185aca",
-                  },
-                }}
-              >
-                Create
-              </Button>
-            </Box>
+    <Box mb={5}>
+      <Box>
+        <Text fontSize={"30px"} fontWeight={"bold"}>
+          User Table
+        </Text>
+        <Box display={"flex"} mt={3}>
+          <Box display={"flex"} width={{ base: "90%", md: "50%", lg: "35%" }}>
+            <Input
+              variant="outline"
+              placeholder="Search"
+              onChange={handleChangeSearch}
+            />
+            <Button
+              ml={1}
+              onClick={() => {
+                FetchGetAllUserListFun();
+              }}
+            >
+              <FaSistrix />
+            </Button>
           </Box>
+          <Box display={"flex"} justifyContent={"flex-end"} width={"100%"}>
+            {trash ? (
+              <Button
+                onClick={() => {
+                  dispatch(setTrash(false));
+                }}
+              >
+                <FaAngleDoubleLeft />
+              </Button>
+            ) : (
+              <Button
+                colorScheme={"red"}
+                onClick={() => {
+                  dispatch(setTrash(true));
+                }}
+              >
+                Trash List
+              </Button>
+            )}
+
+            <Button
+              colorScheme={"blue"}
+              ml={4}
+              onClick={handleCreateModal}
+              sx={{
+                bgColor: "#5c90e9",
+                transitionDuration: "500ms",
+                color: "white",
+                _hover: {
+                  bgColor: "#185aca",
+                },
+              }}
+            >
+              Create
+            </Button>
+          </Box>
+        </Box>
+        {isFetchLoading ? (
+          <Loading />
+        ) : (
           <TableContainer>
             <CustomTable
-              data={userList}
+              data={userData}
               columns={columns}
               pagination={pagination}
               onPaginationChange={onPaginationChange}
               pageCount={pageCount}
             />
           </TableContainer>
-        </Box>
-      )}
+        )}
+      </Box>
+
       <CustomModal
         modalTitle={"Delete"}
         modalText={`Are you sure to Delete User Id ${userDataForDelete} ?`}
@@ -421,8 +420,16 @@ const UserManagement = () => {
         actionFun={forceDeleteComfirmFun}
         actionText={"Force Delete"}
       />
-      <UserManagementCreateModal ref={createModalRef} title={"Create User"} />
-      <UserManagementEditModal ref={editModalRef} title={"Edit User"} />
+      <UserManagementCreateModal
+        ref={createModalRef}
+        title={"Create User"}
+        fetchData={FetchGetAllUserListFun}
+      />
+      <UserManagementEditModal
+        ref={editModalRef}
+        title={"Edit User"}
+        fetchData={FetchGetAllUserListFun}
+      />
     </Box>
   );
 };

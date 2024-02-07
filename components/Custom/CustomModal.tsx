@@ -1,4 +1,5 @@
 "use client";
+import { useAppSelector } from "@/store/hooks";
 import {
   Button,
   Modal,
@@ -32,6 +33,9 @@ const CustomModal = ({
   actionFun,
   actionText,
 }: CustomModalType) => {
+  const deleteLoading = useAppSelector(
+    (state) => state.globalSlice.deleteLoading
+  );
   return (
     <>
       <Modal isOpen={isOpen} onClose={onClose} isCentered>
@@ -61,6 +65,7 @@ const CustomModal = ({
               Close
             </Button>
             <Button
+              isLoading={deleteLoading}
               variant="solid"
               onClick={actionFun}
               sx={{

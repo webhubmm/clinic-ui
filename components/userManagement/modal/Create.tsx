@@ -1,6 +1,8 @@
 import FilePondUploader from "@/components/FilePondUploader/FilePondUloader";
 import { getToken } from "@/lib/auth";
 import { CreateUser } from "@/lib/userManagement";
+import { useAppSelector } from "@/store/hooks";
+import { setCreateLoading } from "@/store/slices/globalSlice";
 import { UserManagementCreateType } from "@/types/userManagementType";
 import { getBase64 } from "@/utils/changes";
 import {
@@ -20,10 +22,12 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import React, { forwardRef, useImperativeHandle, useState } from "react";
+import { useDispatch } from "react-redux";
 
 interface MyModalProps {
   title: string;
   children?: React.ReactNode;
+  fetchData: () => void;
 }
 
 export interface MyModalRef {
@@ -34,7 +38,7 @@ export interface MyModalRef {
 const UserManagementCreateModal: React.ForwardRefRenderFunction<
   MyModalRef,
   MyModalProps
-> = ({ title, children }, ref) => {
+> = ({ title, children, fetchData }, ref) => {
   const accessToken = getToken();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [formData, setFormData] = useState<UserManagementCreateType>({
@@ -47,6 +51,10 @@ const UserManagementCreateModal: React.ForwardRefRenderFunction<
     image: "",
     token: accessToken,
   });
+  const dispatch = useDispatch();
+  const createLoading = useAppSelector(
+    (state) => state.globalSlice.createLoading
+  );
 
   useImperativeHandle(ref, () => ({
     open: onOpen,
@@ -70,6 +78,7 @@ const UserManagementCreateModal: React.ForwardRefRenderFunction<
   };
 
   const handleSubmit = async (e: any) => {
+    dispatch(setCreateLoading(true));
     e.preventDefault();
     const res = await CreateUser(formData);
     if (res.code === 400) {
@@ -78,7 +87,19 @@ const UserManagementCreateModal: React.ForwardRefRenderFunction<
     if (res.code === 200) {
       toastFun("Success", res.message, "success");
     }
+    dispatch(setCreateLoading(false));
     onClose();
+    fetchData();
+    setFormData({
+      name: "",
+      email: "",
+      phone: "",
+      password: "",
+      password_confirmation: "",
+      role: "",
+      image: "",
+      token: accessToken,
+    });
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -92,13 +113,6 @@ const UserManagementCreateModal: React.ForwardRefRenderFunction<
     setFormData((prevData) => ({
       ...prevData,
       role: e.target.value,
-    }));
-  };
-
-  const handleGenderChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      gender: e.target.value,
     }));
   };
 
@@ -176,6 +190,7 @@ const UserManagementCreateModal: React.ForwardRefRenderFunction<
             <FilePondUploader onFileChange={handleFileChange} />
 
             <Button
+              isLoading={createLoading}
               float="inline-end"
               type="submit"
               colorScheme="blue"

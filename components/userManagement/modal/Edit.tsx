@@ -17,9 +17,13 @@ import {
 import { EditUser } from "@/lib/userManagement";
 import { getToken } from "@/lib/auth";
 import { UserManagementType } from "@/types/userManagementType";
+import { useDispatch } from "react-redux";
+import { useAppSelector } from "@/store/hooks";
+import { setEditLoading } from "@/store/slices/globalSlice";
 
 interface EditModalProps {
   title: string; // Data to be edited
+  fetchData: () => void;
 }
 
 export interface EditModalRef {
@@ -30,7 +34,7 @@ export interface EditModalRef {
 const UserManagementEditModal: React.ForwardRefRenderFunction<
   EditModalRef,
   EditModalProps
-> = ({ title }, ref) => {
+> = ({ title, fetchData }, ref) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const accessToken = getToken();
   const [formData, setFormData] = useState<UserManagementType>({
@@ -41,6 +45,8 @@ const UserManagementEditModal: React.ForwardRefRenderFunction<
     role: "",
     token: accessToken,
   });
+  const dispatch = useDispatch();
+  const EditLoading = useAppSelector((state) => state.globalSlice.editLoading);
   const toast = useToast();
 
   useImperativeHandle(ref, () => ({
@@ -82,17 +88,20 @@ const UserManagementEditModal: React.ForwardRefRenderFunction<
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("form :: from edit :: ", formData);
+    dispatch(setEditLoading(true));
     const res = await EditUser(formData);
     if (res === undefined) {
       return;
     }
     if (res.code === 400) {
       toastFun("Error", res.message || res.data, "error");
+      onClose();
     } else if (res.code === 200) {
       toastFun("Success", res.message, "success");
       onClose();
+      fetchData();
     }
+    dispatch(setEditLoading(false));
   };
 
   // Render modal content
@@ -147,6 +156,7 @@ const UserManagementEditModal: React.ForwardRefRenderFunction<
             </FormControl>
 
             <Button
+              isLoading={EditLoading}
               float="inline-end"
               type="submit"
               colorScheme="blue"
