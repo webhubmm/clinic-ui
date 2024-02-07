@@ -43,11 +43,11 @@ const blogsLists =[
 ]
 export default function BlogsShow() {
   return (
-    <Wrap marginTop='4rem' spacing={10}>
+    <Wrap marginTop='4rem' spacing={10} >
             {
                 blogsLists?.map((item) =>(
                   <WrapItem key={item.id}>
-                    <BlogsCard blogImg={item.blogImg} title={item?.title} />
+                    <BlogsCard blogImg={item.blogImg} title={item?.title}  md='330px'/>
                    </WrapItem> 
                 ))
             }

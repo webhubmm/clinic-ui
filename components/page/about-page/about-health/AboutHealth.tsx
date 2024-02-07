@@ -27,7 +27,7 @@ const healthLsit =[
 ]
 export default function AboutHealth() {
   return (
-    <Box paddingTop={{md:'8rem',lg:'16rem'}} paddingBottom={{md:'7rem'}} >
+    <Box paddingTop={{md:'8rem',lg:'16rem'}} paddingBottom={{md:'7rem'}}  bg='neat.pearlwhite'>
       <Container maxW='container.xl'>
       {/* <ContainerBox> */}
        <Box display='flex' flexDir="column" gap='5'  justifyContent='center' alignItems='center'>

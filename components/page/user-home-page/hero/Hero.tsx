@@ -7,35 +7,35 @@ import dantxLogo from "@/public/assets/asset 6.svg";
 import ButtonPrimary from "@/components/common/button/ButtonPrimary";
 export default function Hero() {
   return (
-    
+    <Box  overflow='hidden'>
 
     <Box 
      bgImage= "url('../assets/asset 37.webp')"
      bgPosition="center"
     bgRepeat="no-repeat"
-   overflow='hidden'
+  
     >
       <Container maxW='container.xl'>
         <Box 
         display='flex'
         flexDir={{sm:'column-reverse',lg:'row'}}
-        justifyContent={{lg:'space-around'}}
+        justifyContent={{sm:'center',lg:'space-around'}}
         gap={{sm:'5',lg:'10'}}
         alignItems="center"
         >
-          <Box position='relative' width='60%' height='100%' >
+          <Box position='relative' width={{sm:'100%',md:'40%',lg:'50%'}} height='100%' >
             <Image src={HeroImg} alt="hero img" 
              width="0"
-           height="0"
-           sizes="100vw"
+             height="0"
+             sizes="100vw"
             className="w-full h-auto"
             />
             </Box>
           <Box  display='grid' gap='5' 
           >
-            <Stack direction='column' spacing='20px'  color='brands.logInTextColor'
+            <Stack direction='column' spacing='20px'  color='brands.logInTextColor'  maxW={{md:'md',lg:'xl'}}
             >
-              <Heading fontSize={{sm:"45px",md:'60px'}} fontWeight='bold' >Trustworthy dental services</Heading>
+              <Heading fontSize={{sm:"45px",md:'60px'}} fontWeight='bold'  >Trustworthy dental services</Heading>
               <Text fontSize={{sm:'18px',md:'20px'}} fontWeight='500' lineHeight={2} >
                 Our dental clinic offers a range of services to help you achieve
                 a healthy and beautiful smile.
@@ -63,7 +63,7 @@ export default function Hero() {
         </Box>
       </Container>
       </Box>
-   
+   </Box>
   );
 };
 

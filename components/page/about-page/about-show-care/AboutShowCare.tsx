@@ -38,7 +38,7 @@ export default function AboutShowCare() {
     <Box bg='brands.logInBgColor' paddingY={{lg:'6rem'}} paddingTop={{sm:'6rem',lg:'auto'}}>
      {/* <Container maxW={{sm:"container.sm",md:'container.md',lg:'container.xl'}}> */}
      <ContainerBox>
-      <Box position='relative' gap={{sm:10,lg:'0'}} display="grid" justifyContent={{sm:'center',lg:'start'}} alignItems={{sm:'center',lg:'start'}}>
+      <Box position='relative' gap={{sm:10,lg:'0'}} display="grid" justifyContent={{sm:'center',lg:'space-around'}} alignItems={{sm:'center',lg:'start'}}>
         <Box display='flex' flexDir={{sm:'column-reverse',lg:'row'}} gap='5' justifyContent='space-evenly'>
           <Stack maxW={{sm:'lg',lg:'md'}} spacing={{sm:5,lg:10}}>
            <Text color='neat.primary' fontWeight='600'>

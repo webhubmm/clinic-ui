@@ -15,6 +15,7 @@ export default function AboutHero() {
     >
       <Container maxW='container.xl'>
         <Box 
+        display='flex'
         flexDir={{sm:'column-reverse',lg:'row'}}
         justifyContent='center'
         gap='10'

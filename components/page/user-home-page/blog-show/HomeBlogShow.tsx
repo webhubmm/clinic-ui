@@ -41,12 +41,12 @@ const blogsLists =[
             </Heading>
         </Box>
 
-        <Box marginTop='4rem' display='flex' flexDir={{sm:"column",lg:'row'}} alignItems='center' justifyContent={{lg:'space-between'}}>
+        <Box marginTop='4rem' display='flex' flexDir={{sm:"column",lg:'row'}} alignItems='center' justifyContent={{lg:'space-between'}}  gap={{sm:'5',lg:'0'}}>
             {
                 blogsLists?.map((item) =>(
                     
- 
-                        <BlogsCard  key={item.id} blogImg={item.blogImg} title={item?.title} />
+                    
+                        <BlogsCard  key={item.id} blogImg={item.blogImg} title={item?.title} md="90%"/>
                    
                 ))
             }

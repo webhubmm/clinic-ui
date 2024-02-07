@@ -55,7 +55,7 @@ import ContainerBox from "@/components/common/container/Container";
 
               
 
-              <Card padding={{sm:'30px',md:'40px'}} borderRadius='15px' boxShadow='md' marginTop='80px' maxW='xl'>
+              <Card padding={{sm:'30px',md:'40px'}} borderRadius='15px' boxShadow='md' marginTop='80px' maxW={{md:'xl',lg:'xl'}}>
                 <Box 
                 className="space-y-8"
                 >
@@ -69,7 +69,7 @@ import ContainerBox from "@/components/common/container/Container";
                     <Heading marginY='20px'>Provide genuine dental care</Heading>
                   </Box>
                   <Box 
-                  display='flex' flexDir={{sm:'column-reverse',lg:'row'}} gap='3'
+                  display='flex' flexDir={{sm:'column-reverse',md:'row',lg:'row'}} gap='3'
                   >
                     <Stack 
                     spacing={20}
