@@ -1,4 +1,5 @@
 "use client";
+import { useAppSelector } from "@/store/hooks";
 import {
   Button,
   Modal,
@@ -21,8 +22,6 @@ interface RestoreModalType {
   actionFun?: () => void;
   actionText?: string;
   children?: React.ReactNode;
-  isRestoreLoading: boolean;
-  setIsRestoreLoading: (value: any) => void;
 }
 
 const RestoreModal = ({
@@ -33,9 +32,10 @@ const RestoreModal = ({
   onClose,
   actionFun,
   actionText,
-  isRestoreLoading,
-  setIsRestoreLoading,
 }: RestoreModalType) => {
+  const restoreLoading = useAppSelector(
+    (state) => state.globalSlice.restoreLoading
+  );
   return (
     <>
       <Modal isOpen={isOpen} isCentered onClose={onClose}>
@@ -66,7 +66,7 @@ const RestoreModal = ({
               Close
             </Button>
             <Button
-              isLoading={isRestoreLoading}
+              isLoading={restoreLoading}
               variant="solid"
               onClick={actionFun}
               sx={{

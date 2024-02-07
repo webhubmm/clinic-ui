@@ -46,6 +46,7 @@ import {
   setDeleteLoading,
   setFetchLoading,
   setInit,
+  setRestoreLoading,
   setSearch,
   setTotal_count,
   setTrash,
@@ -75,7 +76,6 @@ const UserManagement = () => {
     string | null
   >(null);
   const accessToken = getToken();
-  const [isRestoreLoading, setIsRestoreLoading] = useState(false);
   const dispatch = useAppDispatch();
   const { credential, userData } = useAppSelector((state) => state.globalSlice);
   const trash = useAppSelector((state) => state.globalSlice.credential.trash);
@@ -155,17 +155,14 @@ const UserManagement = () => {
   };
 
   const restoreComfirmFun = async () => {
-    dispatch(setDeleteLoading(true));
-    setIsRestoreLoading(true);
+    dispatch(setRestoreLoading(true));
     if (userDataForRestore) {
       const restoreobj = { id: userDataForRestore };
       const result = await userRestore(restoreobj, accessToken);
-      console.log("result from restoreComfirmFun :: ", result);
       if (result.code === 200) toastFun("Success", result.message, "success");
       if (result.status === 400) toastFun("Error", result.message, "error");
       onRestoreClose();
-      setIsRestoreLoading(false);
-      dispatch(setDeleteLoading(false));
+      dispatch(setRestoreLoading(false));
       FetchGetAllUserListFun();
     }
   };
@@ -177,8 +174,8 @@ const UserManagement = () => {
 
   const forceDeleteComfirmFun = async () => {
     dispatch(setDeleteLoading(true));
-    if (userDataForDelete) {
-      const delobj = { id: userDataForDelete };
+    if (userDataForForceDelete) {
+      const delobj = { id: userDataForForceDelete };
       const result = await userForceDelete(delobj, accessToken);
       if (result.code === 200) toastFun("Success", result.message, "success");
       if (result.status === 400) toastFun("Error", result.message, "error");
@@ -408,8 +405,6 @@ const UserManagement = () => {
         onClose={onRestoreClose}
         actionFun={restoreComfirmFun}
         actionText={"Restore"}
-        isRestoreLoading={isRestoreLoading}
-        setIsRestoreLoading={setIsRestoreLoading}
       />
       <CustomModal
         modalTitle={"Delete Permanent"}
