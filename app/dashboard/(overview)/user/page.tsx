@@ -329,6 +329,14 @@ const UserManagement = () => {
             />
             <Button
               ml={1}
+              sx={{
+                bgColor: "#5c90e9",
+                transitionDuration: "500ms",
+                color: "white",
+                _hover: {
+                  bgColor: "#185aca",
+                },
+              }}
               onClick={() => {
                 FetchGetAllUserListFun();
               }}
@@ -339,6 +347,14 @@ const UserManagement = () => {
           <Box display={"flex"} justifyContent={"flex-end"} width={"100%"}>
             {trash ? (
               <Button
+                sx={{
+                  bgColor: "#5c90e9",
+                  transitionDuration: "500ms",
+                  color: "white",
+                  _hover: {
+                    bgColor: "#185aca",
+                  },
+                }}
                 onClick={() => {
                   dispatch(setTrash(false));
                 }}

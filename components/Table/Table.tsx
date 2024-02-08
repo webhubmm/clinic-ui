@@ -89,7 +89,7 @@ const CustomTable: React.FC<TableProps<any>> = ({
       </Box>
       <Divider mt={4} />
       <TableContainer mt={"5px"}>
-        <Table variant="striped">
+        <Table variant="simple" colorScheme="facebook">
           <Thead>
             {table.getHeaderGroups().map((headerGroup) => (
               <Tr key={headerGroup.id}>
