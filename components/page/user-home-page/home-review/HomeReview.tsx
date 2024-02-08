@@ -59,13 +59,15 @@ export default function HomeReview() {
             </Heading>
          </Box>
           <Box display={{sm:'grid',lg:'flex'}} justifyContent={{sm:'center',lg:'space-between'}} gap={{sm:'20',lg:'8'}} marginTop='4rem'>
-          
-              
+            
+
+
                 {
                     reviewList?.map((item,index) =>(
                         <ReviewCard key={item.id+index} item={item}/>
                     ))
                 }
+                
           </Box>
           </ContainerBox>
          {/* </Container> */}
