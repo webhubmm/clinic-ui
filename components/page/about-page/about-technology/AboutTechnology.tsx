@@ -2,19 +2,20 @@ import { Box,Container,Heading,Stack,Text,Flex } from "@chakra-ui/react";
 import Image from "next/image";
 import technologyImg from '@/public/assets/about_technol.png';
 import { FaCircleCheck } from "react-icons/fa6";
+import ContainerBox from "@/components/common/container/Container";
 
 export default function AboutTechnology() {
   return (
-    <Box>
     <Box 
      bgImage= "url('../assets/asset 38.webp')"
      bgPosition="center"
     bgRepeat="no-repeat"
-    // height='600px'
+    
     >
-        <Container maxW='container.xl'>
-       <Box display='flex'  justifyContent='space-between' alignItems='center' height='100vh'>
-        <Box maxW="lg"  display='grid' gap='8'>
+        <ContainerBox>
+       <Box display='flex' flexDir={{sm:'column-reverse',lg:'row'}}  justifyContent={{sm:'center',lg:'space-between'}} alignItems='center' gap={{sm:'5'}} minH='100vh' paddingTop={{sm:'2rem',lg:'0px'}}>
+
+        <Box maxW={{sm:'xl',lg:"lg"}}  display='grid' gap={{sm:'4',lg:'8'}}>
             <Text color='neat.primary' fontWeight='600'>
                 Need online support?
 
@@ -30,7 +31,7 @@ export default function AboutTechnology() {
                     <Box color="neat.primary">
                       <FaCircleCheck size={20} />
                     </Box>
-                    <Text as="span" color="white" fontWeight="500">
+                    <Text as="span" color="brands.logInTextColor" fontWeight="500">
                       Digital X-rays
                     </Text>
               </Flex>
@@ -39,7 +40,7 @@ export default function AboutTechnology() {
                     <Box color="neat.primary">
                       <FaCircleCheck size={20} />
                     </Box>
-                    <Text as="span" color="white" fontWeight="500">
+                    <Text as="span" color="brands.logInTextColor" fontWeight="500">
                       CAD/CAM technology
 
                     </Text>
@@ -48,7 +49,7 @@ export default function AboutTechnology() {
                     <Box color="neat.primary">
                       <FaCircleCheck size={20} />
                     </Box>
-                    <Text as="span" color="white" fontWeight="500">
+                    <Text as="span" color="brands.logInTextColor" fontWeight="500">
                       3D printing
 
 
@@ -57,12 +58,17 @@ export default function AboutTechnology() {
                   
              </Stack>
         </Box>
-         <Box>
-            <Image src={technologyImg} alt="technology image" width={500} height={500}/>
+
+         <Box position='relative' width={{sm:'80%',md:'50%'}}>
+            <Image src={technologyImg} alt="technology image"
+             width="0"
+           height="0"
+           sizes="100vw"
+            className="w-full h-auto"
+            />
          </Box>
        </Box>
-     </Container>
-    </Box>
+       </ContainerBox>
     </Box>
   )
 }

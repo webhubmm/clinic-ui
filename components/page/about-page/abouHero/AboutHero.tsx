@@ -22,9 +22,13 @@ export default function AboutHero() {
         alignItems="center"
        
         >
-          <Box position='relative' >
-            <Image src={AboutImg} alt="hero img" objectFit="cover" width={600} height={400} sizes='50vw' />
+          <Box position='relative' width={{sm:'100%',md:'80%',lg:'60%'}} height='100%'>
+            <Image src={AboutImg} alt="hero img"   width="0"
+           height="0"
+           sizes="100vw"
+            className="w-full h-auto" />
             </Box>
+
              <HeroCommon  title="About Us" description="
              Our dental team has years of experience and is dedicated to providing dental care.
 

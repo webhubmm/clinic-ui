@@ -1,8 +1,10 @@
-    import { Box, Container, Heading, Text } from "@chakra-ui/react";
-import HomeBlogCard from "./HomeBlogCard";
+import { Box, Container, Heading, Text,Wrap } from "@chakra-ui/react";
 import blogOne from '@/public/assets/blogOne_image13.png';
 import blogTwo  from "@/public/assets/blog_imageTwo.png";
 import blogThree from '@/public/assets/blog_imageThree14.png';
+import BlogsCard from "@/components/common/blogscard/BlogsCard";
+import ContainerBox from "@/components/common/container/Container";
+
 const blogsLists =[
        {
         id:44,
@@ -26,8 +28,8 @@ const blogsLists =[
     export default function HomeBlogShow() {
     return (
         <Box paddingY='8rem'>
-            <Container maxW='container.xl'>
-                
+            {/* <Container maxW='container.xl'> */}
+    <ContainerBox>
         <Box display='grid' justifyItems='center' alignItems='center' gap='5'>
             <Text color='neat.primary' fontWeight='600'>
                 Our blogs
@@ -39,19 +41,20 @@ const blogsLists =[
             </Heading>
         </Box>
 
-        <Box marginTop='4rem' display='flex' alignItems='center' justifyContent='space-evenly'>
+        <Box marginTop='4rem' display='flex' flexDir={{sm:"column",lg:'row'}} alignItems='center' justifyContent={{lg:'space-between'}}  gap={{sm:'5',lg:'0'}}>
             {
                 blogsLists?.map((item) =>(
-                    <HomeBlogCard item={item} key={item.id}/>
+                    
+                    
+                        <BlogsCard  key={item.id} blogImg={item.blogImg} title={item?.title} md="90%"/>
+                   
                 ))
             }
-            {/* <HomeBlogCard />
-            <HomeBlogCard />
-            <HomeBlogCard /> */}
+            
 
         </Box>
-
-        </Container>
+</ContainerBox>
+        {/* </Container> */}
         </Box>
     )
     }

@@ -7,18 +7,23 @@ interface blogProps {
    blogImg:string,
         title:string,
 }
-export default function HomeBlogCard({item}:{
-item:blogProps
+export default function BlogsCard({blogImg,title,md}:{
+        blogImg:string;
+        title:string;
+        md?:string;
 }) {
   return (
-    <Card width='380px' borderRadius='10px'>
-      <Box >
-        <Image src={item.blogImg}   alt="blogs app" width={380} height={380}  />
+    <Card width={{sm:'auto',md:`${md}`,lg:'380px'}} borderRadius='10px'>
+      <Box pos='relative' >
+        <Image src={blogImg}   alt="blogs app" 
+          height="0"
+           sizes="100vw"
+            className="w-full h-auto" /> 
 
       </Box>
-      <CardHeader maxW='sm'>
-        <Heading size='md' color='neat.secondary' fontSize='1.5rem'>
-          {item?.title}
+      <CardHeader maxW={{sm:'lg',lg:'sm'}}>
+        <Heading size='md' color='neat.secondary'   fontSize='1.5rem'>
+          {title}
           </Heading>
      <Text  display='flex' marginTop='20px' justifyItems='center' alignItems='center' gap="5" cursor='pointer'>
        <Text as='span' color='neat.primary' >

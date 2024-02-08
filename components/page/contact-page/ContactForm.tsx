@@ -6,7 +6,7 @@ export default function ContactForm() {
   return (
     <Box bg='#fff' marginY='4rem'>
         <Card  borderRadius='20px'>
-           <Box display='flex'>
+           <Box display='flex' flexDir={{sm:'column',lg:'row'}}>
              <Box position='relative'>
                 <Image src={heroImg}  alt='hero img name' width={600} height={800}/>
              </Box>

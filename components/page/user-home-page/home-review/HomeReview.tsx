@@ -7,6 +7,10 @@ import revieImgOne from '@/public/assets/revireimg.png';
 import revieImgTwo from '@/public/assets/revieauth.png';
 import revieImgThree from '@/public/assets/reviewAuthThree.png';
 import ReviewCard from "./ReviewCard";
+import ContainerBox from "@/components/common/container/Container";
+
+
+
 const reviewList =[
     {
         id:30,
@@ -42,7 +46,7 @@ const reviewList =[
 export default function HomeReview() {
   return (
      <Box paddingTop='6rem' paddingBottom='16rem' bg='neat.pearlwhite'>
-        <Container maxW='container.xl'>
+        <ContainerBox>
          <Box display='flex' flexDir='column'  gap='5' justifyContent='center' alignItems='center'>
            <Text color='neat.primary' fontWeight='600'>
             Our customers
@@ -54,25 +58,17 @@ export default function HomeReview() {
 
             </Heading>
          </Box>
-          <Box display='flex' justifyContent='space-between' gap='8' marginTop='4rem'>
-            {/* <Box position='relative'>
-                <Image src={reviewOne} alt="reviewone name" width={400} height={300}/> */}
+          <Box display={{sm:'grid',lg:'flex'}} justifyContent={{sm:'center',lg:'space-between'}} gap={{sm:'20',lg:'8'}} marginTop='4rem'>
+          
               
                 {
                     reviewList?.map((item,index) =>(
                         <ReviewCard key={item.id+index} item={item}/>
                     ))
                 }
-                {/* <ReviewCard /> */}
-            {/* </Box> */}
-            {/* <Box>
-                <Image src={reviewTwo} alt="reviewtwo name" width={400} height={300}/>
-            </Box>
-            <Box>
-                <Image src={reviewThree} alt="reviewthree name" width={400} height={300}/>
-            </Box> */}
           </Box>
-         </Container>
+          </ContainerBox>
+         {/* </Container> */}
      </Box>
   )
 }

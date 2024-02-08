@@ -32,9 +32,9 @@ const Navbar = ({ showSidebarButton = true, onShowSidebar }: Props) => {
 
   return (
     <Flex
-      bg="white"
+      bg="brands.logInTextColor"
       p={4}
-      color="white"
+      color="brands.logInTextColor"
       alignItems="center"
       justifyContent="center"
       shadow="lg"

@@ -8,14 +8,14 @@ interface BannerProp {
 
 const Banner = ({ left, right }: BannerProp) => {
   return (
-    <Box  color="white" padding='8px' bg="neat.secondary" display={{sm:"none",lg:'block'}}
+    <Box  color="brands.logInTextColor" padding='8px' bg="neat.secondary" display={{sm:"none",lg:'block'}}
     //  className="  bg-neat-secondary text-white p-2 hidden lg:block"
      >
       <Container maxW='container.xl' >
         <Box  display='flex' 
         justifyContent='space-between'
         alignItems="center"
-        // className="flex justify-between items-center"
+      
         >
           <Text>{left}</Text>
           <Text>{right}</Text>

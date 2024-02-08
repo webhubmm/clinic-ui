@@ -1,34 +1,49 @@
 "use client";
-import { Box, Container,Text ,List,ListItem,Circle} from "@chakra-ui/react";
+import { Box,Text ,List,ListItem,Circle} from "@chakra-ui/react";
+import { Fade, ScaleFade, Slide, useDisclosure, Collapse } from '@chakra-ui/react'
 import Image from "next/image";
 import dantxLogo from "@/public/assets/asset 6.svg";
 import { usePathname } from "next/navigation";
 import ButtonPrimary from "../button/ButtonPrimary";
 import Link from "next/link";
 import { FaPhoneAlt } from "react-icons/fa";
+import { CiMenuFries } from "react-icons/ci";
+import ContainerBox from "../container/Container";
+import { useState } from "react";
+import { RxCross2 } from "react-icons/rx";
 
+export default function UserNavBar() {
+  const [isRes,setIsRes] =useState(false)
+  const handleRes =() =>{
+    setIsRes(prev =>!prev)
+  }
+    const { isOpen, onToggle } = useDisclosure()
 
-export default function NavBar() {
     const navLinks = [
     {
       name: "Home",
       href: "/",
+      isOpen:false,
     },
     {
       name: "AboutUs",
       href: "/about",
+        isOpen:false,
     },
     {
       name: "Services",
       href: "/services",
+        isOpen:false,
     },
     {
       name: "Blogs",
       href: "/blogs",
+        isOpen:false,
     },
     {
       name: "ContactUs",
       href: "/contact",
+        isOpen:false,
     },
   ];
    const pathName = usePathname();
@@ -37,11 +52,12 @@ export default function NavBar() {
     pathname === url ? "neat.primary" : "neat.secondary";
 
   return (
-    <Box bg='brands.logInTextColor'>
-       <Container maxW='container.xl' >
-        <Box display='flex' alignItems="center"  justifyContent='space-between' height={28}>
+    <Box bg='brands.logInTextColor' position={{sm:'sticky',lg:'static'}} top='0' left='0' zIndex={60} boxShadow="sm">
+       <ContainerBox>
+         <Box paddingY={{sm:"18px",lg:"28px"}}  >
+        <Box display='flex' alignItems="center"  justifyContent='space-between'  >
 
-       <Box  display="flex" gap='3' alignItems='center'>
+      <Box  display={{sm:'none',lg:'flex'}}alignItems='center' gap='3'>
           <Image src={dantxLogo} alt="Dentex Logo" width={30} height={30} />
          <Text color='neat.secondary' fontSize='25px' fontWeight='bold'>
             Dentex
@@ -49,7 +65,7 @@ export default function NavBar() {
        </Box>
         
        
-             <Box>
+             <Box display={{sm:'none',xl:'inline-block'}}>
               <List  display="flex" alignItems='center' justifyContent='space-around' gap='20' fontSize='lg' fontWeight='600' >
                  {
                    navLinks?.map((link,index) =>(
@@ -64,7 +80,8 @@ export default function NavBar() {
 
                 </List>
              </Box>
-             <Box display='flex' gap='8' alignItems='center'>
+
+             <Box display={{sm:'none',xl:'flex'}} gap='8' alignItems='center'>
                 <Box display='flex' gap='3' alignItems='center'> 
               <Circle size='35px' bg='neat.primary' color='white'>
                 <FaPhoneAlt />
@@ -81,10 +98,38 @@ export default function NavBar() {
                 onClick={() => {}}
               ></ButtonPrimary>
             </Link>
-             </Box>
-        
-        </Box>
-    </Container>
+          </Box>
+
+              
+
+            
+    </Box>
+
+    {/* for responsive */}
+  <Box display={{sm:'flex',lg:'none'}} alignItems="center"  justifyContent='space-between'>
+      <Box  display='flex'alignItems='center' gap='3'>
+          <Image src={dantxLogo} alt="Dentex Logo" width={30} height={30} />
+         <Text color='neat.secondary' fontSize='25px' fontWeight='bold'>
+            Dentex
+         </Text>
+       </Box>
+       
+
+        {/* toggle */}
+    <Box as='button' onClick={handleRes} zIndex='100'>
+         {
+                      isRes  ? <RxCross2 size={25}/> : <CiMenuFries size={25}/>
+        }
+
+     </Box>
+     
+     
+  </Box>
+
+ 
+  
+</Box>
+    </ContainerBox>
   </Box>
   )
 }

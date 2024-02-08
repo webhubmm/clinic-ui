@@ -9,7 +9,7 @@
   export default function ShowDataCard({data}:{data:dataProps}) {
     // console.log(data)
     return (
-      <Card padding='30px' minW='280px'height='260px' shadow='md'>
+      <Card padding='30px' minW={{sm:'50%',md:'200px',lg:'280px'}}height={{sm:'auto',md:'300px',lg:'260px'}} shadow='md'>
           <Box display="flex" flexDir='column' gap='5' justifyContent='center' alignItems='center'>
             <Image src={data?.icons} alt="" width={60} height={60}/>
              <Box display='flex' flexDir="column" justifyContent='center' alignItems='center'>

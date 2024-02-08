@@ -3,12 +3,15 @@ import Image from "next/image";
 import imageOne from "@/public/assets/homeOne.png";
 import ButtonPrimary from "@/components/common/button/ButtonPrimary";
 import ButtonSecondary from "@/components/common/button/ButtonSecondary";
+import ContainerBox from "@/components/common/container/Container";
+
 export default function HomeDentalServices() {
   return (
     <Box bg="brands.logInBgColor" paddingY="8rem">
-      <Container maxW="container.xl">
-        <Box display="flex" alignContent="center" justifyContent="space-around">
-          <Box maxW="lg" display="grid" gap="6">
+      {/* <Container maxW="container.xl"> */}
+      <ContainerBox>
+        <Box display="flex" flexDir={{sm:'column-reverse',lg:'row'}} alignContent="center" justifyContent="space-around" alignItems='center' gap={{sm:'8',lg:'0'}}>
+          <Box maxW={{md:'xl',lg:"lg"}} display="grid" gap="6">
             <Text color="neat.primary" fontWeight="600">
               Introduction
             </Text>
@@ -49,7 +52,8 @@ export default function HomeDentalServices() {
             </Card>
           </Box>
         </Box>
-      </Container>
+        </ContainerBox>
+      {/* </Container> */}
     </Box>
   );
 }

@@ -9,7 +9,7 @@ import DoctorList from "@/components/page/about-page/doctor-meet/DoctorList";
 import AboutTechnology from "@/components/page/about-page/about-technology/AboutTechnology";
 export default function AboutPage() {
   return (
-    <Box bg="neat.pearlwhite">
+    <Box >
       <AboutHero />
       <AboutShowCare />
       <AboutHealth />

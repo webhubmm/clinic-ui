@@ -14,17 +14,21 @@
   import ButtonSecondary from "@/components/common/button/ButtonSecondary";
   import Image from "next/image";
 import FormCommon from "@/components/common/form/FormCommon";
+import ContainerBox from "@/components/common/container/Container";
+
   const BookAppointment = () => {
     return (
       <Box color="neat.pearlwhite" paddingY='50px' position='relative'>
-        <Container maxW='container.xl'>
-          <Box  display='flex' justifyContent='space-between' gap='10'
+        {/* <Container maxW='container.xl'> */}
+        <ContainerBox>
+          <Box  display='flex' flexDir={{sm:'column',lg:'row'}} justifyContent={{sm:'center',lg:'space-between'}} gap='10' alignItems={{sm:'center',lg:'space-between'}}
           >
             <Box
-            flex='1' 
+            flex='1'
             
             >
-              <Card bg="neat.primary" paddingX='30px' paddingY='15px' position='absolute' zIndex={20} top='-12'>
+              <Box position={{lg:'absolute'}} maxW={{sm:'sm',lg:'auto'}} zIndex={20} top='-12'>
+<Card bg="neat.primary" paddingX='30px' paddingY='15px' >
                 <Box 
                 display="flex" alignItems='start'
                 gap='5'
@@ -40,17 +44,19 @@ import FormCommon from "@/components/common/form/FormCommon";
                   spacing={2}
                   color='brands.logInTextColor'
                   fontWeight='700'
-                  // className="text-white space-y-2"
+                  
                   >
                     <Text>Call us for emergency</Text>
                     <Text>1800-749-8000</Text>
                   </VStack>
                 </Box>
               </Card>
+              </Box>
 
-              <Card padding='40px' borderRadius='15px' boxShadow='md' marginTop='80px' maxW='xl'>
+              
+
+              <Card padding={{sm:'30px',md:'40px'}} borderRadius='15px' boxShadow='md' marginTop='80px' maxW={{md:'xl',lg:'xl'}}>
                 <Box 
-                // display='grid'
                 className="space-y-8"
                 >
                   <Text 
@@ -58,19 +64,19 @@ import FormCommon from "@/components/common/form/FormCommon";
                   >What we do</Text>
                   <Box 
                   color='neat.secondary'
-                  width='80%'
+                  width={{sm:'100%',md:'80%'}}
                   >
                     <Heading marginY='20px'>Provide genuine dental care</Heading>
                   </Box>
                   <Box 
-                  display='flex' gap='3'
+                  display='flex' flexDir={{sm:'column-reverse',md:'row',lg:'row'}} gap='3'
                   >
                     <Stack 
                     spacing={20}
-                    maxW='220px'
+                    maxW={{lg:'220px'}}
                     >
                       <Text 
-                      color="gray"
+                      color="slate"
                       lineHeight={2}
                       fontWeight={600}
                       >
@@ -97,101 +103,18 @@ import FormCommon from "@/components/common/form/FormCommon";
             <Box 
             maxW='xl'
             flex='1'
-            marginTop='-150px'
+            marginTop={{lg:'-150px'}}
             zIndex={30}
-            // position='absolute'  top={-15} right="20"
             >
-              <Card padding='40px' borderRadius="15px">
+              
+              <Card padding={{sm:'30px',lg:'40px'}} borderRadius="15px">
                 <FormCommon />
-                {/* <Box display='grid' gap='5'
-                >
-                  <Box 
-                  color='neat.secondary'
-                  >
-                    <Heading>Book an appointment</Heading>
-                  </Box>
-                  <Text 
-                  color="neat.secondary"
-                  >
-                    Get your dental health back on track with us
-                  </Text>
-                  <form action="" 
-                  // className="space-y-5"
-                  >
-                  <Box color='gray' display='grid' gap='5'>
-                    <Box 
-                    display="flex" justifyContent='space-between'
-                    gap='10'
-                    >
-                      <Box>
-                        <FormControl>
-                          <Input
-                            type="text"
-                            placeholder="First Name"
-                            padding={8}
-                          />
-                        </FormControl>
-                      </Box>
-                      <Box>
-                        <FormControl>
-                          <Input
-                            type="text"
-                            placeholder="Last Name"
-                            padding={8}
-                          />
-                        </FormControl>
-                      </Box>
-                    </Box>
-                    <Box>
-                      <FormControl>
-                        <Input
-                          type="email"
-                          placeholder="Email Address"
-                          padding={8}
-                        />
-                      </FormControl>
-                    </Box>
-                    <Box>
-                      <FormControl>
-                        <Input type="tel" placeholder="Phone" padding={8} />
-                      </FormControl>
-                    </Box>
-                    <Box 
-                    display='flex'
-                    // className="flex"
-                    >
-                      <Box 
-                      flex='1'
-                      // className="flex-1"
-                      >
-                        <FormControl>
-                          <Input type="date" placeholder="Date" paddingY='32px'/>
-                        </FormControl>
-                      </Box>
-                    </Box>
-                    <Box 
-                    marginBottom='40px'
-                    // className="mb-10"
-                    >
-                      <FormControl>
-                        <Textarea placeholder="Message" cols={5} rows={6} />
-                      </FormControl>
-                    </Box>
-                    <Box 
-                    display="flex"
-                    alignContent='center'
-                    justifyContent='space-between'
-                    >
-                      <Checkbox colorScheme="gray">Email subscribe</Checkbox>
-                      <ButtonPrimary placeholder="Book Now"></ButtonPrimary>
-                    </Box>
-                    </Box> 
-                  </form>
-                </Box> */}
+                
               </Card>
             </Box>
           </Box>
-        </Container>
+          </ContainerBox>
+        {/* </Container> */}
       </Box>
     );
   };

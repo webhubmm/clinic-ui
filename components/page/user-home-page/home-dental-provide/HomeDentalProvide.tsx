@@ -1,16 +1,19 @@
 import { Box,Container,Stack,Text,Heading } from "@chakra-ui/react";
 import Image from "next/image";
 import homeImgTwo from '@/public/assets/homeTwo.png';
+import ContainerBox from "@/components/common/container/Container";
+
 export default function HomeDentalProvide() {
   return (
     <Box bg="neat.pearlwhite" paddingY="6rem">
-      <Container maxW="container.xl">
-          <Box display="flex" alignItems="center" justifyContent="space-around">
+      {/* <Container maxW="container.xl"> */}
+      <ContainerBox>
+          <Box display="flex" flexDir={{sm:'column',lg:'row'}} gap={{md:'8',lg:'0'}} alignItems="center" justifyContent="space-around">
                       <Box position="relative">
             <Image src={homeImgTwo} alt="image name" width={500} height={400} />
     
           </Box>
-          <Box maxW="lg" display="grid" gap="6">
+          <Box maxW={{md:'xl',lg:"lg"}} display="grid" gap="6">
             <Text color="neat.primary" fontWeight="600">
             Our services
             </Text>
@@ -27,7 +30,8 @@ export default function HomeDentalProvide() {
 
 
         </Box>
-      </Container>
+      {/* </Container> */}
+      </ContainerBox>
     </Box>
   );
 }

@@ -5,6 +5,7 @@ import Link from 'next/link';
 
 import ButtonSecondary from "../button/ButtonSecondary";
 import ButtonPrimary  from "../button/ButtonPrimary";
+import ContainerBox from "../container/Container";
 export default function Footer() {
    const navLinks = [
     {
@@ -30,9 +31,10 @@ export default function Footer() {
   ];
   return (
     <Box bg="neat.tertiary" paddingY='50px'>
-       <Container maxW='container.xl'>
+       {/* <Container maxW='container.xl'> */}
+       <ContainerBox>
          <Box>
-           <Grid templateColumns='repeat(5, 1fr)' gap='10'>
+           <Grid templateColumns={{sm:'repeat(2, 1fr)',md:'repeat(5, 1fr)',lg:'repeat(5, 1fr)'}} gap='10'>
               <GridItem>
                <Box color='brands.logInTextColor' display='grid' gap='5'>
                 <Text fontSize='lg' fontWeight='600' >
@@ -54,7 +56,7 @@ export default function Footer() {
 
                </Box>
               </GridItem>
-               <GridItem colSpan={2}>
+               <GridItem colSpan={{md:2}}>
                <Box color='brands.logInTextColor' display='grid' gap='5'>
                 <Text  fontSize='lg' fontWeight='600'>
 
@@ -126,16 +128,16 @@ export default function Footer() {
 
       
       fontWeight='bold'
-      color="white"
+      color="brands.logInTextColor"
       size="xl"
-      minW="250px"
+      minW={{sm:'200px',lg:"250px"}}
 
       border='2px'
-      borderColor='white'
+      borderColor='brands.logInBgColor'
       paddingY={{sm:'0.5rem',md:'15px'}}
       paddingX={{sm:"20px",md:"32px"}}
       borderRadius="30px"
-      _hover={{bg:"white",borderColor:'white',color:"neat.secondary"
+      _hover={{bg:"brands.logInBgColor",borderColor:'brands.logInTextColor',color:"neat.secondary"
     ,
     transitionDuration: '150ms',
     transitionTimingFunction: "ease-in"
@@ -165,12 +167,12 @@ export default function Footer() {
           Copyright © Dentex. All rights reserved. Designed by Vik Studio. Powered by Webflow
 
           </Text>
-          <Box display='flex' gap='3' color='white' alignItems='center'>
+          <Box display='flex' gap='3' color='brands.logInTextColor' alignItems='center'>
              <FaFacebookF size={20}/>
              <FaInstagram size={20}/>
           </Box>
       </Flex>
-        </Container>
+      </ContainerBox>
     </Box>
   )
 }

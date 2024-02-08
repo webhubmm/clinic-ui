@@ -17,12 +17,12 @@ export default function HealthCard(
   {list:ListProps}) 
   {
   return (
-  <Card padding='2.5rem' borderRadius='12px'>
+  <Card padding={{sm:'2rem',lg:'2.5rem'}} borderRadius='12px' maxW={{md:'80%',lg:"100%"}}>
             <Heading color='neat.secondary' marginBottom='30px' fontSize='1.7rem'>
               {list?.title}
 
             </Heading>
-            <Box display="flex" gap='10'>
+            <Box display="flex" flexDir={{sm:'column',md:'row'}} gap={{sm:'5',md:'10'}}>
                <Image src={list?.img} alt="" width={200} height={300}/>
                <Box maxW='md' display='grid' gap='8'>
                   <Text color='slate' fontSize='lg' fontWeight='600' lineHeight={2}>
