@@ -28,6 +28,7 @@ export const theme = extendTheme({
         gray_four: "#dddddd",
         sky: "#a8b6ce",
         pink: "#ffdede",
+        "#332941":"#332941",
         "#05b9de": "#05b9de",
         sky_one: "#052e73",
         brown: "#333333",

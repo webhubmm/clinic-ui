@@ -13,8 +13,8 @@ export default function HomeOnlineServices() {
     bgRepeat="no-repeat"
     >
         <ContainerBox>
-       <Box display='flex' flexDir={{sm:'column-reverse',lg:'row'}} justifyContent='space-evenly' alignItems='center' height={{lg:'100vh'}}  gap='5'>
-        <Box maxW={{sm:'md',lg:"lg"}} display='grid' gap={{sm:'5',lg:'10'}} alignItems='center' justifyItems='center'>
+       <Box display='flex' flexDir={{sm:'column-reverse',lg:'row'}} justifyContent={{lg:'space-evenly'}} alignItems='center' height={{lg:'100vh'}}  gap='5'>
+        <Box maxW={{sm:'md',lg:"lg"}} display='grid' gap={{sm:'5',lg:'10'}} alignItems='center' justifyItems={{sm:'center',lg:'start'}}>
             <Text color='brands.logInTextColor' fontWeight='600'>
                 Need online support?
 
@@ -59,7 +59,7 @@ export default function HomeOnlineServices() {
                   </ButtonPrimary>
                 </Box>  
         </Box>
-         <Box position='relative' width={{sm:'80%',md:'50%'}} >
+         <Box position='relative' width={{sm:'80%',md:'50%',lg:'500px'}}  >
             <Image src={homeThreeImg} alt="technology image" 
             width="0"
            height="0"

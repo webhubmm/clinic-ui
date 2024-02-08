@@ -13,9 +13,10 @@ export default function ReviewCard({item}:{
     item:reviewProps
 }) {
   return (
-     <Box position='relative'>
+     <Box position='relative' >
 <Image src={item?.imagesH} alt="reviewone name" width={400} height={300}/>
- <Card paddingX='2rem' paddingY='3rem' maxW='330px' borderRadius='15px' position='absolute' bottom='-40' left='8%'>
+
+ <Card paddingX='2rem' paddingY='3rem' maxW={{md:'300px',lg:'330px'}} borderRadius='15px' position='absolute' bottom={{md:'-20',lg:'-40'}} left='8%'>
                    <Box display='flex' flexDir='column' justifyItems='center' gap='5' maxW='sm'>
                     <Text fontWeight='600' fontSize='25px' color='neat.secondary'>
                        {item?.title}

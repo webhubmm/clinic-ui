@@ -6,7 +6,9 @@ import {
   FormControl,
   FormLabel,
   InputGroup,
+  Heading,
   InputRightElement,
+  Flex
 } from "@chakra-ui/react";
 import { Input } from "@chakra-ui/react";
 import { setCookie } from "cookies-next";
@@ -19,6 +21,10 @@ import Link from "next/link";
 import { UserLogin } from "@/lib/login";
 import { getAuth, getToken } from "@/lib/auth";
 import { isValidEmail } from "@/utils/validation";
+import { FaGoogle, FaArrowLeft } from "react-icons/fa";
+import SinginImg from "@/public/assets/contactForm.png";
+import Image from 'next/image';
+import ContainerBox from "@/components/common/container/Container";
 
 interface FormState {
   email: string;
@@ -118,114 +124,181 @@ const Login = () => {
   };
 
   return (
+    <Box bg='neat.pearlwhite'>
+    <ContainerBox>
     <Box
-      w={"100vw"}
-      h={"100vh"}
-      display={"flex"}
-      bg={"brand.logInBgColor"}
-      bgSize={"cover"}
-      alignItems={{ sm: "flex-start", md: "center" }}
-      justifyContent={"center"}
-      p={{ sm: 0, md: "4rem" }}
-    >
-      <Box
-        width={{ base: "100%", md: "70%", lg: "60%", xl: "50%", xxl: "35%" }}
-        my={{ base: "4rem", md: 0 }}
-        p={{ base: 6, sm: 2, md: 0 }}
-      >
-        <Link href={"/"}>
-          <Box display={"flex"} justifyContent={"center"}>
-            <Text>Neat Tech</Text>
-          </Box>
-        </Link>
+    display='flex'
+      
+      alignItems="center"
+      justifyContent="center"
+      gap={8}
+              overflow="hidden"
 
-        <Box
-          display={"flex"}
-          mt={5}
-          justifyContent={"center"}
-          alignItems={{ base: "flex-start", md: "center" }}
-        >
-          <Box
-            w={"100%"}
-            px={{ base: "1.75rem", md: "2.3rem" }}
-            pb={{ base: "1.75rem", md: "2.3rem" }}
-            pt={{ base: "1.75rem", md: "2rem" }}
-            bgColor={"white"}
-            className="loginShadow"
-            borderRadius={7}
+      h="100vh">
+      <Flex flexDirection="column" gap={{lg:'20'}}>
+        
+        <Flex
+          maxW={{ sm: "100%", md:'100%',lg: "max-content" }}
+          w="100%"
+          mx={{ sm: "auto", xl: "30px" }}
+          marginRight="auto"
+          alignItems="start"
+          justifyContent="center"
+          px={{ sm: "25px", md: "0px" }}
+          flexDirection="column"
+          gap='3'
           >
+            <Link href="/">
+          <Flex alignItems="center"  gap={3}>
+            <FaArrowLeft size={20} />
+            <span className="py-3">Back</span>
+          </Flex>
+        </Link>
+          <Box marginRight="auto">
+            <Heading color="neat.secondary" fontSize={{sm:'30px',md:"36px"}} >
+              Neat Tech
+            </Heading>
             <Text
-              fontSize={{ base: "lg", sm: "22px", md: "25px" }}
-              textAlign={"center"}
-              fontWeight={"bold"}
-              userSelect={"none"}
-              mb={5}
-            >
-              Login to Dental Clinic
+              my="20px"
+              ms="4px"
+              color="brown"
+              fontWeight="500"
+              fontSize="md">
+              Enter your email and password to sign in!
             </Text>
+          </Box>
 
-            <FormControl mb={3}>
-              <FormLabel color={"gray"} userSelect={"none"}>
-                Email address
-              </FormLabel>
-              <Input
-                placeholder="Email"
-                size="md"
-                color={"black"}
-                mb={"0.8rem"}
-                _placeholder={{ color: "white" }}
-                onChange={(e) => formFillingFun("email", e.target.value)}
-              />
-            </FormControl>
-            <FormControl mb={3}>
-              <FormLabel color={"gray"} userSelect={"none"}>
-                Password
-              </FormLabel>
-              <InputGroup>
-                <InputRightElement className="InputLeft">
-                  <PwShowHideFun show={show} setShow={setShow} />
-                </InputRightElement>
+          <Flex
+            zIndex="2"
+            direction="column"
+            w={{ base: "100%", md: "420px" }}
+            maxW="100%"
+            background="transparent"
+            borderRadius="15px"
+            mx={{ base: "auto", lg: "unset" }}
+            marginRight="auto"
+            mb={{ base: "20px", md: "auto" }}>
+           
+            {/* <form action="" > */}
+              <FormControl>
+                <FormLabel
+                  display="flex"
+                  userSelect={"none"}
+                  ms="4px"
+                  fontSize="sm"
+                  fontWeight="500"
+                  color="#000"
+                  mb="8px">
+                  Email Address<Text color="#000">*</Text>
+                </FormLabel>
                 <Input
-                  type={show ? "text" : "password"}
-                  placeholder="Password"
-                  size="md"
-                  color={"black"}
-                  mb={"0.8rem"}
-                  _placeholder={{ color: "white" }}
-                  onChange={(e) => formFillingFun("password", e.target.value)}
+                  isRequired={true}
+                  fontSize="sm"
+                 
+                  ms={{ base: "0px", md: "0px" }}
+                  type="email"
+                  placeholder="Email"
+                   onChange={(e) => formFillingFun("email", e.target.value)}
+                  mb="20px"
+                  bgColor={"neat.pearlwhite"}
+                  fontWeight="500"
+                  size="lg"
                 />
-              </InputGroup>
-            </FormControl>
-            <Box display={"flex"} justifyContent={"center"} mt={5}>
-              <Button
-                isLoading={isLoading}
+               
+              </FormControl>
+              <FormControl>
+                <FormLabel
+                  ms="4px"
+                  fontSize="sm"
+                  fontWeight="500"
+                  color="#000"
+                  display="flex"
+                  userSelect={"none"}
+                  >
+                  Password<Text color="#000">*</Text>
+                </FormLabel>
+                <InputGroup size="md">
+                 
+                  <Input
+                    isRequired={true}
+                    fontSize="sm"
+                                     placeholder="Password"
+
+                    mb="20px"
+                    id="password"
+                    size="lg"
+                    bgColor={"neat.pearlwhite"}
+                  type={show ? "text" : "password"}
+                  onChange={(e) => formFillingFun("password", e.target.value)}
+                  
+                  
+                  />
+                 
+                 <InputRightElement  
+                  display="flex"
+                    alignItems="center"
+                    mt="4px"
+                  >
+                <PwShowHideFun show={show} setShow={setShow} />
+                 </InputRightElement>
+                </InputGroup>
+              </FormControl>
+                <Button
+              isLoading={isLoading}
                 loadingText="Loading"
-                width={"100%"}
-                variant="solid"
-                size="md"
-                fontSize={17}
-                spinnerPlacement="start"
-                bgColor={"#05b9de"}
-                color={"white"}
-                _hover={{
-                  bgColor: "#5cd1e9",
+             type="submit"
+                fontSize="sm"
+                variant="brand"
+                fontWeight="500"
+                w="100%"
+                h="50"
+                mb="20px"
+                bg="#332941"
+                 _hover={{
+                  bgColor: "brown",
                 }}
+                color="#fff"
                 transitionDuration={"500ms"}
                 onClick={LoginFunc}
-              >
-                Login
+                >
+                   Login
+                  {/* <Spinner size='sm' /> */}
+               
               </Button>
-            </Box>
-            <Box display={"flex"} mt={6}>
-              <Text mr={3}>Not registered yet?</Text>
-              <Link href={"/register"}>
-                <Text color={"#05b9de"}>Create an Account</Text>
-              </Link>
-            </Box>
-          </Box>
-        </Box>
+            {/* </form> */}
+
+            <Flex
+              flexDirection="column"
+              justifyContent="center"
+              alignItems="start"
+              maxW="100%"
+              mt="0px">
+              <Text color="neat.secondary"  fontSize="14px">
+                Not registered yet?{" "}
+                <Link href="/register">
+                  <Text as='span' color="brown"  fontWeight="600">
+                    Create an Account
+                  </Text>
+                </Link>
+              </Text>
+            </Flex>
+          </Flex>
+        </Flex>
+      </Flex>
+      <Box width="450px" display={{sm:'none',lg:"inline-block"}} >
+        <Image
+          src={SinginImg}
+          alt="singinimage"
+          width={0}
+          height={0}
+          sizes="100vw"
+          style={{ width: "100%", height: "auto" }}
+        />
       </Box>
     </Box>
+    </ContainerBox>
+  </Box>  
+
   );
 };
 
@@ -245,3 +318,6 @@ function PwShowHideFun({ show, setShow }: ShowHideType) {
     </>
   );
 }
+
+
+    
