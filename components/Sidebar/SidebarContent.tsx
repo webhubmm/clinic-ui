@@ -23,7 +23,7 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ onClose }) => {
       </Center>
       <Flex direction="column" rowGap={5}>
         {navItems.map((item) => (
-          <NavLink key={item.title} href={item.link}>
+          <NavLink color={'white'} key={item.title} href={item.link}>
             {item.title}
           </NavLink>
         ))}

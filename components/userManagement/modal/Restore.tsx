@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 
-interface CustomModalType {
+interface RestoreModalType {
   modalTitle: string;
   modalText?: string;
   isOpen: boolean;
@@ -24,7 +24,7 @@ interface CustomModalType {
   children?: React.ReactNode;
 }
 
-const CustomModal = ({
+const RestoreModal = ({
   modalTitle,
   modalText,
   isOpen,
@@ -32,13 +32,13 @@ const CustomModal = ({
   onClose,
   actionFun,
   actionText,
-}: CustomModalType) => {
-  const deleteLoading = useAppSelector(
-    (state) => state.globalSlice.deleteLoading
+}: RestoreModalType) => {
+  const restoreLoading = useAppSelector(
+    (state) => state.globalSlice.restoreLoading
   );
   return (
     <>
-      <Modal isOpen={isOpen} onClose={onClose} isCentered>
+      <Modal isOpen={isOpen} isCentered onClose={onClose}>
         <ModalOverlay />
         <ModalContent minW={{ base: "95%", sm: "90%", md: "50%", lg: "40%" }}>
           <ModalHeader>{modalTitle}</ModalHeader>
@@ -51,6 +51,9 @@ const CustomModal = ({
 
           <ModalFooter>
             <Button
+              mr={3}
+              onClick={onClose}
+              variant={"solid"}
               sx={{
                 bgColor: "#5c90e9",
                 transitionDuration: "500ms",
@@ -59,21 +62,19 @@ const CustomModal = ({
                   bgColor: "#185aca",
                 },
               }}
-              mr={3}
-              onClick={onClose}
             >
               Close
             </Button>
             <Button
-              isLoading={deleteLoading}
+              isLoading={restoreLoading}
               variant="solid"
               onClick={actionFun}
               sx={{
-                bgColor: "#EE5D50",
+                bgColor: "#2ce04d",
                 color: "white",
                 transitionDuration: "500ms",
                 _hover: {
-                  bgColor: "#E31A1A",
+                  bgColor: "#009911",
                 },
               }}
             >
@@ -86,4 +87,4 @@ const CustomModal = ({
   );
 };
 
-export default CustomModal;
+export default RestoreModal;

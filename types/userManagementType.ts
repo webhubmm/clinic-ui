@@ -17,10 +17,6 @@ export interface UserManagementCreateType {
   password: string;
   password_confirmation: string;
   role: string;
-  note: string;
-  age: string;
-  blood_type: string;
   image: string | null;
-  gender: string;
   token: CookieValueTypes;
 }

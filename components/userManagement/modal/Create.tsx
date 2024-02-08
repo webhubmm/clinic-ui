@@ -1,6 +1,8 @@
 import FilePondUploader from "@/components/FilePondUploader/FilePondUloader";
 import { getToken } from "@/lib/auth";
 import { CreateUser } from "@/lib/userManagement";
+import { useAppSelector } from "@/store/hooks";
+import { setCreateLoading } from "@/store/slices/globalSlice";
 import { UserManagementCreateType } from "@/types/userManagementType";
 import { getBase64 } from "@/utils/changes";
 import {
@@ -20,10 +22,12 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import React, { forwardRef, useImperativeHandle, useState } from "react";
+import { useDispatch } from "react-redux";
 
 interface MyModalProps {
   title: string;
   children?: React.ReactNode;
+  fetchData: () => void;
 }
 
 export interface MyModalRef {
@@ -34,7 +38,7 @@ export interface MyModalRef {
 const UserManagementCreateModal: React.ForwardRefRenderFunction<
   MyModalRef,
   MyModalProps
-> = ({ title, children }, ref) => {
+> = ({ title, children, fetchData }, ref) => {
   const accessToken = getToken();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [formData, setFormData] = useState<UserManagementCreateType>({
@@ -44,13 +48,13 @@ const UserManagementCreateModal: React.ForwardRefRenderFunction<
     password: "",
     password_confirmation: "",
     role: "",
-    note: "",
-    age: "",
-    blood_type: "",
     image: "",
-    gender: "",
     token: accessToken,
   });
+  const dispatch = useDispatch();
+  const createLoading = useAppSelector(
+    (state) => state.globalSlice.createLoading
+  );
 
   useImperativeHandle(ref, () => ({
     open: onOpen,
@@ -74,6 +78,7 @@ const UserManagementCreateModal: React.ForwardRefRenderFunction<
   };
 
   const handleSubmit = async (e: any) => {
+    dispatch(setCreateLoading(true));
     e.preventDefault();
     const res = await CreateUser(formData);
     if (res.code === 400) {
@@ -82,7 +87,19 @@ const UserManagementCreateModal: React.ForwardRefRenderFunction<
     if (res.code === 200) {
       toastFun("Success", res.message, "success");
     }
+    dispatch(setCreateLoading(false));
     onClose();
+    fetchData();
+    setFormData({
+      name: "",
+      email: "",
+      phone: "",
+      password: "",
+      password_confirmation: "",
+      role: "",
+      image: "",
+      token: accessToken,
+    });
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -96,13 +113,6 @@ const UserManagementCreateModal: React.ForwardRefRenderFunction<
     setFormData((prevData) => ({
       ...prevData,
       role: e.target.value,
-    }));
-  };
-
-  const handleGenderChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      gender: e.target.value,
     }));
   };
 
@@ -177,47 +187,24 @@ const UserManagementCreateModal: React.ForwardRefRenderFunction<
                 <option value="user">User</option>
               </Select>
             </FormControl>
-            <FormControl mt={4}>
-              <FormLabel>Note</FormLabel>
-              <Input
-                type="text"
-                name="note"
-                value={formData.note}
-                onChange={handleInputChange}
-              />
-            </FormControl>
-            <FormControl mt={4}>
-              <FormLabel>Age</FormLabel>
-              <Input
-                type="text"
-                name="age"
-                value={formData.age}
-                onChange={handleInputChange}
-              />
-            </FormControl>
-            <FormControl mt={4}>
-              <FormLabel>Blood Type</FormLabel>
-              <Input
-                type="text"
-                name="blood_type"
-                value={formData.blood_type}
-                onChange={handleInputChange}
-              />
-            </FormControl>
-            <FormControl mt={4}>
-              <FormLabel>Gender</FormLabel>
-              <Select
-                value={formData.gender}
-                onChange={(e) => handleGenderChange(e)}
-              >
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-              </Select>
-            </FormControl>
-
             <FilePondUploader onFileChange={handleFileChange} />
 
-            <Button float="inline-end" type="submit" colorScheme="blue" mt={4}>
+            <Button
+              isLoading={createLoading}
+              float="inline-end"
+              type="submit"
+              colorScheme="blue"
+              mt={4}
+              sx={{
+                bgColor: "#5c90e9",
+                transitionDuration: "500ms",
+                color: "white",
+                _hover: {
+                  bgColor: "#185aca",
+                },
+                mb: 3,
+              }}
+            >
               Create
             </Button>
           </form>

@@ -1,4 +1,5 @@
 "use client";
+import { useAppDispatch } from "@/store/hooks";
 import { useState } from "react";
 
 const usePagination = () => {
@@ -6,7 +7,6 @@ const usePagination = () => {
     pageSize: 10,
     pageIndex: 0,
   });
-
   const { pageSize, pageIndex } = pagination;
 
   return {

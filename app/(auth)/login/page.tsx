@@ -70,14 +70,22 @@ const Login = () => {
   useEffect(() => {
     const checkAuth = getAuth();
     const accessToken = getToken();
-    if (checkAuth === null || accessToken === undefined) {
+    if (
+      checkAuth === null ||
+      accessToken === undefined ||
+      accessToken === "" ||
+      checkAuth.code === 400
+    ) {
       router.push("/login");
-    } else if (pathname === "/login" && checkAuth !== null) {
+    } else if (
+      pathname === "/login" &&
+      checkAuth !== null &&
+      accessToken !== undefined
+    ) {
       const userRole = checkAuth.data.user.role;
       if (userRole === "admin") router.push("/dashboard");
       else if (userRole === "staff") router.push("/dashboard/staff");
       else if (userRole === "user") router.push("/");
-      else router.push("/");
     }
   }, []);
 

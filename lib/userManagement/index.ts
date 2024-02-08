@@ -1,6 +1,6 @@
 import { CookieValueTypes, setCookie } from "cookies-next";
 
-import { saveAuth } from "../auth";
+import { getToken, saveAuth } from "../auth";
 import { config } from "@/config/config";
 import { changeFormatDateStringArr } from "@/utils/changes";
 import { UserManagementCreateType } from "@/types/userManagementType";
@@ -9,9 +9,9 @@ import { centralApi } from "../api-central";
 export interface GetUserType {
   page?: number;
   per_page?: number;
-  trash?: boolean;
+  trash?: boolean | number;
   search?: string;
-  token: CookieValueTypes;
+  token?: CookieValueTypes;
 }
 
 export interface EditUserType {
@@ -25,26 +25,26 @@ export interface EditUserType {
 
 //Get All User List
 
-export const GetAllUserListFun = async (data: GetUserType, pagination: any) => {
-  const obj = {
-    page: pagination.pageIndex + 1,
-    per_page: pagination.pageSize,
-  };
+// export const GetAllUserListFun = async (data: GetUserType, pagination: any) => {
+//   const obj = {
+//     page: pagination.pageIndex + 1,
+//     per_page: pagination.pageSize,
+//   };
 
-  return await GetAllUserList({ ...data, ...obj });
-};
+//   return await GetAllUserList({ ...data, ...obj });
+// };
 
 export const GetAllUserList = async ({
   page,
   per_page,
   trash,
   search,
-  token,
 }: GetUserType) => {
   try {
-    console.log("search :: ", search);
+    const token = getToken();
+    if (!trash) trash = 0;
     const response = await fetch(
-      `${config.apiBaseUrl}/admin/user_management?page=${page}&per_page=${per_page}&search=${search}`,
+      `${config.apiBaseUrl}/admin/user_management?page=${page}&per_page=${per_page}&trash=${trash}&search=${search}`,
       {
         method: "GET",
         headers: {
@@ -88,7 +88,6 @@ export const EditUser = async ({
   token,
 }: EditUserType) => {
   const obj = { name, email, phone, role, token };
-  console.log("obj ::", obj);
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/admin/user_management/${id}`,
@@ -122,6 +121,46 @@ export const userDelete = async (
     `${process.env.NEXT_PUBLIC_API_URL}/admin/user_management/${id}`,
     {
       method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  const data = await response.json();
+  return data;
+};
+
+export const userForceDelete = async (
+  { id }: DelObjType,
+  token: CookieValueTypes
+) => {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/admin/user_management/force_delete/${id}`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+    }
+  );
+  const data = await response.json();
+  return data;
+};
+
+//Restore User
+interface RestoreObjType {
+  id: string;
+}
+export const userRestore = async (
+  { id }: RestoreObjType,
+  token: CookieValueTypes
+) => {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/admin/user_management/restore/${id}`,
+    {
+      method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
