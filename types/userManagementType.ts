@@ -7,6 +7,7 @@ export interface UserManagementType {
   phone: string;
   role: string;
   updated_at?: string;
+  image: string | null;
   token: CookieValueTypes;
 }
 

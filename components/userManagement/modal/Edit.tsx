@@ -20,6 +20,7 @@ import { UserManagementType } from "@/types/userManagementType";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "@/store/hooks";
 import { setEditLoading } from "@/store/slices/globalSlice";
+import FilePondUploader from "@/components/FilePondUploader/FilePondUloader";
 
 interface EditModalProps {
   title: string; // Data to be edited
@@ -43,6 +44,7 @@ const UserManagementEditModal: React.ForwardRefRenderFunction<
     email: "",
     phone: "",
     role: "",
+    image: "",
     token: accessToken,
   });
   const dispatch = useDispatch();
@@ -104,6 +106,13 @@ const UserManagementEditModal: React.ForwardRefRenderFunction<
     dispatch(setEditLoading(false));
   };
 
+  const handleFileChange = (base64Image: string | null) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      image: base64Image,
+    }));
+  };
+
   // Render modal content
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -154,6 +163,7 @@ const UserManagementEditModal: React.ForwardRefRenderFunction<
                 required
               />
             </FormControl>
+            <FilePondUploader onFileChange={handleFileChange} />
 
             <Button
               isLoading={EditLoading}

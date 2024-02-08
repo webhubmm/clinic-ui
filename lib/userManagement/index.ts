@@ -21,6 +21,7 @@ export interface EditUserType {
   phone: string;
   role: string;
   token: CookieValueTypes;
+  image: string | null;
 }
 
 //Get All User List
@@ -86,8 +87,9 @@ export const EditUser = async ({
   phone,
   role,
   token,
+  image,
 }: EditUserType) => {
-  const obj = { name, email, phone, role, token };
+  const obj = { name, email, phone, role, token, image };
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/admin/user_management/${id}`,
