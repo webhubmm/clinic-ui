@@ -23,19 +23,11 @@ import {
 } from "react-icons/fa";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import usePagination from "@/hooks/usePagination";
-import { getToken } from "@/lib/auth";
-import { badgeColorChange, changeFormatDateStringArr } from "@/utils/changes";
-import Loading from "@/components/Custom/Loading";
-import UserManagementCreateModal, {
-  MyModalRef,
-} from "@/components/userManagement/modal/Create";
-import UserManagementEditModal, {
-  EditModalRef,
-} from "@/components/userManagement/modal/Edit";
 import CustomModal from "@/components/Custom/CustomModal";
 import RestoreModal from "@/components/userManagement/modal/Restore";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
+  fetchUserData,
   setDeleteLoading,
   setFetchLoading,
   setInit,
@@ -45,14 +37,28 @@ import {
   setTrash,
   setUserData,
 } from "@/store/slices/globalSlice";
+import BranchesCreateModal, {
+  BranchesCreateModalRef,
+} from "./modal/BranchesCreateModal";
 import {
   centralDelete,
   centralForceDelete,
   centralGetAllLists,
   centralRestore,
 } from "@/lib/api-central";
+import { BranchesDataType } from "@/types/branchesDataType";
+import { setBranchesData } from "@/store/slices/branchesSlice";
+import BranchesEditModal, {
+  branchesEditModalRef,
+} from "./modal/BranchesEditModal";
+import {
+  badgeColorChangeForIsOpenOrClosed,
+  changeFormatDateStringArr,
+} from "@/utils/changes";
+import Loading from "../Custom/Loading";
+import { getToken } from "@/lib/auth";
 
-const UserManagementComponent = () => {
+const BranchesComponent = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: isRestoreOpen,
@@ -65,27 +71,44 @@ const UserManagementComponent = () => {
     onClose: onForceDeleteClose,
   } = useDisclosure();
   const { onPaginationChange, pagination } = usePagination();
-  const [userDataForDelete, setUserDataForDelete] = useState<string | null>(
-    null
-  );
-  const [userDataForRestore, setUserDataForRestore] = useState<string | null>(
-    null
-  );
-  const [userDataForForceDelete, setUserDataForForceDelete] = useState<
+  const [branchesDataForDelete, setBranchesDataForDelete] = useState<
+    string | null
+  >(null);
+  const [branchesDataForRestore, setBranchesDataForRestore] = useState<
+    string | null
+  >(null);
+  const [branchesDataForForceDelete, setBranchesDataForForceDelete] = useState<
     string | null
   >(null);
   const accessToken = getToken();
   const dispatch = useAppDispatch();
-  const { credential, userData } = useAppSelector((state) => state.globalSlice);
+  const { credential } = useAppSelector((state) => state.globalSlice);
+  const branchesData = useAppSelector(
+    (state) => state.branchesSlice.branchesData
+  );
   const trash = useAppSelector((state) => state.globalSlice.credential.trash);
   const { total_count, isFetchLoading } = useAppSelector(
     (state) => state.globalSlice
   );
+  const perPage = useAppSelector(
+    (state) => state.globalSlice.credential.per_page
+  );
   const toast = useToast();
 
   useEffect(() => {
-    FetchGetAllUserListFun();
+    FetchGetAllBranches();
   }, [pagination]);
+
+  useEffect(() => {
+    dispatch(
+      fetchUserData({
+        page: 1,
+        per_page: perPage,
+        search: "staff",
+        trash: false,
+      })
+    );
+  }, [perPage]);
 
   useEffect(() => {
     onPaginationChange({ pageSize: 10, pageIndex: 0 });
@@ -111,18 +134,20 @@ const UserManagementComponent = () => {
     ? Math.ceil(total_count / pagination.pageSize)
     : 0;
 
-  const createModalRef = useRef<MyModalRef>(null);
-  const editModalRef = useRef<EditModalRef>(null);
+  const branchesCreateModalRef = useRef<BranchesCreateModalRef>(null);
+  const branchesEditModalRef = useRef<branchesEditModalRef>(null);
 
   const handleCreateModal = () => {
-    if (createModalRef.current) {
-      createModalRef.current.open();
+    if (branchesCreateModalRef.current) {
+      branchesCreateModalRef.current.open();
     }
   };
 
-  const handleEditModal = (userManagement: UserManagementType) => {
-    if (editModalRef.current) {
-      editModalRef.current.open({ ...userManagement, token: accessToken });
+  const handleEditModal = (branchesEdit: BranchesDataType) => {
+    if (branchesEditModalRef.current) {
+      branchesEditModalRef.current.open({
+        ...branchesEdit,
+      });
     }
   };
 
@@ -130,85 +155,81 @@ const UserManagementComponent = () => {
     dispatch(setSearch(e.target.value));
   };
 
-  const handleDelete = (user: UserManagementType) => {
-    setUserDataForDelete(user.id);
+  const handleDelete = (branches: BranchesDataType) => {
+    setBranchesDataForDelete(branches.id as string);
     onOpen();
   };
 
   const deleteComfirmFun = async () => {
     dispatch(setDeleteLoading(true));
-    if (userDataForDelete) {
-      const delobj = { id: userDataForDelete };
-      const result = await centralDelete("crudUserManagementAPI", delobj);
-      if (result?.code === 200) toastFun("Success", result?.message, "success");
-      if (result?.status === 400) toastFun("Error", result?.message, "error");
+    if (branchesDataForDelete) {
+      const delobj = { id: branchesDataForDelete };
+      const result = await centralDelete("createEditDeleteBranchesAPI", delobj);
+      if (result.code === 200) toastFun("Success", result.message, "success");
+      if (result.status === 400) toastFun("Error", result.message, "error");
       onClose();
       dispatch(setDeleteLoading(false));
-      FetchGetAllUserListFun();
+      FetchGetAllBranches();
     }
   };
 
-  const handleRestore = (user: UserManagementType) => {
-    setUserDataForRestore(user.id);
+  const handleRestore = (branches: BranchesDataType) => {
+    setBranchesDataForRestore(branches.id as string);
     onRestoreOpen();
   };
 
   const restoreComfirmFun = async () => {
     dispatch(setRestoreLoading(true));
-    if (userDataForRestore) {
-      const restoreobj = { id: userDataForRestore };
-      const result = await centralRestore(
-        "restoreUserManagementAPI",
-        restoreobj
-      );
-      if (result?.code === 200) toastFun("Success", result?.message, "success");
-      if (result?.status === 400) toastFun("Error", result?.message, "error");
+    if (branchesDataForRestore) {
+      const restoreobj = { id: branchesDataForRestore };
+      const result = await centralRestore("restoreBranchesAPI", restoreobj);
+      if (result?.code === 200) toastFun("Success", result.message, "success");
+      if (result?.status === 400) toastFun("Error", result.message, "error");
       onRestoreClose();
       dispatch(setRestoreLoading(false));
-      FetchGetAllUserListFun();
+      FetchGetAllBranches();
     }
   };
 
-  const handleForceDelete = (user: UserManagementType) => {
-    setUserDataForForceDelete(user.id);
+  const handleForceDelete = (branches: BranchesDataType) => {
+    setBranchesDataForForceDelete(branches.id as string);
     onForceDeleteOpen();
   };
 
   const forceDeleteComfirmFun = async () => {
     dispatch(setDeleteLoading(true));
-    if (userDataForForceDelete) {
-      const delobj = { id: userDataForForceDelete };
-      const result = await centralForceDelete(
-        "forceDeleteUserManagementAPI",
-        delobj
-      );
-      if (result?.code === 200) toastFun("Success", result?.message, "success");
-      if (result?.status === 400) toastFun("Error", result?.message, "error");
+    if (branchesDataForForceDelete) {
+      const delobj = { id: branchesDataForForceDelete };
+      const result = await centralForceDelete("forceDeleteBranchesAPI", delobj);
+      if (result.code === 200) toastFun("Success", result.message, "success");
+      if (result.status === 400) toastFun("Error", result.message, "error");
       onForceDeleteClose();
       dispatch(setDeleteLoading(false));
-      FetchGetAllUserListFun();
+      FetchGetAllBranches();
     }
   };
 
-  const FetchGetAllUserListFun = async () => {
+  const FetchGetAllBranches = async () => {
     const obj = {
       page: pagination.pageIndex + 1,
       per_page: pagination.pageSize,
     };
     dispatch(setFetchLoading(true));
-    const result = await centralGetAllLists("crudUserManagementAPI", {
+    const result = await centralGetAllLists("getBranchesAPI", {
       ...credential,
       ...obj,
     });
-    const resultWithChangeDate = changeFormatDateStringArr(result?.data.users);
-    dispatch(setUserData(resultWithChangeDate));
+    const resultWithChangeDate = changeFormatDateStringArr(
+      result?.data.branches
+    );
+    dispatch(setBranchesData(resultWithChangeDate));
     dispatch(setInit(true));
-    dispatch(setTotal_count(result?.data.total_count));
+    dispatch(setTotal_count(result.data.total_count));
     dispatch(setUserData(resultWithChangeDate));
     dispatch(setFetchLoading(false));
   };
 
-  const columns = useMemo<ColumnDef<UserManagementType, React.ReactNode>[]>(
+  const columns = useMemo<ColumnDef<BranchesDataType, React.ReactNode>[]>(
     () => [
       {
         header: "Id",
@@ -227,11 +248,23 @@ const UserManagementComponent = () => {
         accessorKey: "phone",
       },
       {
-        header: "Role",
-        accessorKey: "role",
-        cell: ({ row }: CellContext<UserManagementType, React.ReactNode>) => (
+        header: "Address",
+        accessorKey: "address",
+      },
+      {
+        header: "Open Time",
+        accessorKey: "open_hour",
+      },
+      {
+        header: "Close Time",
+        accessorKey: "close_hour",
+      },
+      {
+        header: "Is Open?",
+        accessorKey: "is_open",
+        cell: ({ row }: CellContext<BranchesDataType, React.ReactNode>) => (
           <Badge
-            bg={badgeColorChange(row.original.role)}
+            bg={badgeColorChangeForIsOpenOrClosed(row.original.is_open)}
             px={4}
             py={2}
             borderRadius={4}
@@ -240,17 +273,18 @@ const UserManagementComponent = () => {
             fontSize="0.9em"
             variant="solid"
           >
-            {row.original.role}
+            {row.original.is_open === "1" ? "True" : "False"}
           </Badge>
         ),
       },
+
       {
         header: "Date & Time",
         accessorKey: "updated_at",
       },
       {
         id: "actions",
-        cell: ({ row }: CellContext<UserManagementType, React.ReactNode>) => (
+        cell: ({ row }: CellContext<BranchesDataType, React.ReactNode>) => (
           <>
             {trash ? (
               <Flex gap={3}>
@@ -326,7 +360,7 @@ const UserManagementComponent = () => {
     <Box mb={5}>
       <Box>
         <Text fontSize={"30px"} fontWeight={"bold"}>
-          User Table
+          Branches
         </Text>
         <Box display={"flex"} mt={3}>
           <Box display={"flex"} width={{ base: "90%", md: "50%", lg: "35%" }}>
@@ -347,7 +381,7 @@ const UserManagementComponent = () => {
                 },
               }}
               onClick={() => {
-                FetchGetAllUserListFun();
+                FetchGetAllBranches();
               }}
             >
               <FaSistrix />
@@ -385,7 +419,6 @@ const UserManagementComponent = () => {
 
             <Button
               colorScheme={"blue"}
-              isDisabled={isFetchLoading}
               ml={4}
               onClick={handleCreateModal}
               sx={{
@@ -406,7 +439,7 @@ const UserManagementComponent = () => {
         ) : (
           <TableContainer>
             <CustomTable
-              data={userData}
+              data={branchesData}
               columns={columns}
               pagination={pagination}
               onPaginationChange={onPaginationChange}
@@ -418,7 +451,7 @@ const UserManagementComponent = () => {
 
       <CustomModal
         modalTitle={"Delete"}
-        modalText={`Are you sure to Delete User Id ${userDataForDelete} ?`}
+        modalText={`Are you sure to Delete User Id ${branchesDataForDelete} ?`}
         isOpen={isOpen}
         onOpen={onOpen}
         onClose={onClose}
@@ -426,7 +459,7 @@ const UserManagementComponent = () => {
         actionText={"Delete"}
       />
       <RestoreModal
-        modalText={`Are you sure to Restore User Id ${userDataForRestore} ?`}
+        modalText={`Are you sure to Restore User Id ${branchesDataForRestore} ?`}
         modalTitle={"Restore"}
         isOpen={isRestoreOpen}
         onOpen={onRestoreOpen}
@@ -436,25 +469,25 @@ const UserManagementComponent = () => {
       />
       <CustomModal
         modalTitle={"Delete Permanent"}
-        modalText={`Are you sure to Delete User Id ${userDataForDelete} permanently?`}
+        modalText={`Are you sure to Delete User Id ${branchesDataForForceDelete} permanently?`}
         isOpen={isForceDeleteOpen}
         onOpen={onForceDeleteOpen}
         onClose={onForceDeleteClose}
         actionFun={forceDeleteComfirmFun}
         actionText={"Force Delete"}
       />
-      <UserManagementCreateModal
-        ref={createModalRef}
+      <BranchesCreateModal
+        ref={branchesCreateModalRef}
         title={"Create User"}
-        fetchData={FetchGetAllUserListFun}
+        fetchData={FetchGetAllBranches}
       />
-      <UserManagementEditModal
-        ref={editModalRef}
+      <BranchesEditModal
+        ref={branchesEditModalRef}
         title={"Edit User"}
-        fetchData={FetchGetAllUserListFun}
+        fetchData={FetchGetAllBranches}
       />
     </Box>
   );
 };
 
-export default UserManagementComponent;
+export default BranchesComponent;

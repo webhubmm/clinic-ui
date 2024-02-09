@@ -8,57 +8,60 @@ import Image from "next/image";
 registerPlugin(FilePondPluginFileEncode);
 
 interface FilePondUploaderProps {
-  onFileChange: (base64Image: string | null) => void;
+  onFileChange: (base64Images: string[]) => void;
 }
 
-const FilePondUploader: React.FC<FilePondUploaderProps> = ({
+const MulitpleFilePondUploader: React.FC<FilePondUploaderProps> = ({
   onFileChange,
 }) => {
   const pond = useRef<FilePond | null>(null);
-  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
-
-  // const handleInit = () => {
-  //   console.log("FilePond instance has initialised", pond.current);
-  // };
+  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
 
   const handleUpdateFiles = (fileItems: any[]) => {
-    if (fileItems.length > 0) {
-      // Extract File object from fileItems
-      const file = fileItems[0].file;
+    const newUploadedImages: string[] = [];
 
-      // Convert the uploaded file to base64
+    fileItems.forEach((fileItem) => {
+      const file = fileItem.file;
       if (file) {
         const reader = new FileReader();
         reader.onloadend = () => {
           const base64 = reader.result as string;
-          setUploadedImage(base64);
-          // Pass the base64 image to the parent component
-          onFileChange(base64);
+          newUploadedImages.push(base64);
+          if (newUploadedImages.length === fileItems.length) {
+            setUploadedImages(newUploadedImages);
+            onFileChange(newUploadedImages);
+          }
         };
         reader.readAsDataURL(file);
       }
-    }
+    });
   };
 
   return (
     <Box mt={4}>
-      {uploadedImage && (
-        <Image
-          src={uploadedImage}
-          alt="Uploaded"
-          style={{
-            marginTop: "10px",
-            height: "300px",
-            objectFit: "cover",
-          }}
-          width={400}
-          height={300}
-        />
-      )}
+      <Box
+        display={"flex"}
+        gap={2}
+        flexWrap={"wrap"}
+        justifyContent={"space-between"}
+      >
+        {uploadedImages.map((image, index) => (
+          <Image
+            key={index}
+            src={image}
+            alt={`Uploaded ${index}`}
+            style={{
+              marginTop: "10px",
+              objectFit: "cover",
+            }}
+            width={180}
+            height={150}
+          />
+        ))}
+      </Box>
       <FilePond
         ref={pond}
-        allowMultiple={false}
-        // oninit={handleInit}
+        allowMultiple={true}
         onupdatefiles={handleUpdateFiles}
         server={{
           process: (
@@ -70,8 +73,6 @@ const FilePondUploader: React.FC<FilePondUploaderProps> = ({
             progress,
             abort
           ) => {
-            // You can handle the file upload logic here
-            // For simplicity, let's assume it's synchronous and we encode the file to base64
             const reader = new FileReader();
             reader.onloadend = () => {
               load(reader.result as string);
@@ -84,4 +85,4 @@ const FilePondUploader: React.FC<FilePondUploaderProps> = ({
   );
 };
 
-export default FilePondUploader;
+export default MulitpleFilePondUploader;

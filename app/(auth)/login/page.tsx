@@ -83,7 +83,6 @@ const Login = () => {
       accessToken !== undefined
     ) {
       const userRole = checkAuth.data.user.role;
-      console.log("checkAuth :: ", checkAuth);
       if (userRole === "admin") router.push("/dashboard");
       else if (userRole === "staff") router.push("/dashboard/staff");
       else if (userRole === "user") router.push("/");

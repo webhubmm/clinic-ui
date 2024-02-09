@@ -23,6 +23,11 @@ export const badgeColorChange = (value: string) => {
   if (value === "admin") return "#993311";
 };
 
+export const badgeColorChangeForIsOpenOrClosed = (value: string) => {
+  if (value === "1") return "#222299";
+  if (value === "0") return "#993311";
+};
+
 export const getBase64 = (file: any, cb: any) => {
   let reader = new FileReader();
   reader.onload = function () {

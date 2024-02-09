@@ -1,9 +1,9 @@
 import { config } from "@/config/config";
 import { getToken } from "@/lib/auth";
-import { GetAllUserList } from "@/lib/userManagement";
 import { UserManagementType } from "@/types/userManagementType";
 import { changeFormatDateStringArr } from "@/utils/changes";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { setIsStaffFetching, setUserDataForBranches } from "./branchesSlice";
 
 interface CredientialType {
   trash: boolean | number;
@@ -85,6 +85,42 @@ export const globalSlice = createSlice({
     },
   },
 });
+
+export const fetchUserData = createAsyncThunk(
+  "app/fetchUserData",
+  async (payload: any, thunkAPI) => {
+    try {
+      const token = getToken();
+      thunkAPI.dispatch(setIsStaffFetching(true));
+      const updatedPayload = {
+        ...payload,
+        trash: payload.trash ? true : 0,
+      };
+
+      const response = await fetch(
+        `${config.apiBaseUrl}/admin/user_management?trash=${updatedPayload.trash}&page=${payload.page}&search=${payload.search}&per_page=${payload.per_page}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const responseJson = await response.json();
+      thunkAPI.dispatch(setInit(true));
+      const resultWithChangeDate = changeFormatDateStringArr(
+        responseJson.data.users
+      );
+      thunkAPI.dispatch(setUserDataForBranches(resultWithChangeDate));
+      thunkAPI.dispatch(setIsStaffFetching(false));
+
+      return responseJson;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
 
 export const {
   setFetchLoading,

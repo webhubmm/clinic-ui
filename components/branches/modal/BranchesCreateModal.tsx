@@ -1,9 +1,13 @@
+import Loading from "@/components/Custom/Loading";
 import FilePondUploader from "@/components/FilePondUploader/FilePondUploader";
+import MulitpleFilePondUploader from "@/components/FilePondUploader/MulitpleFilePondUploader";
 import { centralCreate } from "@/lib/api-central";
 import { getToken } from "@/lib/auth";
 import { useAppSelector } from "@/store/hooks";
-import { setCreateLoading } from "@/store/slices/globalSlice";
+import { setCreateLoading, setPerPage } from "@/store/slices/globalSlice";
+import { BranchesDataType } from "@/types/branchesDataType";
 import { UserManagementCreateType } from "@/types/userManagementType";
+import { getBase64 } from "@/utils/changes";
 import {
   Box,
   Button,
@@ -19,40 +23,51 @@ import {
   Select,
   useDisclosure,
   useToast,
+  Text,
 } from "@chakra-ui/react";
 import React, { forwardRef, useImperativeHandle, useState } from "react";
 import { useDispatch } from "react-redux";
 
-interface MyModalProps {
+interface BranchesCreateModalProps {
   title: string;
   children?: React.ReactNode;
   fetchData: () => void;
 }
 
-export interface MyModalRef {
+export interface BranchesCreateModalRef {
   open: () => void;
   close: () => void;
 }
 
-const UserManagementCreateModal: React.ForwardRefRenderFunction<
-  MyModalRef,
-  MyModalProps
+const BranchesCreateModal: React.ForwardRefRenderFunction<
+  BranchesCreateModalRef,
+  BranchesCreateModalProps
 > = ({ title, children, fetchData }, ref) => {
   const accessToken = getToken();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [formData, setFormData] = useState<UserManagementCreateType>({
+  const [formData, setFormData] = useState<BranchesDataType>({
     name: "",
     email: "",
     phone: "",
-    password: "",
-    password_confirmation: "",
-    role: "",
-    image: "",
-    token: accessToken,
+    daily_appointment_count: "",
+    user_id: "",
+    images: [],
+    is_open: "1",
+    address: "",
+    lat: "",
+    lng: "",
+    open_hour: "",
+    close_hour: "",
   });
   const dispatch = useDispatch();
   const createLoading = useAppSelector(
     (state) => state.globalSlice.createLoading
+  );
+  const staffList = useAppSelector(
+    (state) => state.branchesSlice.userDataForBranches
+  );
+  let perPage = useAppSelector(
+    (state) => state.globalSlice.credential.per_page
   );
 
   useImperativeHandle(ref, () => ({
@@ -79,7 +94,7 @@ const UserManagementCreateModal: React.ForwardRefRenderFunction<
   const handleSubmit = async (e: any) => {
     dispatch(setCreateLoading(true));
     e.preventDefault();
-    const res = await centralCreate("crudUserManagementAPI", formData);
+    const res = await centralCreate("createEditDeleteBranchesAPI", formData);
     if (res.code === 400) {
       toastFun("Error", res.data, "error");
     }
@@ -93,10 +108,15 @@ const UserManagementCreateModal: React.ForwardRefRenderFunction<
       name: "",
       email: "",
       phone: "",
-      password: "",
-      password_confirmation: "",
-      role: "",
-      image: "",
+      daily_appointment_count: "",
+      user_id: "",
+      images: [],
+      is_open: "",
+      address: "",
+      lat: "",
+      lng: "",
+      open_hour: "",
+      close_hour: "",
       token: accessToken,
     });
   };
@@ -108,17 +128,24 @@ const UserManagementCreateModal: React.ForwardRefRenderFunction<
     }));
   };
 
-  const handleRoleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleIsUserIdChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setFormData((prevData) => ({
       ...prevData,
-      role: e.target.value,
+      user_id: e.target.value,
     }));
   };
 
-  const handleFileChange = (base64Image: string | null) => {
+  const handleIsOpenChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setFormData((prevData) => ({
       ...prevData,
-      image: base64Image,
+      is_open: e.target.value,
+    }));
+  };
+
+  const handleFileChange = (base64Images: string[]) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      images: base64Images,
     }));
   };
 
@@ -157,36 +184,97 @@ const UserManagementCreateModal: React.ForwardRefRenderFunction<
                 onChange={handleInputChange}
               />
             </FormControl>
+
             <FormControl mt={4}>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>Staff</FormLabel>
+              {staffList.length > 0 ? (
+                <Box display={"flex"}>
+                  <Select
+                    placeholder="Select Staff"
+                    value={formData.user_id}
+                    onChange={(e) => handleIsUserIdChange(e)}
+                  >
+                    {staffList.map((item) => {
+                      return (
+                        <option value={item.id} key={item.id}>
+                          {item.name}
+                        </option>
+                      );
+                    })}
+                  </Select>
+                  <Text
+                    color={"#185aca"}
+                    cursor={"pointer"}
+                    width={"35%"}
+                    textAlign={"center"}
+                    my={"auto"}
+                    onClick={() => {
+                      dispatch(setPerPage((perPage += 10)));
+                    }}
+                  >
+                    Load more
+                  </Text>
+                </Box>
+              ) : (
+                <Loading />
+              )}
+            </FormControl>
+
+            <FormControl mt={4}>
+              <FormLabel>Address</FormLabel>
               <Input
-                type="password"
-                name="password"
-                value={formData.password}
+                type="text"
+                name="address"
+                value={formData.address}
                 onChange={handleInputChange}
+                required
               />
             </FormControl>
+
             <FormControl mt={4}>
-              <FormLabel>Confirm Password</FormLabel>
-              <Input
-                type="password"
-                name="password_confirmation"
-                value={formData.password_confirmation}
-                onChange={handleInputChange}
-              />
-            </FormControl>
-            <FormControl mt={4}>
-              <FormLabel>Role</FormLabel>
+              <FormLabel>Is Open?</FormLabel>
               <Select
-                value={formData.role}
-                onChange={(e) => handleRoleChange(e)}
+                value={formData.is_open}
+                onChange={(e) => handleIsOpenChange(e)}
               >
-                <option value="admin">Admin</option>
-                <option value="staff">Staff</option>
-                <option value="user">User</option>
+                <option value="1">Open</option>
+                <option value="0">Close</option>
               </Select>
             </FormControl>
-            <FilePondUploader onFileChange={handleFileChange} />
+            <FormControl mt={4}>
+              <FormLabel>Daily Appointment Count</FormLabel>
+              <Input
+                type="text"
+                name="daily_appointment_count"
+                value={formData.daily_appointment_count}
+                onChange={handleInputChange}
+                required
+              />
+            </FormControl>
+
+            <FormControl mt={4}>
+              <FormLabel>Open Time</FormLabel>
+              <Input
+                type="text"
+                name="open_hour"
+                value={formData.open_hour}
+                onChange={handleInputChange}
+                required
+              />
+            </FormControl>
+
+            <FormControl mt={4}>
+              <FormLabel>Close Time</FormLabel>
+              <Input
+                type="text"
+                name="close_hour"
+                value={formData.close_hour}
+                onChange={handleInputChange}
+                required
+              />
+            </FormControl>
+
+            <MulitpleFilePondUploader onFileChange={handleFileChange} />
 
             <Button
               isLoading={createLoading}
@@ -213,4 +301,4 @@ const UserManagementCreateModal: React.ForwardRefRenderFunction<
   );
 };
 
-export default forwardRef(UserManagementCreateModal);
+export default forwardRef(BranchesCreateModal);

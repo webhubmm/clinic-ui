@@ -13,14 +13,16 @@ import {
   Input,
   Select,
   useToast,
+  Box,
 } from "@chakra-ui/react";
-import { EditUser } from "@/lib/userManagement";
 import { getToken } from "@/lib/auth";
 import { UserManagementType } from "@/types/userManagementType";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "@/store/hooks";
 import { setEditLoading } from "@/store/slices/globalSlice";
-import FilePondUploader from "@/components/FilePondUploader/FilePondUloader";
+import FilePondUploader from "@/components/FilePondUploader/FilePondUploader";
+import { centralEdit } from "@/lib/api-central";
+import Image from "next/image";
 
 interface EditModalProps {
   title: string; // Data to be edited
@@ -59,6 +61,8 @@ const UserManagementEditModal: React.ForwardRefRenderFunction<
     close: onClose,
   }));
 
+  console.log("formData :: ", formData);
+
   const toastFun = (
     condition: string,
     description: string,
@@ -91,7 +95,7 @@ const UserManagementEditModal: React.ForwardRefRenderFunction<
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     dispatch(setEditLoading(true));
-    const res = await EditUser(formData);
+    const res = await centralEdit("crudUserManagementAPI", formData);
     if (res === undefined) {
       return;
     }
@@ -163,6 +167,18 @@ const UserManagementEditModal: React.ForwardRefRenderFunction<
                 required
               />
             </FormControl>
+
+            {formData.image && (
+              <Box display={"flex"} justifyContent={"center"} mt={4}>
+                <Image
+                  src={formData.image.base64_url}
+                  width={250}
+                  alt="branches-img"
+                  height={100}
+                />
+              </Box>
+            )}
+
             <FilePondUploader onFileChange={handleFileChange} />
 
             <Button
