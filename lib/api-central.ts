@@ -41,10 +41,9 @@ export const centralGetAllLists = async (
   endpoint: keyof typeof API,
   data: any
 ) => {
-  const finalObj =
-    accessToken !== undefined
-      ? { ...data, access_token: accessToken }
-      : { ...data };
+  const finalObj = { ...data };
+  const accessToken = getToken();
+
   try {
     if (!finalObj.trash) finalObj.trash = 0;
     const response = await fetch(

@@ -61,8 +61,6 @@ const UserManagementEditModal: React.ForwardRefRenderFunction<
     close: onClose,
   }));
 
-  console.log("formData :: ", formData);
-
   const toastFun = (
     condition: string,
     description: string,
