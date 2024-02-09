@@ -10,9 +10,14 @@ export default function DoctorCard({item}:{
   item:DoctorProps
 }) {
   return (
-    <Box marginTop='3rem'>
-       <Box position='relative' marginBottom='3rem'>
-              <Image src={item?.img} alt={`${item?.name} ${item.skill}`} width={300} height={300}/>
+    <Box marginTop='3rem' width={{md:'350px',lg:'300px'}}>
+       <Box position='relative' marginBottom='3rem' width={{md:'350px',lg:'100%'}}>
+              <Image src={item?.img} alt={`${item?.name} ${item.skill}`} 
+               width="0"
+             height="0"
+             sizes="100vw"
+            className="w-full h-auto"
+              />
                <Box position='absolute' bottom='-6' left='40%'>
                 <Image src={messageDoctor} alt="message for doctor" width={50} height={50}/>
               </Box>
