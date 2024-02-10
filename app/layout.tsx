@@ -20,7 +20,7 @@ export default function RootLayout({
 }) {
   const pathname = usePathname();
   const avaliablePath = pathname.includes("/dashboard");
-  const avaliableNav= pathname.includes('/login' || '/register') 
+  const avaliableNav= pathname.includes('/login' ) || pathname.includes('/register') 
   return (
     <ReduxProvider store={store}>
       <html lang="en">

@@ -1,4 +1,13 @@
+'use client'
 
+
+
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination } from 'swiper/modules';
+
+import 'swiper/css'
+import 'swiper/css/navigation'
+import 'swiper/css/pagination'
 import { Box, Container,Text,Heading, Card,Stack } from "@chakra-ui/react";
 import reviewOne from '@/public/assets/reviewone.png';
 import reviewTwo from '@/public/assets/reviewTwo.png';
@@ -8,11 +17,6 @@ import revieImgOne from '@/public/assets/revireimg.png';
 import revieImgTwo from '@/public/assets/revieauth.png';
 import revieImgThree from '@/public/assets/reviewAuthThree.png';
 import ReviewCard from "./ReviewCard";
-import ContainerBox from "@/components/common/container/Container";
-    // import styles from "../styles/Elastic.module.css";
- import HomeCaurosel from "./HomeCaurosel"   
-
-
 const reviewList =[
     {
         id:30,
@@ -75,26 +79,54 @@ const reviewList =[
 
     }
 ]
-export default function HomeReview() {
-    // paddingBottom='16rem'
+
+export default function HomeCaurosel() {
   return (
-     <Box paddingTop='6rem'  bg='neat.pearlwhite'>
-        <ContainerBox>
-         <Box display='flex' flexDir='column'  gap='5' justifyContent='center' alignItems='center'>
-           <Text color='neat.primary' fontWeight='600'>
-            Our customers
+   <Box display={{sm:'grid',lg:'flex'}} justifyContent={{sm:'center',lg:'space-between'}} gap={{sm:'20',lg:'8'}}  marginTop='4rem' minH={{sm:'70vh',md:'50vh',lg:'90vh'}}>
+            
 
-           </Text>
-           <Heading color='neat.secondary'>
-            Our happy patient says
+            <Swiper
+            autoHeight={true}
+         slidesPerView={3}
+        spaceBetween={30}
+        pagination={{
+          clickable: true,
+        }}
+        modules={[Pagination]}
+          onSwiper={swiper => console.log(swiper)}
+          className='h-96 w-full rounded-lg'
+          breakpoints={{
+        // when window width is >= 320px
+        320: {
+          slidesPerView: 1,
+          // spaceBetween: 20
+        },
+        // when window width is >= 480px
+        480: {
+          slidesPerView: 1,
+          // spaceBetween: 30
+        },
+        // when window width is >= 640px
+        640: {
+          slidesPerView: 2,
+          spaceBetween: 40
+        },
+         1200: {
+          slidesPerView: 3,
+          spaceBetween: 40
+        }
+      }}
+        >
+           
+                {
+                    reviewList?.map((item,index) =>(
+                        <SwiperSlide key={item.id+index}>
+                        <ReviewCard  item={item}/>
+                        </SwiperSlide>
 
-
-            </Heading>
-         </Box>
-         
-          <HomeCaurosel />
-          </ContainerBox>
-         {/* </Container> */}
-     </Box>
+                    ))
+                }
+        </Swiper>
+          </Box>
   )
 }
