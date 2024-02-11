@@ -8,7 +8,8 @@ import {
   InputGroup,
   Heading,
   InputRightElement,
-  Flex
+  Flex,
+  Card
 } from "@chakra-ui/react";
 import { Input } from "@chakra-ui/react";
 import { setCookie } from "cookies-next";
@@ -126,15 +127,25 @@ const Login = () => {
   return (
     <Box bg='neat.pearlwhite'>
     <ContainerBox>
-    <Box
-    display='flex'
+      <Box h="100vh"
+      display='flex'
       
       alignItems="center"
-      justifyContent="center"
+      justifyContent={{md:"center"}}
       gap={8}
-              overflow="hidden"
-
-      h="100vh">
+      overflow="hidden"
+      >
+    <Card padding={{md:'20px'}} boxShadow='md' borderRadius='md'
+    w='100%'
+      >
+    <Box display='flex'
+      
+      alignItems={{md:"center"}}
+      justifyContent={{md:"center"}}
+      gap={8}
+      overflow="hidden"
+      w='100%'
+      >
       <Flex flexDirection="column" gap={{lg:'20'}}>
         
         <Flex
@@ -144,7 +155,7 @@ const Login = () => {
           marginRight="auto"
           alignItems="start"
           justifyContent="center"
-          px={{ sm: "25px", md: "0px" }}
+          px={{ sm: "10px", md: "0px" }}
           flexDirection="column"
           gap='3'
           >
@@ -171,16 +182,16 @@ const Login = () => {
           <Flex
             zIndex="2"
             direction="column"
-            w={{ base: "100%", md: "420px" }}
+            w={{ base: "345px", md:'500px',lg: "420px" }}
             maxW="100%"
             background="transparent"
             borderRadius="15px"
-            mx={{ base: "auto", lg: "unset" }}
+            mx={{ md: "auto", lg: "unset" }}
             marginRight="auto"
             mb={{ base: "20px", md: "auto" }}>
            
             {/* <form action="" > */}
-              <FormControl>
+              <FormControl w='100%'>
                 <FormLabel
                   display="flex"
                   userSelect={"none"}
@@ -194,7 +205,7 @@ const Login = () => {
                 <Input
                   isRequired={true}
                   fontSize="sm"
-                 
+                 w='100%'
                   ms={{ base: "0px", md: "0px" }}
                   type="email"
                   placeholder="Email"
@@ -222,7 +233,7 @@ const Login = () => {
                   <Input
                     isRequired={true}
                     fontSize="sm"
-                                     placeholder="Password"
+                     placeholder="Password"
 
                     mb="20px"
                     id="password"
@@ -295,7 +306,10 @@ const Login = () => {
           style={{ width: "100%", height: "auto" }}
         />
       </Box>
-    </Box>
+      </Box>
+    </Card>
+       </Box> 
+
     </ContainerBox>
   </Box>  
 

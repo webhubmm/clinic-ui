@@ -132,17 +132,12 @@ export default function UserNavBar() {
   </Box>
   {
     isRes && (
- <Box  display={{sm:'flex',lg:'none'}} flexDir='column'   pl='20px' justifyContent='space-between' position='fixed' top='0' left='50%' width='100%' height='100vh'  bg='white' zIndex={80}
+ <Box  display={{sm:'flex',lg:'none'}} flexDir='column-reverse'   pl='20px' justifyContent='space-evenly' position='fixed' top='0' left='20%' width='100%' height='100vh'  bg='white' zIndex={80}
   transition={{exit: {delay: 1}, enter: {duration: 0.6}}}
  >
- <Box  display='flex' alignItems='center' gap='3' mt='20px'>
-          <Image src={dantxLogo} alt="Dentex Logo" width={25} height={25} />
-         <Text color='neat.secondary' fontSize='20px' fontWeight='bold'>
-            Dentex
-         </Text>
-       </Box>
+ 
 
-     <Box display='flex' flexDir='column' gap='8' justifyContent='space-around'>
+     <Box display='flex' flexDir='column' gap='3' justifyContent='space-around'>
               <List  display="grid" alignItems='center'  gap='6' fontSize='lg' fontWeight='600' >
                  {
                    navLinks?.map((link,index) =>(

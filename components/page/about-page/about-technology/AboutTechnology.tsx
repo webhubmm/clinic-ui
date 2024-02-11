@@ -15,12 +15,12 @@ export default function AboutTechnology() {
         <ContainerBox>
        <Box display='flex' flexDir={{sm:'column-reverse',lg:'row'}}  justifyContent={{sm:'center',lg:'space-between'}} alignItems='center' gap={{sm:'5'}} minH='100vh' paddingTop={{sm:'2rem',lg:'0px'}}>
 
-        <Box maxW={{sm:'xl',lg:"lg"}}  display='grid' gap={{sm:'4',lg:'8'}}>
+        <Box maxW={{sm:'xl',lg:"lg"}}  display='grid' gap={{sm:'4',lg:'8'}} >
             <Text color='neat.primary' fontWeight='600'>
                 Need online support?
 
             </Text>
-             <Heading color='brands.logInTextColor'>
+             <Heading color='brands.logInTextColor' fontSize={{sm:'2rem',lg:'auto'}}>
                 Dental technology is constantly advancing
              </Heading>
              <Text color='brands.logInTextColor' lineHeight={2} fontSize='20px'>

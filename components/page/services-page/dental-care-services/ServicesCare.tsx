@@ -77,7 +77,7 @@
 
             </Box>
             <Box display='flex' justifyContent={{sm: 'center', lg: 'unset'}}>
-              <Wrap  spacing={{sm:'40px',lg:'30px'}}   position={{lg:'absolute'}} top={{lg:'57%'}} left={{lg:'15%'}}>
+              <Wrap  spacing={{sm:'30px',lg:'30px'}}   position={{lg:'absolute'}} top={{lg:'57%'}} left={{lg:'15%'}}>
                 {
                   serviceCardList?.map((item) =>(
                         <WrapItem key={item.id}  >

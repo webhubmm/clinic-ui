@@ -11,7 +11,7 @@ export default function ServiceCard({item}:{
   }
 }) {
   return (
-   <Card bg='brands.logInBgColor' padding='1.5rem' boxShadow='md' maxW={{sm:'xs',lg:'xs'}} borderRadius='10px'>
+   <Card bg='brands.logInBgColor' padding='1.5rem' boxShadow='md' maxW={{sm:'100%',md:'353px',lg:'xs'}} borderRadius='10px'>
                <CardHeader>
               <Image src={item?.imgIcons} alt='service img alt' width={60} height={60}/>
                  

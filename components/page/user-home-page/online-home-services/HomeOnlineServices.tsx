@@ -13,7 +13,7 @@ export default function HomeOnlineServices() {
     bgRepeat="no-repeat"
     >
         <ContainerBox>
-       <Box display='flex' flexDir={{sm:'column-reverse',lg:'row'}} justifyContent={{lg:'space-evenly'}} alignItems='center' height={{lg:'100vh'}}  gap='5'>
+       <Box display='flex' flexDir={{sm:'column-reverse',lg:'row'}} justifyContent={{lg:'space-evenly'}} alignItems='center' height={{lg:'100vh'}}  gap='5' p={{sm:'2rem',lg:'auto'}}>
         <Box maxW={{sm:'md',lg:"lg"}} display='grid' gap={{sm:'5',lg:'10'}} alignItems='center' justifyItems={{sm:'center',lg:'start'}}>
             <Text color='brands.logInTextColor' fontWeight='600'>
                 Need online support?

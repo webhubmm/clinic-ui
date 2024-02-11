@@ -8,7 +8,7 @@ export default function FormCommon() {
                   <Box 
                   color='neat.secondary'
                   >
-                    <Heading>Book an appointment</Heading>
+                    <Heading fontSize={{sm:'2rem',md:'auto'}}>Book an appointment</Heading>
                   </Box>
                   <Text 
                   color="neat.secondary"
