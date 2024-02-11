@@ -72,8 +72,14 @@ const UserManagementEditModal: React.ForwardRefRenderFunction<
 
   useImperativeHandle(ref, () => ({
     open: (data: BranchesDataType) => {
+      const newObj = {
+        // Copy other properties from the original object
+        ...data,
+        // Map over the images array and extract the base64_url values
+        images: data.images.map((image: any) => image.base64_url),
+      };
       onOpen();
-      setFormData(data);
+      setFormData(newObj);
     },
     close: onClose,
   }));
@@ -143,152 +149,161 @@ const UserManagementEditModal: React.ForwardRefRenderFunction<
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
-      <ModalContent minW={{ base: "100%", sm: "90%", md: "40%", lg: "28%" }}>
+      <ModalContent
+        minW={{ base: "100%", sm: "90%", md: "90%", lg: "80%", xl: "60%" }}
+      >
         <ModalHeader>{title}</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <form onSubmit={(e) => handleSubmit(e)}>
-            <FormControl>
-              <FormLabel>Name</FormLabel>
-              <Input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-                required
-              />
-            </FormControl>
-            <FormControl mt={4}>
-              <FormLabel>Email</FormLabel>
-              <Input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                required
-              />
-            </FormControl>
-
-            <FormControl mt={4}>
-              <FormLabel>Phone</FormLabel>
-              <Input
-                type="text"
-                name="phone"
-                value={formData.phone}
-                onChange={handleInputChange}
-                required
-              />
-            </FormControl>
-
-            <FormControl mt={4}>
-              <FormLabel>Staff</FormLabel>
-              {staffList.length > 0 ? (
-                <Box display={"flex"}>
-                  <Select
-                    value={formData.user_id}
-                    onChange={(e) => handleIsUserIdChange(e)}
-                  >
-                    {staffList.map((item) => {
-                      return (
-                        <option value={item.id} key={item.id}>
-                          {item.name}
-                        </option>
-                      );
-                    })}
-                  </Select>
-                  <Text
-                    color={"#185aca"}
-                    cursor={"pointer"}
-                    width={"35%"}
-                    textAlign={"center"}
-                    my={"auto"}
-                    onClick={() => {
-                      dispatch(setPerPage((perPage += 10)));
-                    }}
-                  >
-                    Load more
-                  </Text>
-                </Box>
-              ) : (
-                <Loading />
-              )}
-            </FormControl>
-
-            <FormControl mt={4}>
-              <FormLabel>Address</FormLabel>
-              <Input
-                type="text"
-                name="address"
-                value={formData.address}
-                onChange={handleInputChange}
-                required
-              />
-            </FormControl>
-
-            <FormControl mt={4}>
-              <FormLabel>Is Open?</FormLabel>
-              <Select
-                value={formData.is_open}
-                onChange={(e) => handleIsOpenChange(e)}
-              >
-                <option value="1">Open</option>
-                <option value="0">Close</option>
-              </Select>
-            </FormControl>
-            <FormControl mt={4}>
-              <FormLabel>Daily Appointment Count</FormLabel>
-              <Input
-                type="text"
-                name="daily_appointment_count"
-                value={formData.daily_appointment_count}
-                onChange={handleInputChange}
-                required
-              />
-            </FormControl>
-
-            <FormControl mt={4}>
-              <FormLabel>Open Time</FormLabel>
-              <Input
-                type="text"
-                name="open_hour"
-                value={formData.open_hour}
-                onChange={handleInputChange}
-                required
-              />
-            </FormControl>
-
-            <FormControl mt={4}>
-              <FormLabel>Close Time</FormLabel>
-              <Input
-                type="text"
-                name="close_hour"
-                value={formData.close_hour}
-                onChange={handleInputChange}
-                required
-              />
-            </FormControl>
-
-            <Box
-              display={"flex"}
-              gap={2}
-              flexWrap={"wrap"}
-              justifyContent={"space-between"}
-              mt={4}
-            >
-              {formData.images.map((item: any) => {
-                return (
-                  <Image
-                    src={item.base64_url}
-                    key={item.id}
-                    width={180}
-                    alt="branches-img"
-                    height={150}
+            <Box display={{ base: "block ", md: "flex" }} gap={5}>
+              <Box width={{ base: "100%", md: "50%" }}>
+                <FormControl>
+                  <FormLabel>Name</FormLabel>
+                  <Input
+                    type="text"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    required
                   />
-                );
-              })}
-            </Box>
+                </FormControl>
+                <FormControl mt={4}>
+                  <FormLabel>Email</FormLabel>
+                  <Input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </FormControl>
 
-            <MulitpleFilePondUploader onFileChange={handleFileChange} />
+                <FormControl mt={4}>
+                  <FormLabel>Phone</FormLabel>
+                  <Input
+                    type="text"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </FormControl>
+
+                <FormControl mt={4}>
+                  <FormLabel>Staff</FormLabel>
+                  {staffList.length > 0 ? (
+                    <Box display={"flex"}>
+                      <Select
+                        value={formData.user_id}
+                        onChange={(e) => handleIsUserIdChange(e)}
+                      >
+                        {staffList.map((item) => {
+                          return (
+                            <option value={item.id} key={item.id}>
+                              {item.name}
+                            </option>
+                          );
+                        })}
+                      </Select>
+                      <Text
+                        color={"#185aca"}
+                        cursor={"pointer"}
+                        width={"35%"}
+                        textAlign={"center"}
+                        fontSize={{ base: "13px", md: "15px" }}
+                        my={"auto"}
+                        onClick={() => {
+                          dispatch(setPerPage((perPage += 10)));
+                        }}
+                      >
+                        Load more
+                      </Text>
+                    </Box>
+                  ) : (
+                    <Loading />
+                  )}
+                </FormControl>
+
+                <FormControl mt={4}>
+                  <FormLabel>Address</FormLabel>
+                  <Input
+                    type="text"
+                    name="address"
+                    value={formData.address}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </FormControl>
+
+                <FormControl mt={4}>
+                  <FormLabel>Is Open?</FormLabel>
+                  <Select
+                    value={formData.is_open}
+                    onChange={(e) => handleIsOpenChange(e)}
+                  >
+                    <option value="1">Open</option>
+                    <option value="0">Close</option>
+                  </Select>
+                </FormControl>
+              </Box>
+              <Box width={{ base: "100%", md: "50%" }}>
+                <FormControl mt={4}>
+                  <FormLabel>Daily Appointment Count</FormLabel>
+                  <Input
+                    type="text"
+                    name="daily_appointment_count"
+                    value={formData.daily_appointment_count}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </FormControl>
+
+                <FormControl mt={4}>
+                  <FormLabel>Open Time</FormLabel>
+                  <Input
+                    type="text"
+                    name="open_hour"
+                    value={formData.open_hour}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </FormControl>
+
+                <FormControl mt={4}>
+                  <FormLabel>Close Time</FormLabel>
+                  <Input
+                    type="text"
+                    name="close_hour"
+                    value={formData.close_hour}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </FormControl>
+
+                <Box
+                  display={"flex"}
+                  gap={2}
+                  flexWrap={"wrap"}
+                  justifyContent={"space-evenly"}
+                  mt={4}
+                >
+                  {formData.images.map((item: any, index: number) => {
+                    return (
+                      <Image
+                        src={item}
+                        key={index}
+                        width={150}
+                        alt="branches-img"
+                        height={100}
+                      />
+                    );
+                  })}
+                </Box>
+
+                <MulitpleFilePondUploader onFileChange={handleFileChange} />
+              </Box>
+            </Box>
 
             <Button
               isLoading={EditLoading}

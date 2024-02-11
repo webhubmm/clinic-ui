@@ -69,6 +69,7 @@ export const centralGetAllLists = async (
 
 //Edit
 export const centralEdit = async (endpoint: keyof typeof API, data: any) => {
+  const accessToken = getToken();
   const finalObj = { ...data };
   try {
     const response = await fetch(

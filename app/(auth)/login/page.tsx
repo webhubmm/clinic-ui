@@ -101,7 +101,7 @@ const Login = () => {
       return null;
     }
     const res = await UserLogin(form);
-    if (res.code === 400) {
+    if (res?.code === 400) {
       toastFun("Error", res.message, "error");
       setIsLoading(false);
     }
