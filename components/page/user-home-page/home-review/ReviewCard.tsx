@@ -13,7 +13,7 @@ export default function ReviewCard({item}:{
     item:reviewProps
 }) {
   return (
-     <Box position='relative'  width={{sm:'350px',md:'350px',lg:'400px'}}>
+     <Box position='relative'  width={{sm:'100%',md:'350px',lg:'400px'}}>
 <Image src={item?.imagesH} alt="reviewone name"
   width="0"
              height="0"
@@ -21,7 +21,7 @@ export default function ReviewCard({item}:{
             className="w-full h-auto"
 />
 
- <Card paddingX='2rem' paddingY={{sm:'1rem',md:'1rem',lg:'3rem'}} maxW={{sm:'300px',md:'300px',lg:'330px'}} borderRadius='15px' position='absolute' bottom={{sm:'-40',md:'-40',lg:'-40'}} left='8%'>
+ <Card paddingX='2rem' paddingY={{sm:'1rem',md:'1rem',lg:'3rem'}} maxW={{sm:'85%',md:'300px',lg:'330px'}} borderRadius='15px' position='absolute' bottom={{sm:'-40',md:'-40',lg:'-40'}} left='8%'>
                    <Box display='flex' flexDir='column' justifyItems='center' gap='5' maxW='sm'>
                     <Text fontWeight='600' fontSize={{md:'25px'}} color='neat.secondary'>
                        {item?.title}

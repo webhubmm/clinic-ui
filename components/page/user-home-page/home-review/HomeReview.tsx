@@ -85,7 +85,7 @@ export default function HomeReview() {
             Our customers
 
            </Text>
-           <Heading color='neat.secondary'>
+           <Heading color='neat.secondary' fontSize={{sm:'2rem',md:'auto'}}>
             Our happy patient says
 
 

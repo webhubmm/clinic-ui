@@ -65,7 +65,7 @@ const doctorList = [
 ];
 export default function DoctorCaurosel() {
   return (
-     <Box display={{sm:'grid',lg:'flex'}} gridTemplateColumns={{sm:'repeat(1fr)',md:'repeat(1,1fr)'}} justifyContent={{sm:'center',lg:'space-between'}} gap={{sm:'5',md:'8'}} minH={{sm:'80vh',md:'70vh',lg:'90vh'}}>
+     <Box display={{sm:'grid',lg:'flex'}} gridTemplateColumns={{sm:'repeat(1fr)',md:'repeat(1,1fr)'}} justifyContent={{sm:'center',lg:'space-between'}} gap={{sm:'5',md:'8'}} minH={{sm:'80vh',md:'60vh',lg:'90vh'}}>
                 <Swiper
             autoHeight={true}
          slidesPerView={2}

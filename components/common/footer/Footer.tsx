@@ -129,9 +129,9 @@ export default function Footer() {
       
       fontWeight='bold'
       color="brands.logInTextColor"
-      size="xl"
-      minW={{sm:'200px',lg:"250px"}}
-
+      size="lg"
+      minW={{sm:'230px',lg:"250px"}}
+        
       border='2px'
       borderColor='brands.logInBgColor'
       paddingY={{sm:'0.5rem',md:'15px'}}

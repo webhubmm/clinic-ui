@@ -101,13 +101,13 @@ import ContainerBox from "@/components/common/container/Container";
               </Card>
             </Box>
             <Box 
-            maxW='xl'
+            maxW={{md:'xl'}}
             flex='1'
             marginTop={{lg:'-150px'}}
             zIndex={30}
             >
               
-              <Card padding={{sm:'30px',lg:'40px'}} borderRadius="15px">
+              <Card padding={{sm:'1rem',lg:'40px'}} borderRadius="15px">
                 <FormCommon />
                 
               </Card>

@@ -23,7 +23,7 @@ export default function Hero() {
         gap={{sm:'5',lg:'10'}}
         alignItems="center"
         >
-          <Box position='relative' width={{sm:'100%',md:'40%',lg:'50%'}} height='100%' >
+          <Box position='relative' width={{sm:'80%',md:'40%',lg:'50%'}} height='100%' >
             <Image src={HeroImg} alt="hero img" 
              width="0"
              height="0"
@@ -31,7 +31,7 @@ export default function Hero() {
             className="w-full h-auto"
             />
             </Box>
-          <Box  display='grid' gap='5' 
+          <Box  marginTop={{sm:'2rem',lg:'0px'}} display='grid' gap='5' 
           >
             <Stack direction='column' spacing='20px'  color='brands.logInTextColor'  maxW={{md:'md',lg:'xl'}}
             >
@@ -44,11 +44,13 @@ export default function Hero() {
                 <ButtonPrimary placeholder="Learn More" onClick={() => {}} />
                 </Box>
             </Stack>
-            <Box  display='flex' gap='3' alignItems='center'
+            <Box  display='flex' gap='5' alignItems='center'
            
             >
-              <Image src={dantxLogo} alt="dantx logo" width={40} height={40} />
-              <Box display='flex' gap='1'
+             <Box>
+                <Image src={dantxLogo} alt="dantx logo" width={40} height={40} />
+              </Box>
+              <Box display={{md:'flex'}} gap={{md:'1'}}
                >
                 <Text color="neat.primary">Say goodbye</Text>
                 <Text color='brands.logInTextColor'

@@ -7,6 +7,7 @@ import {
   FormLabel,
   InputGroup,
   InputRightElement,
+  Card
 } from "@chakra-ui/react";
 import { Input } from "@chakra-ui/react";
 import { usePathname, useRouter } from "next/navigation";
@@ -112,11 +113,19 @@ const Register = () => {
       alignItems="center"
       justifyContent="space-evenly"
       gap={10}
-                        
-
-
-      minH="100vh">
-       
+       h="100vh">
+        <Card padding={{sm:'5px',md:'20px'}} boxShadow='md' borderRadius='md'
+    w='100%'
+      >
+    <Box display='flex'
+      
+      alignItems={{md:"center"}}
+      justifyContent={{md:"center"}}
+      gap={8}
+      overflow="hidden"
+      w='100%'
+      >
+        
 
         <Box
           display={"flex"}
@@ -126,12 +135,12 @@ const Register = () => {
           marginRight="auto"
           alignItems="start"
           justifyContent="center"
-          px={{ sm: "25px", md: "0px" }}
+          px={{ sm: "5px", md: "0px" }}
           flexDirection="column"
           gap='3'
         >
           <Box
-            w={{ base: "100%", md: "420px" }}
+            w={{ base: "100%", md:'80%',lg: "420px" }}
             maxW="100%"
             background="transparent"
             borderRadius="15px"
@@ -350,6 +359,8 @@ const Register = () => {
           style={{ width: "100%", height: "auto" }}
         />
       </Box>
+      </Box>
+      </Card>
       </Box>
     </ContainerBox>
 

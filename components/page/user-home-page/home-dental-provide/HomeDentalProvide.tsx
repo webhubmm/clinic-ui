@@ -14,7 +14,7 @@ export default function HomeDentalProvide() {
     
           </Box>
           <Box maxW={{md:'xl',lg:"lg"}} display="grid" gap="6">
-            <Text color="neat.primary" fontWeight="600">
+            <Text color="neat.primary" fontWeight="600" mt={{sm:'1rem'}}>
             Our services
             </Text>
 

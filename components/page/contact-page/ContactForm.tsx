@@ -10,7 +10,7 @@ export default function ContactForm() {
              <Box position='relative'>
                 <Image src={heroImg}  alt='hero img name' width={600} height={800}/>
              </Box>
-             <Box padding='4rem'>
+             <Box padding={{sm:'1rem',md:'4rem'}}>
                 <FormCommon />
              </Box>
              
