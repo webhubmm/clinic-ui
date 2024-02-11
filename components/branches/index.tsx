@@ -96,7 +96,9 @@ const BranchesComponent = () => {
   const toast = useToast();
 
   useEffect(() => {
-    FetchGetAllBranches();
+    if (!isFetchLoading) {
+      FetchGetAllBranches();
+    }
   }, [pagination]);
 
   useEffect(() => {
@@ -273,7 +275,7 @@ const BranchesComponent = () => {
             fontSize="0.9em"
             variant="solid"
           >
-            {row.original.is_open === "1" ? "True" : "False"}
+            {row.original.is_open === "1" ? "Open" : "Close"}
           </Badge>
         ),
       },
@@ -362,8 +364,12 @@ const BranchesComponent = () => {
         <Text fontSize={"30px"} fontWeight={"bold"}>
           Branches
         </Text>
-        <Box display={"flex"} mt={3}>
-          <Box display={"flex"} width={{ base: "90%", md: "50%", lg: "35%" }}>
+        <Box display={{ base: "block", md: "flex" }} mt={3}>
+          <Box
+            display={"flex"}
+            width={{ base: "100%", sm: "75%", md: "70%", lg: "45%", xl: "40%" }}
+            mb={{ base: 4, md: 0 }}
+          >
             <Input
               variant="outline"
               placeholder="Search"
@@ -412,15 +418,18 @@ const BranchesComponent = () => {
                 onClick={() => {
                   dispatch(setTrash(true));
                 }}
+                fontSize={{ base: "13px", md: "15px" }}
               >
                 Trash List
               </Button>
             )}
 
             <Button
+              isDisabled={isFetchLoading}
               colorScheme={"blue"}
               ml={4}
               onClick={handleCreateModal}
+              fontSize={{ base: "13px", md: "15px" }}
               sx={{
                 bgColor: "#5c90e9",
                 transitionDuration: "500ms",
