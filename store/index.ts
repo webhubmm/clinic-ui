@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import globalSlice from "./slices/globalSlice";
 import branchesSlice from "./slices/branchesSlice";
 import servicesSlice from "./slices/servicesSlice";
+import packagesSlice from "./slices/packagesSlice";
 
 // ...
 
@@ -10,6 +11,7 @@ export const store = configureStore({
     globalSlice: globalSlice,
     branchesSlice: branchesSlice,
     servicesSlice: servicesSlice,
+    packagesSlice: packagesSlice,
   },
 });
 

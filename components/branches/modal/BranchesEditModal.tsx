@@ -28,19 +28,19 @@ import MulitpleFilePondUploader from "@/components/FilePondUploader/MulitpleFile
 import Loading from "@/components/Custom/Loading";
 import Image from "next/image";
 
-interface branchesEditModalProps {
+interface BranchesEditModalProps {
   title: string; // Data to be edited
   fetchData: () => void;
 }
 
-export interface branchesEditModalRef {
+export interface BranchesEditModalRef {
   open: (data: BranchesDataType) => void; // Updated to accept data object
   close: () => void;
 }
 
 const BranchesEditModal: React.ForwardRefRenderFunction<
-  branchesEditModalRef,
-  branchesEditModalProps
+  BranchesEditModalRef,
+  BranchesEditModalProps
 > = ({ title, fetchData }, ref) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const accessToken = getToken();

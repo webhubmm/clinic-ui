@@ -27,36 +27,44 @@ import { EditBranches } from "@/lib/branches";
 import MulitpleFilePondUploader from "@/components/FilePondUploader/MulitpleFilePondUploader";
 import Loading from "@/components/Custom/Loading";
 import Image from "next/image";
-import { ServicesDataType } from "@/types/servicesDataType";
+import { PackagesDataType } from "@/types/packagesDataType";
 
-interface ServicesEditModalProps {
+interface PackagesEditModalProps {
   title: string; // Data to be edited
   fetchData: () => void;
 }
 
-export interface ServicesEditModalRef {
-  open: (data: ServicesDataType) => void; // Updated to accept data object
+export interface PackagesEditModalRef {
+  open: (data: PackagesDataType) => void; // Updated to accept data object
   close: () => void;
 }
 
-const ServicesEditModal: React.ForwardRefRenderFunction<
-  ServicesEditModalRef,
-  ServicesEditModalProps
+const PackagesEditModal: React.ForwardRefRenderFunction<
+  PackagesEditModalRef,
+  PackagesEditModalProps
 > = ({ title, fetchData }, ref) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const accessToken = getToken();
-  const [formData, setFormData] = useState<ServicesDataType>({
+  const [formData, setFormData] = useState<PackagesDataType>({
     id: "",
     name: "",
-    type: "",
+    service_id: "",
+    price: "",
+    discount_price: "",
+    note: "",
+    timeline: "",
     image: "",
   });
   const dispatch = useDispatch();
   const EditLoading = useAppSelector((state) => state.globalSlice.editLoading);
   const toast = useToast();
-
+  const servicesList = useAppSelector(
+    (state) => state.packagesSlice.servicesDataForPackages
+  );
+  let perPage = useAppSelector(
+    (state) => state.globalSlice.credential.per_page
+  );
   useImperativeHandle(ref, () => ({
-    open: (data: ServicesDataType) => {
+    open: (data: PackagesDataType) => {
       const newObj = {
         // Copy other properties from the original object
         ...data,
@@ -91,10 +99,12 @@ const ServicesEditModal: React.ForwardRefRenderFunction<
     }));
   };
 
-  const handleIsUserIdChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleIsServicesListChange = (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
     setFormData((prevData) => ({
       ...prevData,
-      type: e.target.value,
+      service_id: e.target.value,
     }));
   };
 
@@ -102,7 +112,7 @@ const ServicesEditModal: React.ForwardRefRenderFunction<
     e.preventDefault();
 
     dispatch(setEditLoading(true));
-    const res = await centralEdit("createEditDeleteServicesAPI", formData);
+    const res = await centralEdit("createEditDeletePackagesAPI", formData);
     if (res === undefined) {
       return;
     }
@@ -117,10 +127,10 @@ const ServicesEditModal: React.ForwardRefRenderFunction<
     dispatch(setEditLoading(false));
   };
 
-  const handleFileChange = (base64Images: string[]) => {
+  const handleFileChange = (base64Image: string | null) => {
     setFormData((prevData) => ({
       ...prevData,
-      images: base64Images,
+      image: base64Image,
     }));
   };
 
@@ -133,7 +143,7 @@ const ServicesEditModal: React.ForwardRefRenderFunction<
         <ModalCloseButton />
         <ModalBody>
           <form onSubmit={(e) => handleSubmit(e)}>
-            <FormControl>
+            <FormControl mt={4}>
               <FormLabel>Name</FormLabel>
               <Input
                 type="text"
@@ -145,14 +155,80 @@ const ServicesEditModal: React.ForwardRefRenderFunction<
             </FormControl>
 
             <FormControl mt={4}>
-              <FormLabel>Type</FormLabel>
-              <Select
-                value={formData.type}
-                onChange={(e) => handleIsUserIdChange(e)}
-              >
-                <option value="multiple_visit">multiple_visit</option>
-                <option value="one_visit">one_visit</option>
-              </Select>
+              <FormLabel>Price</FormLabel>
+              <Input
+                type="text"
+                name="price"
+                value={formData.price}
+                onChange={handleInputChange}
+                required
+              />
+            </FormControl>
+
+            <FormControl mt={4}>
+              <FormLabel>Discount Price</FormLabel>
+              <Input
+                type="text"
+                name="discount_price"
+                value={formData.discount_price}
+                onChange={handleInputChange}
+              />
+            </FormControl>
+
+            <FormControl mt={4}>
+              <FormLabel>Note</FormLabel>
+              <Input
+                type="text"
+                name="note"
+                value={formData.note}
+                onChange={handleInputChange}
+              />
+            </FormControl>
+
+            <FormControl mt={4}>
+              <FormLabel>Timeline</FormLabel>
+              <Input
+                type="text"
+                name="timeline"
+                value={formData.timeline}
+                onChange={handleInputChange}
+              />
+            </FormControl>
+
+            <FormControl mt={4}>
+              <FormLabel>Services</FormLabel>
+              {servicesList.length > 0 ? (
+                <Box display={"flex"}>
+                  <Select
+                    placeholder="Select Services"
+                    required
+                    value={formData.service_id}
+                    onChange={(e) => handleIsServicesListChange(e)}
+                  >
+                    {servicesList.map((item) => {
+                      return (
+                        <option value={item.id} key={item.id}>
+                          {item.name}
+                        </option>
+                      );
+                    })}
+                  </Select>
+                  <Text
+                    color={"#185aca"}
+                    cursor={"pointer"}
+                    width={"35%"}
+                    textAlign={"center"}
+                    my={"auto"}
+                    onClick={() => {
+                      dispatch(setPerPage((perPage += 10)));
+                    }}
+                  >
+                    Load more
+                  </Text>
+                </Box>
+              ) : (
+                <Loading />
+              )}
             </FormControl>
 
             {formData.image && (
@@ -172,7 +248,7 @@ const ServicesEditModal: React.ForwardRefRenderFunction<
               </Box>
             )}
 
-            <MulitpleFilePondUploader onFileChange={handleFileChange} />
+            <FilePondUploader onFileChange={handleFileChange} />
 
             <Button
               isLoading={EditLoading}
@@ -199,4 +275,4 @@ const ServicesEditModal: React.ForwardRefRenderFunction<
   );
 };
 
-export default forwardRef(ServicesEditModal);
+export default forwardRef(PackagesEditModal);
