@@ -14,4 +14,10 @@ export const api = {
   createEditDeleteBranchesAPI: "/admin/branches",
   restoreBranchesAPI: "/admin/branches/restore",
   forceDeleteBranchesAPI: "/admin/branches/force_delete",
+
+  // teeth
+  getTeethAPI:'/teeths',
+  createEditDeleteTeethManagmentAPI: "/admin/teeths",
+  restoreTeethManagmentAPI: "/admin/teeths/restore",
+  forceDeleteTeethManagmentAPI: "/admin/teeths/force_delete",
 };
