@@ -38,7 +38,7 @@ export interface branchesEditModalRef {
   close: () => void;
 }
 
-const UserManagementEditModal: React.ForwardRefRenderFunction<
+const BranchesEditModal: React.ForwardRefRenderFunction<
   branchesEditModalRef,
   branchesEditModalProps
 > = ({ title, fetchData }, ref) => {
@@ -58,7 +58,6 @@ const UserManagementEditModal: React.ForwardRefRenderFunction<
     open_hour: "",
     close_hour: "",
     images: [],
-    // token: accessToken,
   });
   const dispatch = useDispatch();
   const EditLoading = useAppSelector((state) => state.globalSlice.editLoading);
@@ -330,4 +329,4 @@ const UserManagementEditModal: React.ForwardRefRenderFunction<
   );
 };
 
-export default forwardRef(UserManagementEditModal);
+export default forwardRef(BranchesEditModal);
