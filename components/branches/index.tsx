@@ -24,7 +24,7 @@ import {
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import usePagination from "@/hooks/usePagination";
 import CustomModal from "@/components/Custom/CustomModal";
-import RestoreModal from "@/components/userManagement/modal/Restore";
+import RestoreModal from "@/components/Custom/RestoreModal";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
   fetchUserData,
@@ -94,6 +94,21 @@ const BranchesComponent = () => {
     (state) => state.globalSlice.credential.per_page
   );
   const toast = useToast();
+
+  const FetchGetAllBranches = async () => {
+    const obj = {
+      page: pagination.pageIndex + 1,
+      per_page: pagination.pageSize,
+    };
+    dispatch(setFetchLoading(true));
+    const result = await centralGetAllLists("getBranchesAPI", {
+      ...credential,
+      ...obj,
+    });
+    dispatch(setBranchesData(result?.data.branches));
+    dispatch(setFetchLoading(false));
+    dispatch(setTotal_count(result.data.total_count));
+  };
 
   useEffect(() => {
     if (!isFetchLoading) {
@@ -211,26 +226,6 @@ const BranchesComponent = () => {
     }
   };
 
-  const FetchGetAllBranches = async () => {
-    const obj = {
-      page: pagination.pageIndex + 1,
-      per_page: pagination.pageSize,
-    };
-    dispatch(setFetchLoading(true));
-    const result = await centralGetAllLists("getBranchesAPI", {
-      ...credential,
-      ...obj,
-    });
-    const resultWithChangeDate = changeFormatDateStringArr(
-      result?.data.branches
-    );
-    dispatch(setBranchesData(resultWithChangeDate));
-    dispatch(setInit(true));
-    dispatch(setTotal_count(result.data.total_count));
-    dispatch(setUserData(resultWithChangeDate));
-    dispatch(setFetchLoading(false));
-  };
-
   const columns = useMemo<ColumnDef<BranchesDataType, React.ReactNode>[]>(
     () => [
       {
@@ -240,14 +235,6 @@ const BranchesComponent = () => {
       {
         header: "Name",
         accessorKey: "name",
-      },
-      {
-        header: "Email",
-        accessorKey: "email",
-      },
-      {
-        header: "Phone",
-        accessorKey: "phone",
       },
       {
         header: "Address",
@@ -278,11 +265,6 @@ const BranchesComponent = () => {
             {row.original.is_open === "1" ? "Open" : "Close"}
           </Badge>
         ),
-      },
-
-      {
-        header: "Date & Time",
-        accessorKey: "updated_at",
       },
       {
         id: "actions",

@@ -15,9 +15,7 @@ const ThemeWrapper = ({ children }: { children: React.ReactNode }) => {
   const variants = useBreakpointValue({ base: smVariant, md: mdVariant });
   const router = useRouter();
   const pathname = usePathname();
-  const accessToken = getToken();
-  const avaliablePath =
-    pathname.includes("/dashboard") || pathname.includes("/userManagement");
+  const avaliablePath = pathname.includes("/dashboard");
   const checkingPathAndNavigationButton =
     avaliablePath && !variants?.navigationButton;
 

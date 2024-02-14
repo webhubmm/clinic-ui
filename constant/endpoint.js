@@ -14,4 +14,10 @@ export const api = {
   createEditDeleteBranchesAPI: "/admin/branches",
   restoreBranchesAPI: "/admin/branches/restore",
   forceDeleteBranchesAPI: "/admin/branches/force_delete",
+
+  //services
+  getServicesAPI: "/services",
+  createEditDeleteServicesAPI: "/admin/services",
+  restoreServicesAPI: "/admin/services/restore",
+  forceDeleteServicesAPI: "/admin/services/force_delete",
 };

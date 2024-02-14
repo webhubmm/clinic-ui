@@ -28,6 +28,11 @@ export const badgeColorChangeForIsOpenOrClosed = (value: string) => {
   if (value === "0") return "#993311";
 };
 
+export const badgeColorChangeForServicesType = (value: string) => {
+  if (value === "multiple_visit") return "#009911";
+  if (value === "one_visit") return "#222299";
+};
+
 export const getBase64 = (file: any, cb: any) => {
   let reader = new FileReader();
   reader.onload = function () {

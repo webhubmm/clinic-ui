@@ -23,19 +23,11 @@ import {
 } from "react-icons/fa";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import usePagination from "@/hooks/usePagination";
-import { getToken } from "@/lib/auth";
-import { badgeColorChange, changeFormatDateStringArr } from "@/utils/changes";
-import Loading from "@/components/Custom/Loading";
-import UserManagementCreateModal, {
-  MyModalRef,
-} from "@/components/userManagement/modal/Create";
-import UserManagementEditModal, {
-  EditModalRef,
-} from "@/components/userManagement/modal/Edit";
 import CustomModal from "@/components/Custom/CustomModal";
 import RestoreModal from "@/components/Custom/RestoreModal";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
+  fetchUserData,
   setDeleteLoading,
   setFetchLoading,
   setInit,
@@ -51,8 +43,25 @@ import {
   centralGetAllLists,
   centralRestore,
 } from "@/lib/api-central";
+import { setBranchesData } from "@/store/slices/branchesSlice";
+import {
+  badgeColorChangeForIsOpenOrClosed,
+  badgeColorChangeForServicesType,
+  changeFormatDateStringArr,
+} from "@/utils/changes";
+import Loading from "../Custom/Loading";
+import { getToken } from "@/lib/auth";
+import { setServicesData } from "@/store/slices/servicesSlice";
+import { ServicesDataType } from "@/types/servicesDataType";
 
-const UserManagementComponent = () => {
+import ServicesCreatModal, {
+  ServicesCreateModalRef,
+} from "./modal/ServicesCreatModal";
+import ServicesEditModal, {
+  ServicesEditModalRef,
+} from "./modal/ServicesEditModal";
+
+const ServicesComponent = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: isRestoreOpen,
@@ -65,43 +74,47 @@ const UserManagementComponent = () => {
     onClose: onForceDeleteClose,
   } = useDisclosure();
   const { onPaginationChange, pagination } = usePagination();
-  const [userDataForDelete, setUserDataForDelete] = useState<string | null>(
-    null
-  );
-  const [userDataForRestore, setUserDataForRestore] = useState<string | null>(
-    null
-  );
-  const [userDataForForceDelete, setUserDataForForceDelete] = useState<
+  const [servicesDataForDelete, setBranchesDataForDelete] = useState<
+    string | null
+  >(null);
+  const [servicesDataForRestore, setBranchesDataForRestore] = useState<
+    string | null
+  >(null);
+  const [servicesDataForForceDelete, setBranchesDataForForceDelete] = useState<
     string | null
   >(null);
   const accessToken = getToken();
   const dispatch = useAppDispatch();
-  const { credential, userData } = useAppSelector((state) => state.globalSlice);
+  const { credential } = useAppSelector((state) => state.globalSlice);
+  const { servicesData } = useAppSelector((state) => state.servicesSlice);
   const trash = useAppSelector((state) => state.globalSlice.credential.trash);
   const { total_count, isFetchLoading } = useAppSelector(
     (state) => state.globalSlice
   );
+  const perPage = useAppSelector(
+    (state) => state.globalSlice.credential.per_page
+  );
   const toast = useToast();
 
-  const FetchGetAllUserListFun = async () => {
+  const FetchGetAllServices = async () => {
     const obj = {
       page: pagination.pageIndex + 1,
       per_page: pagination.pageSize,
     };
     dispatch(setFetchLoading(true));
-    const result = await centralGetAllLists("crudUserManagementAPI", {
+    const result = await centralGetAllLists("getServicesAPI", {
       ...credential,
       ...obj,
     });
-    const resultWithChangeDate = changeFormatDateStringArr(result?.data.users);
-    dispatch(setUserData(resultWithChangeDate));
+    dispatch(setServicesData(result?.data.services));
     dispatch(setFetchLoading(false));
-    dispatch(setInit(true));
     dispatch(setTotal_count(result?.data.total_count));
   };
 
   useEffect(() => {
-    FetchGetAllUserListFun();
+    if (!isFetchLoading) {
+      FetchGetAllServices();
+    }
   }, [pagination]);
 
   useEffect(() => {
@@ -128,18 +141,20 @@ const UserManagementComponent = () => {
     ? Math.ceil(total_count / pagination.pageSize)
     : 0;
 
-  const createModalRef = useRef<MyModalRef>(null);
-  const editModalRef = useRef<EditModalRef>(null);
+  const servicesCreateModalRef = useRef<ServicesCreateModalRef>(null);
+  const servicesEditModalRef = useRef<ServicesEditModalRef>(null);
 
   const handleCreateModal = () => {
-    if (createModalRef.current) {
-      createModalRef.current.open();
+    if (servicesCreateModalRef.current) {
+      servicesCreateModalRef.current.open();
     }
   };
 
-  const handleEditModal = (userManagement: UserManagementType) => {
-    if (editModalRef.current) {
-      editModalRef.current.open({ ...userManagement, token: accessToken });
+  const handleEditModal = (servicessEdit: ServicesDataType) => {
+    if (servicesEditModalRef.current) {
+      servicesEditModalRef.current.open({
+        ...servicessEdit,
+      });
     }
   };
 
@@ -147,67 +162,61 @@ const UserManagementComponent = () => {
     dispatch(setSearch(e.target.value));
   };
 
-  const handleDelete = (user: UserManagementType) => {
-    setUserDataForDelete(user.id);
+  const handleDelete = (branches: ServicesDataType) => {
+    setBranchesDataForDelete(branches.id as string);
     onOpen();
   };
 
   const deleteComfirmFun = async () => {
     dispatch(setDeleteLoading(true));
-    if (userDataForDelete) {
-      const delobj = { id: userDataForDelete };
-      const result = await centralDelete("crudUserManagementAPI", delobj);
-      if (result?.code === 200) toastFun("Success", result?.message, "success");
-      if (result?.status === 400) toastFun("Error", result?.message, "error");
+    if (servicesDataForDelete) {
+      const delobj = { id: servicesDataForDelete };
+      const result = await centralDelete("createEditDeleteServicesAPI", delobj);
+      if (result.code === 200) toastFun("Success", result.message, "success");
+      if (result.status === 400) toastFun("Error", result.message, "error");
       onClose();
       dispatch(setDeleteLoading(false));
-      FetchGetAllUserListFun();
+      FetchGetAllServices();
     }
   };
 
-  const handleRestore = (user: UserManagementType) => {
-    setUserDataForRestore(user.id);
+  const handleRestore = (branches: ServicesDataType) => {
+    setBranchesDataForRestore(branches.id as string);
     onRestoreOpen();
   };
 
   const restoreComfirmFun = async () => {
     dispatch(setRestoreLoading(true));
-    if (userDataForRestore) {
-      const restoreobj = { id: userDataForRestore };
-      const result = await centralRestore(
-        "restoreUserManagementAPI",
-        restoreobj
-      );
-      if (result?.code === 200) toastFun("Success", result?.message, "success");
-      if (result?.status === 400) toastFun("Error", result?.message, "error");
+    if (servicesDataForRestore) {
+      const restoreobj = { id: servicesDataForRestore };
+      const result = await centralRestore("restoreServicesAPI", restoreobj);
+      if (result?.code === 200) toastFun("Success", result.message, "success");
+      if (result?.status === 400) toastFun("Error", result.message, "error");
       onRestoreClose();
       dispatch(setRestoreLoading(false));
-      FetchGetAllUserListFun();
+      FetchGetAllServices();
     }
   };
 
-  const handleForceDelete = (user: UserManagementType) => {
-    setUserDataForForceDelete(user.id);
+  const handleForceDelete = (services: ServicesDataType) => {
+    setBranchesDataForForceDelete(services.id as string);
     onForceDeleteOpen();
   };
 
   const forceDeleteComfirmFun = async () => {
     dispatch(setDeleteLoading(true));
-    if (userDataForForceDelete) {
-      const delobj = { id: userDataForForceDelete };
-      const result = await centralForceDelete(
-        "forceDeleteUserManagementAPI",
-        delobj
-      );
-      if (result?.code === 200) toastFun("Success", result?.message, "success");
-      if (result?.status === 400) toastFun("Error", result?.message, "error");
+    if (servicesDataForForceDelete) {
+      const delobj = { id: servicesDataForForceDelete };
+      const result = await centralForceDelete("forceDeleteServicesAPI", delobj);
+      if (result.code === 200) toastFun("Success", result.message, "success");
+      if (result.status === 400) toastFun("Error", result.message, "error");
       onForceDeleteClose();
       dispatch(setDeleteLoading(false));
-      FetchGetAllUserListFun();
+      FetchGetAllServices();
     }
   };
 
-  const columns = useMemo<ColumnDef<UserManagementType, React.ReactNode>[]>(
+  const columns = useMemo<ColumnDef<ServicesDataType, React.ReactNode>[]>(
     () => [
       {
         header: "Id",
@@ -218,38 +227,26 @@ const UserManagementComponent = () => {
         accessorKey: "name",
       },
       {
-        header: "Email",
-        accessorKey: "email",
-      },
-      {
-        header: "Phone",
-        accessorKey: "phone",
-      },
-      {
-        header: "Role",
-        accessorKey: "role",
-        cell: ({ row }: CellContext<UserManagementType, React.ReactNode>) => (
+        header: "Type",
+        accessorKey: "type",
+        cell: ({ row }: CellContext<ServicesDataType, React.ReactNode>) => (
           <Badge
-            bg={badgeColorChange(row.original.role)}
+            bg={badgeColorChangeForServicesType(row.original.type)}
             px={4}
             py={2}
             borderRadius={4}
-            width={"100%"}
+            width={{ base: "100%", lg: "60%" }}
             textAlign={"center"}
             fontSize="0.9em"
             variant="solid"
           >
-            {row.original.role}
+            {row.original.type}
           </Badge>
         ),
       },
       {
-        header: "Date & Time",
-        accessorKey: "updated_at",
-      },
-      {
         id: "actions",
-        cell: ({ row }: CellContext<UserManagementType, React.ReactNode>) => (
+        cell: ({ row }: CellContext<ServicesDataType, React.ReactNode>) => (
           <>
             {trash ? (
               <Flex gap={3}>
@@ -325,10 +322,14 @@ const UserManagementComponent = () => {
     <Box mb={5}>
       <Box>
         <Text fontSize={"30px"} fontWeight={"bold"}>
-          User Table
+          Services
         </Text>
-        <Box display={"flex"} mt={3}>
-          <Box display={"flex"} width={{ base: "90%", md: "50%", lg: "35%" }}>
+        <Box display={{ base: "block", md: "flex" }} mt={3}>
+          <Box
+            display={"flex"}
+            width={{ base: "100%", sm: "75%", md: "70%", lg: "45%", xl: "40%" }}
+            mb={{ base: 4, md: 0 }}
+          >
             <Input
               variant="outline"
               placeholder="Search"
@@ -346,7 +347,7 @@ const UserManagementComponent = () => {
                 },
               }}
               onClick={() => {
-                FetchGetAllUserListFun();
+                FetchGetAllServices();
               }}
             >
               <FaSistrix />
@@ -377,16 +378,18 @@ const UserManagementComponent = () => {
                 onClick={() => {
                   dispatch(setTrash(true));
                 }}
+                fontSize={{ base: "13px", md: "15px" }}
               >
                 Trash List
               </Button>
             )}
 
             <Button
-              colorScheme={"blue"}
               isDisabled={isFetchLoading}
+              colorScheme={"blue"}
               ml={4}
               onClick={handleCreateModal}
+              fontSize={{ base: "13px", md: "15px" }}
               sx={{
                 bgColor: "#5c90e9",
                 transitionDuration: "500ms",
@@ -405,7 +408,7 @@ const UserManagementComponent = () => {
         ) : (
           <TableContainer>
             <CustomTable
-              data={userData}
+              data={servicesData}
               columns={columns}
               pagination={pagination}
               onPaginationChange={onPaginationChange}
@@ -417,7 +420,7 @@ const UserManagementComponent = () => {
 
       <CustomModal
         modalTitle={"Delete"}
-        modalText={`Are you sure to Delete User Id ${userDataForDelete} ?`}
+        modalText={`Are you sure to Delete User Id ${servicesDataForDelete} ?`}
         isOpen={isOpen}
         onOpen={onOpen}
         onClose={onClose}
@@ -425,7 +428,7 @@ const UserManagementComponent = () => {
         actionText={"Delete"}
       />
       <RestoreModal
-        modalText={`Are you sure to Restore User Id ${userDataForRestore} ?`}
+        modalText={`Are you sure to Restore User Id ${servicesDataForRestore} ?`}
         modalTitle={"Restore"}
         isOpen={isRestoreOpen}
         onOpen={onRestoreOpen}
@@ -435,25 +438,25 @@ const UserManagementComponent = () => {
       />
       <CustomModal
         modalTitle={"Delete Permanent"}
-        modalText={`Are you sure to Delete User Id ${userDataForDelete} permanently?`}
+        modalText={`Are you sure to Delete User Id ${servicesDataForForceDelete} permanently?`}
         isOpen={isForceDeleteOpen}
         onOpen={onForceDeleteOpen}
         onClose={onForceDeleteClose}
         actionFun={forceDeleteComfirmFun}
         actionText={"Force Delete"}
       />
-      <UserManagementCreateModal
-        ref={createModalRef}
+      <ServicesCreatModal
+        ref={servicesCreateModalRef}
         title={"Create User"}
-        fetchData={FetchGetAllUserListFun}
+        fetchData={FetchGetAllServices}
       />
-      <UserManagementEditModal
-        ref={editModalRef}
+      <ServicesEditModal
+        ref={servicesEditModalRef}
         title={"Edit User"}
-        fetchData={FetchGetAllUserListFun}
+        fetchData={FetchGetAllServices}
       />
     </Box>
   );
 };
 
-export default UserManagementComponent;
+export default ServicesComponent;
