@@ -1,13 +1,13 @@
 import { api as API } from "@/constant/endpoint";
 import { getToken } from "./auth";
 
-const accessToken = getToken();
-
 export async function centralApi(
   endpoint: keyof typeof API,
   entry: "POST" | "GET" | "PUT" | "DELETE" | "PATCH",
   data: any
 ) {
+  const accessToken = getToken();
+
   const finalObj =
     accessToken !== undefined
       ? { ...data, access_token: accessToken }
@@ -97,6 +97,7 @@ export const centralEdit = async (endpoint: keyof typeof API, data: any) => {
 //Create
 export const centralCreate = async (endpoint: keyof typeof API, data: any) => {
   const finalObj = { ...data };
+  const accessToken = getToken();
 
   try {
     const response = await fetch(
@@ -124,6 +125,7 @@ export const centralCreate = async (endpoint: keyof typeof API, data: any) => {
 //Delete
 export const centralDelete = async (endpoint: keyof typeof API, data: any) => {
   const finalObj = { ...data };
+  const accessToken = getToken();
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}${API[endpoint]}/${finalObj.id}`,
@@ -152,6 +154,8 @@ export const centralForceDelete = async (
   data: any
 ) => {
   const finalObj = { ...data };
+  const accessToken = getToken();
+
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}${API[endpoint]}/${finalObj.id}`,
@@ -177,6 +181,8 @@ export const centralForceDelete = async (
 //Restore
 export const centralRestore = async (endpoint: keyof typeof API, data: any) => {
   const finalObj = { ...data };
+  const accessToken = getToken();
+
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}${API[endpoint]}/${finalObj.id}`,

@@ -1,6 +1,5 @@
 "use client";
 import CustomTable from "@/components/Table/Table";
-import { UserManagementType } from "@/types/userManagementType";
 import {
   Badge,
   Box,
@@ -23,11 +22,20 @@ import {
 } from "react-icons/fa";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import usePagination from "@/hooks/usePagination";
+import { getToken } from "@/lib/auth";
+import { badgeColorChange, changeFormatDateStringArr } from "@/utils/changes";
+import Loading from "@/components/Custom/Loading";
+import UserManagementCreateModal, {
+  MyModalRef,
+} from "@/components/userManagement/modal/Create";
+import UserManagementEditModal, {
+  EditModalRef,
+} from "@/components/userManagement/modal/Edit";
 import CustomModal from "@/components/Custom/CustomModal";
 import RestoreModal from "@/components/Custom/RestoreModal";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
-  fetchUserData,
+  fetchServicesData,
   setDeleteLoading,
   setFetchLoading,
   setInit,
@@ -43,25 +51,16 @@ import {
   centralGetAllLists,
   centralRestore,
 } from "@/lib/api-central";
-import { setBranchesData } from "@/store/slices/branchesSlice";
-import {
-  badgeColorChangeForIsOpenOrClosed,
-  badgeColorChangeForServicesType,
-  changeFormatDateStringArr,
-} from "@/utils/changes";
-import Loading from "../Custom/Loading";
-import { getToken } from "@/lib/auth";
-import { setServicesData } from "@/store/slices/servicesSlice";
-import { ServicesDataType } from "@/types/servicesDataType";
+import PackagesCreateModal, {
+  PackagesCreateModalRef,
+} from "./modal/PackagesCreateModal";
+import { PackagesDataType } from "@/types/packagesDataType";
+import { setPackagesData } from "@/store/slices/packagesSlice";
+import PackagesEditModal, {
+  PackagesEditModalRef,
+} from "./modal/PackagesEditModal";
 
-import ServicesCreatModal, {
-  ServicesCreateModalRef,
-} from "./modal/ServicesCreatModal";
-import ServicesEditModal, {
-  ServicesEditModalRef,
-} from "./modal/ServicesEditModal";
-
-const ServicesComponent = () => {
+const PackagesComponent = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: isRestoreOpen,
@@ -74,48 +73,56 @@ const ServicesComponent = () => {
     onClose: onForceDeleteClose,
   } = useDisclosure();
   const { onPaginationChange, pagination } = usePagination();
-  const [servicesDataForDelete, setBranchesDataForDelete] = useState<
+  const [packagesDataForDelete, setPackagesDataForDelete] = useState<
     string | null
   >(null);
-  const [servicesDataForRestore, setBranchesDataForRestore] = useState<
+  const [packagesDataForRestore, setPackagesDataForRestore] = useState<
     string | null
   >(null);
-  const [servicesDataForForceDelete, setBranchesDataForForceDelete] = useState<
+  const [packagesDataForForceDelete, setPackagesDataForForceDelete] = useState<
     string | null
   >(null);
-  const accessToken = getToken();
   const dispatch = useAppDispatch();
   const { credential } = useAppSelector((state) => state.globalSlice);
-  const { servicesData } = useAppSelector((state) => state.servicesSlice);
   const trash = useAppSelector((state) => state.globalSlice.credential.trash);
   const { total_count, isFetchLoading } = useAppSelector(
     (state) => state.globalSlice
   );
+  const { packagesData } = useAppSelector((state) => state.packagesSlice);
   const perPage = useAppSelector(
     (state) => state.globalSlice.credential.per_page
   );
   const toast = useToast();
 
-  const FetchGetAllServices = async () => {
+  const FetchGetAllPackagesListFun = async () => {
     const obj = {
       page: pagination.pageIndex + 1,
       per_page: pagination.pageSize,
     };
     dispatch(setFetchLoading(true));
-    const result = await centralGetAllLists("getServicesAPI", {
+    const result = await centralGetAllLists("getPackagesAPI", {
       ...credential,
       ...obj,
     });
-    dispatch(setServicesData(result?.data.services));
+    dispatch(setPackagesData(result?.data.packages));
     dispatch(setFetchLoading(false));
     dispatch(setTotal_count(result?.data.total_count));
   };
 
   useEffect(() => {
-    if (!isFetchLoading) {
-      FetchGetAllServices();
-    }
+    FetchGetAllPackagesListFun();
   }, [pagination]);
+
+  useEffect(() => {
+    dispatch(
+      fetchServicesData({
+        page: 1,
+        per_page: perPage,
+        search: "",
+        trash: false,
+      })
+    );
+  }, [perPage]);
 
   useEffect(() => {
     onPaginationChange({ pageSize: 10, pageIndex: 0 });
@@ -141,20 +148,18 @@ const ServicesComponent = () => {
     ? Math.ceil(total_count / pagination.pageSize)
     : 0;
 
-  const servicesCreateModalRef = useRef<ServicesCreateModalRef>(null);
-  const servicesEditModalRef = useRef<ServicesEditModalRef>(null);
+  const packagesCreateModalRef = useRef<PackagesCreateModalRef>(null);
+  const packagesEditModalRef = useRef<PackagesEditModalRef>(null);
 
   const handleCreateModal = () => {
-    if (servicesCreateModalRef.current) {
-      servicesCreateModalRef.current.open();
+    if (packagesCreateModalRef.current) {
+      packagesCreateModalRef.current.open();
     }
   };
 
-  const handleEditModal = (servicessEdit: ServicesDataType) => {
-    if (servicesEditModalRef.current) {
-      servicesEditModalRef.current.open({
-        ...servicessEdit,
-      });
+  const handleEditModal = (packages: PackagesDataType) => {
+    if (packagesEditModalRef.current) {
+      packagesEditModalRef.current.open({ ...packages });
     }
   };
 
@@ -162,61 +167,61 @@ const ServicesComponent = () => {
     dispatch(setSearch(e.target.value));
   };
 
-  const handleDelete = (branches: ServicesDataType) => {
-    setBranchesDataForDelete(branches.id as string);
+  const handleDelete = (packages: PackagesDataType) => {
+    setPackagesDataForDelete(packages.id as string);
     onOpen();
   };
 
   const deleteComfirmFun = async () => {
     dispatch(setDeleteLoading(true));
-    if (servicesDataForDelete) {
-      const delobj = { id: servicesDataForDelete };
-      const result = await centralDelete("createEditDeleteServicesAPI", delobj);
-      if (result.code === 200) toastFun("Success", result.message, "success");
-      if (result.status === 400) toastFun("Error", result.message, "error");
+    if (packagesDataForDelete) {
+      const delobj = { id: packagesDataForDelete };
+      const result = await centralDelete("createEditDeletePackagesAPI", delobj);
+      if (result?.code === 200) toastFun("Success", result?.message, "success");
+      if (result?.status === 400) toastFun("Error", result?.message, "error");
       onClose();
       dispatch(setDeleteLoading(false));
-      FetchGetAllServices();
+      FetchGetAllPackagesListFun();
     }
   };
 
-  const handleRestore = (branches: ServicesDataType) => {
-    setBranchesDataForRestore(branches.id as string);
+  const handleRestore = (packages: PackagesDataType) => {
+    setPackagesDataForRestore(packages.id as string);
     onRestoreOpen();
   };
 
   const restoreComfirmFun = async () => {
     dispatch(setRestoreLoading(true));
-    if (servicesDataForRestore) {
-      const restoreobj = { id: servicesDataForRestore };
-      const result = await centralRestore("restoreServicesAPI", restoreobj);
-      if (result?.code === 200) toastFun("Success", result.message, "success");
-      if (result?.status === 400) toastFun("Error", result.message, "error");
+    if (packagesDataForRestore) {
+      const restoreobj = { id: packagesDataForRestore };
+      const result = await centralRestore("restorePackagesAPI", restoreobj);
+      if (result?.code === 200) toastFun("Success", result?.message, "success");
+      if (result?.status === 400) toastFun("Error", result?.message, "error");
       onRestoreClose();
       dispatch(setRestoreLoading(false));
-      FetchGetAllServices();
+      FetchGetAllPackagesListFun();
     }
   };
 
-  const handleForceDelete = (services: ServicesDataType) => {
-    setBranchesDataForForceDelete(services.id as string);
+  const handleForceDelete = (packages: PackagesDataType) => {
+    setPackagesDataForForceDelete(packages.id as string);
     onForceDeleteOpen();
   };
 
   const forceDeleteComfirmFun = async () => {
     dispatch(setDeleteLoading(true));
-    if (servicesDataForForceDelete) {
-      const delobj = { id: servicesDataForForceDelete };
-      const result = await centralForceDelete("forceDeleteServicesAPI", delobj);
-      if (result.code === 200) toastFun("Success", result.message, "success");
-      if (result.status === 400) toastFun("Error", result.message, "error");
+    if (packagesDataForForceDelete) {
+      const delobj = { id: packagesDataForForceDelete };
+      const result = await centralForceDelete("forceDeletePackagesAPI", delobj);
+      if (result?.code === 200) toastFun("Success", result?.message, "success");
+      if (result?.status === 400) toastFun("Error", result?.message, "error");
       onForceDeleteClose();
       dispatch(setDeleteLoading(false));
-      FetchGetAllServices();
+      FetchGetAllPackagesListFun();
     }
   };
 
-  const columns = useMemo<ColumnDef<ServicesDataType, React.ReactNode>[]>(
+  const columns = useMemo<ColumnDef<PackagesDataType, React.ReactNode>[]>(
     () => [
       {
         header: "Id",
@@ -227,26 +232,34 @@ const ServicesComponent = () => {
         accessorKey: "name",
       },
       {
-        header: "Type",
-        accessorKey: "type",
-        cell: ({ row }: CellContext<ServicesDataType, React.ReactNode>) => (
+        header: "Price",
+        accessorKey: "price",
+      },
+      {
+        header: "Discount Price",
+        accessorKey: "discount_price",
+      },
+      {
+        header: "Service Name",
+        accessorKey: "service",
+        cell: ({ row }: CellContext<PackagesDataType, React.ReactNode>) => (
           <Badge
-            bg={badgeColorChangeForServicesType(row.original.type)}
+            bg={"#1E293B"}
             px={4}
             py={2}
             borderRadius={4}
-            width={{ base: "100%", lg: "60%" }}
+            width={"100%"}
             textAlign={"center"}
             fontSize="0.9em"
             variant="solid"
           >
-            {row.original.type}
+            {row.original.service?.name}
           </Badge>
         ),
       },
       {
         id: "actions",
-        cell: ({ row }: CellContext<ServicesDataType, React.ReactNode>) => (
+        cell: ({ row }: CellContext<PackagesDataType, React.ReactNode>) => (
           <>
             {trash ? (
               <Flex gap={3}>
@@ -322,14 +335,10 @@ const ServicesComponent = () => {
     <Box mb={5}>
       <Box>
         <Text fontSize={"30px"} fontWeight={"bold"}>
-          Services
+          Packages
         </Text>
-        <Box display={{ base: "block", md: "flex" }} mt={3}>
-          <Box
-            display={"flex"}
-            width={{ base: "100%", sm: "75%", md: "70%", lg: "45%", xl: "40%" }}
-            mb={{ base: 4, md: 0 }}
-          >
+        <Box display={"flex"} mt={3}>
+          <Box display={"flex"} width={{ base: "90%", md: "50%", lg: "35%" }}>
             <Input
               variant="outline"
               placeholder="Search"
@@ -347,7 +356,7 @@ const ServicesComponent = () => {
                 },
               }}
               onClick={() => {
-                FetchGetAllServices();
+                FetchGetAllPackagesListFun();
               }}
             >
               <FaSistrix />
@@ -378,18 +387,16 @@ const ServicesComponent = () => {
                 onClick={() => {
                   dispatch(setTrash(true));
                 }}
-                fontSize={{ base: "13px", md: "15px" }}
               >
                 Trash List
               </Button>
             )}
 
             <Button
-              isDisabled={isFetchLoading}
               colorScheme={"blue"}
+              isDisabled={isFetchLoading}
               ml={4}
               onClick={handleCreateModal}
-              fontSize={{ base: "13px", md: "15px" }}
               sx={{
                 bgColor: "#5c90e9",
                 transitionDuration: "500ms",
@@ -408,7 +415,7 @@ const ServicesComponent = () => {
         ) : (
           <TableContainer>
             <CustomTable
-              data={servicesData}
+              data={packagesData}
               columns={columns}
               pagination={pagination}
               onPaginationChange={onPaginationChange}
@@ -420,7 +427,7 @@ const ServicesComponent = () => {
 
       <CustomModal
         modalTitle={"Delete"}
-        modalText={`Are you sure to Delete User Id ${servicesDataForDelete} ?`}
+        modalText={`Are you sure to Delete User Id ${packagesDataForDelete} ?`}
         isOpen={isOpen}
         onOpen={onOpen}
         onClose={onClose}
@@ -428,7 +435,7 @@ const ServicesComponent = () => {
         actionText={"Delete"}
       />
       <RestoreModal
-        modalText={`Are you sure to Restore User Id ${servicesDataForRestore} ?`}
+        modalText={`Are you sure to Restore User Id ${packagesDataForRestore} ?`}
         modalTitle={"Restore"}
         isOpen={isRestoreOpen}
         onOpen={onRestoreOpen}
@@ -438,25 +445,25 @@ const ServicesComponent = () => {
       />
       <CustomModal
         modalTitle={"Delete Permanent"}
-        modalText={`Are you sure to Delete User Id ${servicesDataForForceDelete} permanently?`}
+        modalText={`Are you sure to Delete User Id ${packagesDataForDelete} permanently?`}
         isOpen={isForceDeleteOpen}
         onOpen={onForceDeleteOpen}
         onClose={onForceDeleteClose}
         actionFun={forceDeleteComfirmFun}
         actionText={"Force Delete"}
       />
-      <ServicesCreatModal
-        ref={servicesCreateModalRef}
-        title={"Create Services"}
-        fetchData={FetchGetAllServices}
+      <PackagesCreateModal
+        ref={packagesCreateModalRef}
+        title={"Create Packages"}
+        fetchData={FetchGetAllPackagesListFun}
       />
-      <ServicesEditModal
-        ref={servicesEditModalRef}
-        title={"Edit Services"}
-        fetchData={FetchGetAllServices}
+      <PackagesEditModal
+        ref={packagesEditModalRef}
+        title={"Edit Packages"}
+        fetchData={FetchGetAllPackagesListFun}
       />
     </Box>
   );
 };
 
-export default ServicesComponent;
+export default PackagesComponent;

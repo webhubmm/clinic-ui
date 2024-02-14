@@ -20,4 +20,10 @@ export const api = {
   createEditDeleteServicesAPI: "/admin/services",
   restoreServicesAPI: "/admin/services/restore",
   forceDeleteServicesAPI: "/admin/services/force_delete",
+
+  //packages
+  getPackagesAPI: "/packages",
+  createEditDeletePackagesAPI: "/admin/packages",
+  restorePackagesAPI: "/admin/packages/restore",
+  forceDeletePackagesAPI: "/admin/packages/force_delete",
 };

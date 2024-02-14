@@ -49,7 +49,7 @@ import {
 import { BranchesDataType } from "@/types/branchesDataType";
 import { setBranchesData } from "@/store/slices/branchesSlice";
 import BranchesEditModal, {
-  branchesEditModalRef,
+  BranchesEditModalRef,
 } from "./modal/BranchesEditModal";
 import {
   badgeColorChangeForIsOpenOrClosed,
@@ -152,7 +152,7 @@ const BranchesComponent = () => {
     : 0;
 
   const branchesCreateModalRef = useRef<BranchesCreateModalRef>(null);
-  const branchesEditModalRef = useRef<branchesEditModalRef>(null);
+  const branchesEditModalRef = useRef<BranchesEditModalRef>(null);
 
   const handleCreateModal = () => {
     if (branchesCreateModalRef.current) {
@@ -469,12 +469,12 @@ const BranchesComponent = () => {
       />
       <BranchesCreateModal
         ref={branchesCreateModalRef}
-        title={"Create User"}
+        title={"Create Branches"}
         fetchData={FetchGetAllBranches}
       />
       <BranchesEditModal
         ref={branchesEditModalRef}
-        title={"Edit User"}
+        title={"Edit Branches"}
         fetchData={FetchGetAllBranches}
       />
     </Box>

@@ -4,5 +4,5 @@ export interface ServicesDataType {
   type: string;
   created_at?: string;
   updated_at?: string;
-  image: any;
+  image?: any;
 }
