@@ -3,18 +3,7 @@ import { getToken } from "./auth";
 
 const accessToken = getToken();
 
-// for handle 
-async function handleResponse(response:any) {
-  if (response.status === 204) {
-    return Promise.resolve({});
-  } else if (response.status >= 200 && response.status < 300) {
-    const json = await response.json();
-    return Promise.resolve(json);
-  } else {
-    const error = await response.json();
-    return Promise.reject(error);
-  }
-}
+
 
 export async function centralApi(
   endpoint: keyof typeof API,

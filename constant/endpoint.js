@@ -20,4 +20,10 @@ export const api = {
   createEditDeleteTeethManagmentAPI: "/admin/teeths",
   restoreTeethManagmentAPI: "/admin/teeths/restore",
   forceDeleteTeethManagmentAPI: "/admin/teeths/force_delete",
+
+  // holiday
+ getHolidayAPI:'/holiday_management',
+  createEditDeleteHolidayManagmentAPI: "/admin/holiday_management",
+  restoreHolidayManagmentAPI: "/admin/holiday_management/restore",
+  forceDeleteHolidayManagmentAPI: "/admin/holiday_management/force_delete",
 };
