@@ -26,4 +26,10 @@ export const api = {
   createEditDeletePackagesAPI: "/admin/packages",
   restorePackagesAPI: "/admin/packages/restore",
   forceDeletePackagesAPI: "/admin/packages/force_delete",
+  
+  // teeth
+  getTeethAPI:'/teeths',
+  createEditDeleteTeethManagmentAPI: "/admin/teeths",
+  restoreTeethManagmentAPI: "/admin/teeths/restore",
+  forceDeleteTeethManagmentAPI: "/admin/teeths/force_delete",
 };
