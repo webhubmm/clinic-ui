@@ -26,10 +26,16 @@ export const api = {
   createEditDeletePackagesAPI: "/admin/packages",
   restorePackagesAPI: "/admin/packages/restore",
   forceDeletePackagesAPI: "/admin/packages/force_delete",
-  
+
   // teeth
-  getTeethAPI:'/teeths',
+  getTeethAPI: "/teeths",
   createEditDeleteTeethManagmentAPI: "/admin/teeths",
   restoreTeethManagmentAPI: "/admin/teeths/restore",
   forceDeleteTeethManagmentAPI: "/admin/teeths/force_delete",
+
+  //doctors
+  getDoctorsAPI: "/doctors",
+  createEditDeleteDoctorsAPI: "/admin/doctors",
+  restoreDoctorsAPI: "/admin/doctors/restore",
+  forceDeleteDoctorsAPI: "/admin/doctors/force_delete",
 };

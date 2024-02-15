@@ -1,6 +1,5 @@
 "use client";
 import CustomTable from "@/components/Table/Table";
-import { UserManagementType } from "@/types/userManagementType";
 import {
   Badge,
   Box,
@@ -23,45 +22,36 @@ import {
 } from "react-icons/fa";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import usePagination from "@/hooks/usePagination";
+import Loading from "@/components/Custom/Loading";
 import CustomModal from "@/components/Custom/CustomModal";
 import RestoreModal from "@/components/Custom/RestoreModal";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
   setDeleteLoading,
   setFetchLoading,
-  setInit,
   setRestoreLoading,
   setSearch,
   setTotal_count,
   setTrash,
-  setUserData,
 } from "@/store/slices/globalSlice";
-import BranchesCreateModal, {
-  BranchesCreateModalRef,
-} from "./modal/BranchesCreateModal";
 import {
   centralDelete,
   centralForceDelete,
   centralGetAllLists,
   centralRestore,
 } from "@/lib/api-central";
-import { BranchesDataType } from "@/types/branchesDataType";
-import {
-  setBranchesData,
-  setIsStaffFetching,
-  setUserDataForBranches,
-} from "@/store/slices/branchesSlice";
-import BranchesEditModal, {
-  BranchesEditModalRef,
-} from "./modal/BranchesEditModal";
-import {
-  badgeColorChangeForIsOpenOrClosed,
-  changeFormatDateStringArr,
-} from "@/utils/changes";
-import Loading from "../Custom/Loading";
-import { getToken } from "@/lib/auth";
+import { setPackagesData } from "@/store/slices/packagesSlice";
+import DoctorsCreateModal, {
+  DoctorsCreateModalRef,
+} from "./modal/DoctorsCreateModal";
+import DoctorsEditModal, {
+  DoctorsEditModalRef,
+} from "./modal/DoctorsEditModal";
+import { DoctorsDataType } from "@/types/doctorsDataType";
+import { setBranchesData } from "@/store/slices/branchesSlice";
+import { setDoctorsData } from "@/store/slices/doctorsSlice";
 
-const BranchesComponent = () => {
+const DoctorsComponent = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: isRestoreOpen,
@@ -74,36 +64,48 @@ const BranchesComponent = () => {
     onClose: onForceDeleteClose,
   } = useDisclosure();
   const { onPaginationChange, pagination } = usePagination();
-  const [branchesDataForDelete, setBranchesDataForDelete] = useState<
+  const [doctorsDataForDelete, setDoctorsDataForDelete] = useState<
     string | null
   >(null);
-  const [branchesDataForRestore, setBranchesDataForRestore] = useState<
+  const [doctorsDataForRestore, setDoctorsDataForRestore] = useState<
     string | null
   >(null);
-  const [branchesDataForForceDelete, setBranchesDataForForceDelete] = useState<
+  const [doctorsDataForForceDelete, setDoctorsDataForForceDelete] = useState<
     string | null
   >(null);
-  const accessToken = getToken();
   const dispatch = useAppDispatch();
   const { credential } = useAppSelector((state) => state.globalSlice);
-  const branchesData = useAppSelector(
-    (state) => state.branchesSlice.branchesData
-  );
   const trash = useAppSelector((state) => state.globalSlice.credential.trash);
   const { total_count, isFetchLoading } = useAppSelector(
     (state) => state.globalSlice
   );
+  const { doctorsData } = useAppSelector((state) => state.doctorsSlice);
   const perPage = useAppSelector(
     (state) => state.globalSlice.credential.per_page
   );
   const toast = useToast();
 
-  const obj = {
-    page: pagination.pageIndex + 1,
-    per_page: pagination.pageSize,
+  const FetchGetAllDoctorsListFun = async () => {
+    const obj = {
+      page: pagination.pageIndex + 1,
+      per_page: pagination.pageSize,
+    };
+    dispatch(setFetchLoading(true));
+    const result = await centralGetAllLists("getDoctorsAPI", {
+      ...credential,
+      ...obj,
+    });
+
+    dispatch(setDoctorsData(result?.data.doctors));
+    dispatch(setFetchLoading(false));
+    dispatch(setTotal_count(result?.data.total_count));
   };
 
   const FetchGetAllBranches = async () => {
+    const obj = {
+      page: pagination.pageIndex + 1,
+      per_page: pagination.pageSize,
+    };
     dispatch(setFetchLoading(true));
     const result = await centralGetAllLists("getBranchesAPI", {
       ...credential,
@@ -111,33 +113,15 @@ const BranchesComponent = () => {
     });
     dispatch(setBranchesData(result?.data.branches));
     dispatch(setFetchLoading(false));
-    dispatch(setTotal_count(result.data.total_count));
-  };
-
-  const FetchGetAllUserListFun = async () => {
-    dispatch(setIsStaffFetching(true));
-    dispatch(setFetchLoading(true));
-    const result = await centralGetAllLists("crudUserManagementAPI", {
-      page: 1,
-      per_page: perPage,
-      search: "staff",
-      trash: false,
-    });
-    const resultWithChangeDate = changeFormatDateStringArr(result?.data.users);
-    dispatch(setUserData(resultWithChangeDate));
-    dispatch(setUserDataForBranches(resultWithChangeDate));
-    dispatch(setIsStaffFetching(false));
     dispatch(setTotal_count(result?.data.total_count));
   };
 
   useEffect(() => {
-    if (!isFetchLoading) {
-      FetchGetAllBranches();
-    }
+    FetchGetAllDoctorsListFun();
   }, [pagination]);
 
   useEffect(() => {
-    FetchGetAllUserListFun();
+    FetchGetAllBranches();
   }, [perPage]);
 
   useEffect(() => {
@@ -164,20 +148,18 @@ const BranchesComponent = () => {
     ? Math.ceil(total_count / pagination.pageSize)
     : 0;
 
-  const branchesCreateModalRef = useRef<BranchesCreateModalRef>(null);
-  const branchesEditModalRef = useRef<BranchesEditModalRef>(null);
+  const doctorsCreateModalRef = useRef<DoctorsCreateModalRef>(null);
+  const doctorsEditModalRef = useRef<DoctorsEditModalRef>(null);
 
   const handleCreateModal = () => {
-    if (branchesCreateModalRef.current) {
-      branchesCreateModalRef.current.open();
+    if (doctorsCreateModalRef.current) {
+      doctorsCreateModalRef.current.open();
     }
   };
 
-  const handleEditModal = (branchesEdit: BranchesDataType) => {
-    if (branchesEditModalRef.current) {
-      branchesEditModalRef.current.open({
-        ...branchesEdit,
-      });
+  const handleEditModal = (doctors: DoctorsDataType) => {
+    if (doctorsEditModalRef.current) {
+      doctorsEditModalRef.current.open({ ...doctors });
     }
   };
 
@@ -185,61 +167,61 @@ const BranchesComponent = () => {
     dispatch(setSearch(e.target.value));
   };
 
-  const handleDelete = (branches: BranchesDataType) => {
-    setBranchesDataForDelete(branches.id as string);
+  const handleDelete = (doctors: DoctorsDataType) => {
+    setDoctorsDataForDelete(doctors.id as string);
     onOpen();
   };
 
   const deleteComfirmFun = async () => {
     dispatch(setDeleteLoading(true));
-    if (branchesDataForDelete) {
-      const delobj = { id: branchesDataForDelete };
-      const result = await centralDelete("createEditDeleteBranchesAPI", delobj);
-      if (result.code === 200) toastFun("Success", result.message, "success");
-      if (result.status === 400) toastFun("Error", result.message, "error");
+    if (doctorsDataForDelete) {
+      const delobj = { id: doctorsDataForDelete };
+      const result = await centralDelete("createEditDeleteDoctorsAPI", delobj);
+      if (result?.code === 200) toastFun("Success", result?.message, "success");
+      if (result?.status === 400) toastFun("Error", result?.message, "error");
       onClose();
       dispatch(setDeleteLoading(false));
-      FetchGetAllBranches();
+      FetchGetAllDoctorsListFun();
     }
   };
 
-  const handleRestore = (branches: BranchesDataType) => {
-    setBranchesDataForRestore(branches.id as string);
+  const handleRestore = (doctors: DoctorsDataType) => {
+    setDoctorsDataForRestore(doctors.id as string);
     onRestoreOpen();
   };
 
   const restoreComfirmFun = async () => {
     dispatch(setRestoreLoading(true));
-    if (branchesDataForRestore) {
-      const restoreobj = { id: branchesDataForRestore };
-      const result = await centralRestore("restoreBranchesAPI", restoreobj);
-      if (result?.code === 200) toastFun("Success", result.message, "success");
-      if (result?.status === 400) toastFun("Error", result.message, "error");
+    if (doctorsDataForRestore) {
+      const restoreobj = { id: doctorsDataForRestore };
+      const result = await centralRestore("restoreDoctorsAPI", restoreobj);
+      if (result?.code === 200) toastFun("Success", result?.message, "success");
+      if (result?.status === 400) toastFun("Error", result?.message, "error");
       onRestoreClose();
       dispatch(setRestoreLoading(false));
-      FetchGetAllBranches();
+      FetchGetAllDoctorsListFun();
     }
   };
 
-  const handleForceDelete = (branches: BranchesDataType) => {
-    setBranchesDataForForceDelete(branches.id as string);
+  const handleForceDelete = (doctors: DoctorsDataType) => {
+    setDoctorsDataForForceDelete(doctors.id as string);
     onForceDeleteOpen();
   };
 
   const forceDeleteComfirmFun = async () => {
     dispatch(setDeleteLoading(true));
-    if (branchesDataForForceDelete) {
-      const delobj = { id: branchesDataForForceDelete };
-      const result = await centralForceDelete("forceDeleteBranchesAPI", delobj);
-      if (result.code === 200) toastFun("Success", result.message, "success");
-      if (result.status === 400) toastFun("Error", result.message, "error");
+    if (doctorsDataForForceDelete) {
+      const delobj = { id: doctorsDataForForceDelete };
+      const result = await centralForceDelete("forceDeleteDoctorsAPI", delobj);
+      if (result?.code === 200) toastFun("Success", result?.message, "success");
+      if (result?.status === 400) toastFun("Error", result?.message, "error");
       onForceDeleteClose();
       dispatch(setDeleteLoading(false));
-      FetchGetAllBranches();
+      FetchGetAllDoctorsListFun();
     }
   };
 
-  const columns = useMemo<ColumnDef<BranchesDataType, React.ReactNode>[]>(
+  const columns = useMemo<ColumnDef<DoctorsDataType, React.ReactNode>[]>(
     () => [
       {
         header: "Id",
@@ -250,38 +232,30 @@ const BranchesComponent = () => {
         accessorKey: "name",
       },
       {
+        header: "Email",
+        accessorKey: "email",
+      },
+      {
+        header: "Phone",
+        accessorKey: "phone",
+      },
+      {
         header: "Address",
         accessorKey: "address",
       },
       {
-        header: "Open Time",
-        accessorKey: "open_hour",
+        header: "Degree",
+        accessorKey: "degree",
       },
+
       {
-        header: "Close Time",
-        accessorKey: "close_hour",
+        header: "Specialize",
+        accessorKey: "specialize",
       },
-      {
-        header: "Is Open?",
-        accessorKey: "is_open",
-        cell: ({ row }: CellContext<BranchesDataType, React.ReactNode>) => (
-          <Badge
-            bg={badgeColorChangeForIsOpenOrClosed(row.original.is_open)}
-            px={4}
-            py={2}
-            borderRadius={4}
-            width={"100%"}
-            textAlign={"center"}
-            fontSize="0.9em"
-            variant="solid"
-          >
-            {row.original.is_open === "1" ? "Open" : "Close"}
-          </Badge>
-        ),
-      },
+
       {
         id: "actions",
-        cell: ({ row }: CellContext<BranchesDataType, React.ReactNode>) => (
+        cell: ({ row }: CellContext<DoctorsDataType, React.ReactNode>) => (
           <>
             {trash ? (
               <Flex gap={3}>
@@ -357,14 +331,10 @@ const BranchesComponent = () => {
     <Box mb={5}>
       <Box>
         <Text fontSize={"30px"} fontWeight={"bold"}>
-          Branches
+          Doctors
         </Text>
-        <Box display={{ base: "block", md: "flex" }} mt={3}>
-          <Box
-            display={"flex"}
-            width={{ base: "100%", sm: "75%", md: "70%", lg: "45%", xl: "40%" }}
-            mb={{ base: 4, md: 0 }}
-          >
+        <Box display={"flex"} mt={3}>
+          <Box display={"flex"} width={{ base: "90%", md: "50%", lg: "35%" }}>
             <Input
               variant="outline"
               placeholder="Search"
@@ -382,7 +352,7 @@ const BranchesComponent = () => {
                 },
               }}
               onClick={() => {
-                FetchGetAllBranches();
+                FetchGetAllDoctorsListFun();
               }}
             >
               <FaSistrix />
@@ -413,18 +383,16 @@ const BranchesComponent = () => {
                 onClick={() => {
                   dispatch(setTrash(true));
                 }}
-                fontSize={{ base: "13px", md: "15px" }}
               >
                 Trash List
               </Button>
             )}
 
             <Button
-              isDisabled={isFetchLoading}
               colorScheme={"blue"}
+              isDisabled={isFetchLoading}
               ml={4}
               onClick={handleCreateModal}
-              fontSize={{ base: "13px", md: "15px" }}
               sx={{
                 bgColor: "#5c90e9",
                 transitionDuration: "500ms",
@@ -443,7 +411,7 @@ const BranchesComponent = () => {
         ) : (
           <TableContainer>
             <CustomTable
-              data={branchesData}
+              data={doctorsData}
               columns={columns}
               pagination={pagination}
               onPaginationChange={onPaginationChange}
@@ -455,7 +423,7 @@ const BranchesComponent = () => {
 
       <CustomModal
         modalTitle={"Delete"}
-        modalText={`Are you sure to Delete User Id ${branchesDataForDelete} ?`}
+        modalText={`Are you sure to Delete User Id ${doctorsDataForDelete} ?`}
         isOpen={isOpen}
         onOpen={onOpen}
         onClose={onClose}
@@ -463,7 +431,7 @@ const BranchesComponent = () => {
         actionText={"Delete"}
       />
       <RestoreModal
-        modalText={`Are you sure to Restore User Id ${branchesDataForRestore} ?`}
+        modalText={`Are you sure to Restore User Id ${doctorsDataForRestore} ?`}
         modalTitle={"Restore"}
         isOpen={isRestoreOpen}
         onOpen={onRestoreOpen}
@@ -473,25 +441,25 @@ const BranchesComponent = () => {
       />
       <CustomModal
         modalTitle={"Delete Permanent"}
-        modalText={`Are you sure to Delete User Id ${branchesDataForForceDelete} permanently?`}
+        modalText={`Are you sure to Delete User Id ${doctorsDataForDelete} permanently?`}
         isOpen={isForceDeleteOpen}
         onOpen={onForceDeleteOpen}
         onClose={onForceDeleteClose}
         actionFun={forceDeleteComfirmFun}
         actionText={"Force Delete"}
       />
-      <BranchesCreateModal
-        ref={branchesCreateModalRef}
-        title={"Create Branches"}
-        fetchData={FetchGetAllBranches}
+      <DoctorsCreateModal
+        ref={doctorsCreateModalRef}
+        title={"Create Doctors"}
+        fetchData={FetchGetAllDoctorsListFun}
       />
-      <BranchesEditModal
-        ref={branchesEditModalRef}
-        title={"Edit Branches"}
-        fetchData={FetchGetAllBranches}
+      <DoctorsEditModal
+        ref={doctorsEditModalRef}
+        title={"Edit Doctors"}
+        fetchData={FetchGetAllDoctorsListFun}
       />
     </Box>
   );
 };
 
-export default BranchesComponent;
+export default DoctorsComponent;

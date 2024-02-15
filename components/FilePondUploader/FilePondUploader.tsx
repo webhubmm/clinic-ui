@@ -2,10 +2,12 @@ import React, { useRef, useState } from "react";
 import { FilePond, registerPlugin } from "react-filepond";
 import "filepond/dist/filepond.min.css";
 import FilePondPluginFileEncode from "filepond-plugin-file-encode";
+import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size";
 import { Box } from "@chakra-ui/react";
 import Image from "next/image";
 
 registerPlugin(FilePondPluginFileEncode);
+registerPlugin(FilePondPluginFileValidateSize);
 
 interface FilePondUploaderProps {
   onFileChange: (base64Image: string | null) => void;
@@ -54,7 +56,7 @@ const FilePondUploader: React.FC<FilePondUploaderProps> = ({
       <FilePond
         ref={pond}
         allowMultiple={false}
-        // oninit={handleInit}
+        maxFileSize="2MB"
         onupdatefiles={handleUpdateFiles}
         server={{
           process: (

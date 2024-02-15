@@ -5,3 +5,11 @@
 .cursor-pointer {
   cursor: pointer;
 }
+
+.multiSelect {
+  width: 75%;
+}
+
+.active-class {
+  /* background-color: aqua; */
+}

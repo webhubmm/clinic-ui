@@ -1,5 +1,10 @@
 import { CookieValueTypes } from "cookies-next";
 
+interface PivotType {
+  doctor_id: string;
+  branch_id: string;
+}
+
 export interface BranchesDataType {
   id?: string;
   name: string;
@@ -16,5 +21,6 @@ export interface BranchesDataType {
   lat: string;
   lng: string;
   user_id: string;
+  pivot?: PivotType;
   token?: CookieValueTypes;
 }

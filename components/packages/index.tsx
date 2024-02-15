@@ -1,5 +1,29 @@
 "use client";
+import CustomModal from "@/components/Custom/CustomModal";
+import Loading from "@/components/Custom/Loading";
+import RestoreModal from "@/components/Custom/RestoreModal";
 import CustomTable from "@/components/Table/Table";
+import usePagination from "@/hooks/usePagination";
+import {
+  centralDelete,
+  centralForceDelete,
+  centralGetAllLists,
+  centralRestore,
+} from "@/lib/api-central";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import {
+  setDeleteLoading,
+  setFetchLoading,
+  setRestoreLoading,
+  setSearch,
+  setTotal_count,
+  setTrash,
+} from "@/store/slices/globalSlice";
+import {
+  setPackagesData,
+  setServicesDataForPackages,
+} from "@/store/slices/packagesSlice";
+import { PackagesDataType } from "@/types/packagesDataType";
 import {
   Badge,
   Box,
@@ -12,50 +36,18 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { CellContext, ColumnDef } from "@tanstack/react-table";
-import {
-  FaRegTrashAlt,
-  FaRegEdit,
-  FaTrashRestore,
-  FaSistrix,
-  FaAngleDoubleLeft,
-  FaTrash,
-} from "react-icons/fa";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import usePagination from "@/hooks/usePagination";
-import { getToken } from "@/lib/auth";
-import { badgeColorChange, changeFormatDateStringArr } from "@/utils/changes";
-import Loading from "@/components/Custom/Loading";
-import UserManagementCreateModal, {
-  MyModalRef,
-} from "@/components/userManagement/modal/Create";
-import UserManagementEditModal, {
-  EditModalRef,
-} from "@/components/userManagement/modal/Edit";
-import CustomModal from "@/components/Custom/CustomModal";
-import RestoreModal from "@/components/Custom/RestoreModal";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
-  fetchServicesData,
-  setDeleteLoading,
-  setFetchLoading,
-  setInit,
-  setRestoreLoading,
-  setSearch,
-  setTotal_count,
-  setTrash,
-  setUserData,
-} from "@/store/slices/globalSlice";
-import {
-  centralDelete,
-  centralForceDelete,
-  centralGetAllLists,
-  centralRestore,
-} from "@/lib/api-central";
+  FaAngleDoubleLeft,
+  FaRegEdit,
+  FaRegTrashAlt,
+  FaSistrix,
+  FaTrash,
+  FaTrashRestore,
+} from "react-icons/fa";
 import PackagesCreateModal, {
   PackagesCreateModalRef,
 } from "./modal/PackagesCreateModal";
-import { PackagesDataType } from "@/types/packagesDataType";
-import { setPackagesData } from "@/store/slices/packagesSlice";
 import PackagesEditModal, {
   PackagesEditModalRef,
 } from "./modal/PackagesEditModal";
@@ -94,11 +86,12 @@ const PackagesComponent = () => {
   );
   const toast = useToast();
 
+  const obj = {
+    page: pagination.pageIndex + 1,
+    per_page: pagination.pageSize,
+  };
+
   const FetchGetAllPackagesListFun = async () => {
-    const obj = {
-      page: pagination.pageIndex + 1,
-      per_page: pagination.pageSize,
-    };
     dispatch(setFetchLoading(true));
     const result = await centralGetAllLists("getPackagesAPI", {
       ...credential,
@@ -109,19 +102,25 @@ const PackagesComponent = () => {
     dispatch(setTotal_count(result?.data.total_count));
   };
 
+  const FetchGetAllServices = async () => {
+    const obj = {
+      page: pagination.pageIndex + 1,
+      per_page: pagination.pageSize,
+    };
+    const result = await centralGetAllLists("getServicesAPI", {
+      ...credential,
+      ...obj,
+    });
+    dispatch(setServicesDataForPackages(result?.data.services));
+    dispatch(setTotal_count(result?.data.total_count));
+  };
+
   useEffect(() => {
     FetchGetAllPackagesListFun();
   }, [pagination]);
 
   useEffect(() => {
-    dispatch(
-      fetchServicesData({
-        page: 1,
-        per_page: perPage,
-        search: "",
-        trash: false,
-      })
-    );
+    FetchGetAllServices();
   }, [perPage]);
 
   useEffect(() => {

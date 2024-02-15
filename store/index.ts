@@ -3,6 +3,7 @@ import globalSlice from "./slices/globalSlice";
 import branchesSlice from "./slices/branchesSlice";
 import servicesSlice from "./slices/servicesSlice";
 import packagesSlice from "./slices/packagesSlice";
+import doctorsSlice from "./slices/doctorsSlice";
 
 // ...
 
@@ -12,6 +13,7 @@ export const store = configureStore({
     branchesSlice: branchesSlice,
     servicesSlice: servicesSlice,
     packagesSlice: packagesSlice,
+    doctorsSlice: doctorsSlice,
   },
 });
 

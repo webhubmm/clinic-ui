@@ -3,8 +3,8 @@ import { getToken } from "./auth";
 
 const accessToken = getToken();
 
-// for handle 
-async function handleResponse(response:any) {
+// for handle
+async function handleResponse(response: any) {
   if (response.status === 204) {
     return Promise.resolve({});
   } else if (response.status >= 200 && response.status < 300) {
@@ -40,7 +40,7 @@ export async function centralApi(
         body: JSON.stringify(finalObj),
       }
     );
-        // return await handleResponse(response);
+    // return await handleResponse(response);
 
     const data = await response.json();
     if (data === undefined || data === null) {
@@ -49,7 +49,7 @@ export async function centralApi(
       return data;
     }
   } catch (error) {
-        // return Promise.reject(error);
+    // return Promise.reject(error);
 
     console.log("error ::: ", error);
   }
@@ -75,17 +75,14 @@ export const centralGetAllLists = async (
         },
       }
     );
-        // return await handleResponse(response);
+    // return await handleResponse(response);
 
-    
     const data = await response.json();
     if (data === undefined || data === null) {
       return;
     } else {
-    return data;
+      return data;
     }
- 
-    
   } catch (error) {
     console.log("error ::: ", error);
   }
@@ -95,6 +92,8 @@ export const centralGetAllLists = async (
 export const centralEdit = async (endpoint: keyof typeof API, data: any) => {
   const accessToken = getToken();
   const finalObj = { ...data };
+  console.log("finalObj :: ", finalObj);
+
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}${API[endpoint]}/${finalObj.id}`,
@@ -149,6 +148,7 @@ export const centralCreate = async (endpoint: keyof typeof API, data: any) => {
 //Delete
 export const centralDelete = async (endpoint: keyof typeof API, data: any) => {
   const finalObj = { ...data };
+  console.log("finalObj :: ", finalObj);
   const accessToken = getToken();
   try {
     const response = await fetch(

@@ -1,6 +1,27 @@
 "use client";
+import CustomModal from "@/components/Custom/CustomModal";
+import RestoreModal from "@/components/Custom/RestoreModal";
 import CustomTable from "@/components/Table/Table";
-import { UserManagementType } from "@/types/userManagementType";
+import usePagination from "@/hooks/usePagination";
+import {
+  centralDelete,
+  centralForceDelete,
+  centralGetAllLists,
+  centralRestore,
+} from "@/lib/api-central";
+import { getToken } from "@/lib/auth";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import {
+  setDeleteLoading,
+  setFetchLoading,
+  setRestoreLoading,
+  setSearch,
+  setTotal_count,
+  setTrash,
+} from "@/store/slices/globalSlice";
+import { setServicesData } from "@/store/slices/servicesSlice";
+import { ServicesDataType } from "@/types/servicesDataType";
+import { badgeColorChangeForServicesType } from "@/utils/changes";
 import {
   Badge,
   Box,
@@ -13,46 +34,16 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { CellContext, ColumnDef } from "@tanstack/react-table";
-import {
-  FaRegTrashAlt,
-  FaRegEdit,
-  FaTrashRestore,
-  FaSistrix,
-  FaAngleDoubleLeft,
-  FaTrash,
-} from "react-icons/fa";
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import usePagination from "@/hooks/usePagination";
-import CustomModal from "@/components/Custom/CustomModal";
-import RestoreModal from "@/components/Custom/RestoreModal";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
-  fetchUserData,
-  setDeleteLoading,
-  setFetchLoading,
-  setInit,
-  setRestoreLoading,
-  setSearch,
-  setTotal_count,
-  setTrash,
-  setUserData,
-} from "@/store/slices/globalSlice";
-import {
-  centralDelete,
-  centralForceDelete,
-  centralGetAllLists,
-  centralRestore,
-} from "@/lib/api-central";
-import { setBranchesData } from "@/store/slices/branchesSlice";
-import {
-  badgeColorChangeForIsOpenOrClosed,
-  badgeColorChangeForServicesType,
-  changeFormatDateStringArr,
-} from "@/utils/changes";
+  FaAngleDoubleLeft,
+  FaRegEdit,
+  FaRegTrashAlt,
+  FaSistrix,
+  FaTrash,
+  FaTrashRestore,
+} from "react-icons/fa";
 import Loading from "../Custom/Loading";
-import { getToken } from "@/lib/auth";
-import { setServicesData } from "@/store/slices/servicesSlice";
-import { ServicesDataType } from "@/types/servicesDataType";
 
 import ServicesCreatModal, {
   ServicesCreateModalRef,

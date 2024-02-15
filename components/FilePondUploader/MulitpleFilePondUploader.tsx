@@ -62,6 +62,7 @@ const MulitpleFilePondUploader: React.FC<FilePondUploaderProps> = ({
       <FilePond
         ref={pond}
         allowMultiple={true}
+        maxFileSize="2MB"
         onupdatefiles={handleUpdateFiles}
         server={{
           process: (
