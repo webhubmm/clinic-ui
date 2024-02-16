@@ -4,7 +4,7 @@ import "filepond/dist/filepond.min.css";
 import FilePondPluginFileEncode from "filepond-plugin-file-encode";
 import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size";
 import { Box } from "@chakra-ui/react";
-import Image from "next/image";
+import { Image } from "@chakra-ui/react";
 
 registerPlugin(FilePondPluginFileEncode);
 registerPlugin(FilePondPluginFileValidateSize);
@@ -46,11 +46,10 @@ const FilePondUploader: React.FC<FilePondUploaderProps> = ({
           alt="Uploaded"
           style={{
             marginTop: "10px",
-            height: "300px",
             objectFit: "cover",
           }}
-          width={400}
-          height={300}
+          width={"100%"}
+          height={"200px"}
         />
       )}
       <FilePond

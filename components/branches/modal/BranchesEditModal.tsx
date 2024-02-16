@@ -1,4 +1,5 @@
 import { forwardRef, useImperativeHandle, useState } from "react";
+import { Image } from "@chakra-ui/react";
 import {
   Modal,
   ModalOverlay,
@@ -26,7 +27,12 @@ import { centralEdit } from "@/lib/api-central";
 import { EditBranches } from "@/lib/branches";
 import MulitpleFilePondUploader from "@/components/FilePondUploader/MulitpleFilePondUploader";
 import Loading from "@/components/Custom/Loading";
-import Image from "next/image";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination } from "swiper/modules";
+
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
 interface BranchesEditModalProps {
   title: string; // Data to be edited
@@ -287,17 +293,29 @@ const BranchesEditModal: React.ForwardRefRenderFunction<
                   justifyContent={"space-evenly"}
                   mt={4}
                 >
-                  {formData.images.map((item: any, index: number) => {
-                    return (
-                      <Image
-                        src={item}
-                        key={index}
-                        width={150}
-                        alt="branches-img"
-                        height={100}
-                      />
-                    );
-                  })}
+                  <Swiper
+                    autoHeight={true}
+                    slidesPerView={1}
+                    spaceBetween={30}
+                    pagination={{
+                      clickable: true,
+                    }}
+                    modules={[Pagination]}
+                  >
+                    {formData.images.map((item: any, index: number) => {
+                      return (
+                        <SwiperSlide key={index}>
+                          <Image
+                            src={item}
+                            key={index}
+                            width={"100%"}
+                            alt="branches-img"
+                            height={"200px"}
+                          />
+                        </SwiperSlide>
+                      );
+                    })}
+                  </Swiper>
                 </Box>
 
                 <MulitpleFilePondUploader onFileChange={handleFileChange} />

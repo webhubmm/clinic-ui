@@ -42,9 +42,9 @@ const TeethManagementEditModal: React.ForwardRefRenderFunction<
   const { isOpen, onOpen, onClose } = useDisclosure();
   const accessToken = getToken();
   const [formData, setFormData] = useState<TeethManagmentType>({
-    id:'',
-    type:'',
-    type_number:'',
+    id: "",
+    type: "",
+    type_number: "",
     image: "",
     token: accessToken,
   });
@@ -52,7 +52,6 @@ const TeethManagementEditModal: React.ForwardRefRenderFunction<
   const EditLoading = useAppSelector((state) => state.globalSlice.editLoading);
   const toast = useToast();
 
- 
   const toastFun = (
     condition: string,
     description: string,
@@ -68,7 +67,7 @@ const TeethManagementEditModal: React.ForwardRefRenderFunction<
     });
   };
 
-   useImperativeHandle(ref, () => ({
+  useImperativeHandle(ref, () => ({
     open: (data: TeethManagmentType) => {
       onOpen();
       setFormData(data);
@@ -82,12 +81,13 @@ const TeethManagementEditModal: React.ForwardRefRenderFunction<
     }));
   };
 
-  
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     dispatch(setEditLoading(true));
-    const res = await centralEdit("createEditDeleteTeethManagmentAPI", formData);
+    const res = await centralEdit(
+      "createEditDeleteTeethManagmentAPI",
+      formData
+    );
     if (res === undefined) {
       return;
     }
@@ -138,7 +138,6 @@ const TeethManagementEditModal: React.ForwardRefRenderFunction<
                 required
               />
             </FormControl>
-           
 
             {formData.image && (
               <Box display={"flex"} justifyContent={"center"} mt={4}>

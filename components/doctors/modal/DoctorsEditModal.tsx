@@ -1,5 +1,6 @@
 "use client";
 import { forwardRef, useImperativeHandle, useState } from "react";
+import { Image } from "@chakra-ui/react";
 import {
   Modal,
   ModalOverlay,
@@ -24,7 +25,6 @@ import FilePondUploader from "@/components/FilePondUploader/FilePondUploader";
 import { centralEdit } from "@/lib/api-central";
 import makeAnimated from "react-select/animated";
 import Loading from "@/components/Custom/Loading";
-import Image from "next/image";
 import { DoctorsDataType } from "@/types/doctorsDataType";
 
 interface DoctorsEditModalProps {
@@ -261,9 +261,9 @@ const DoctorsEditModal: React.ForwardRefRenderFunction<
                 >
                   <Image
                     src={formData.image}
-                    width={200}
+                    width={"80%"}
                     alt="branches-img"
-                    height={150}
+                    height={"200px"}
                   />
                 </Box>
                 <FilePondUploader onFileChange={handleFileChange} />

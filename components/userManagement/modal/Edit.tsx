@@ -22,7 +22,7 @@ import { useAppSelector } from "@/store/hooks";
 import { setEditLoading } from "@/store/slices/globalSlice";
 import FilePondUploader from "@/components/FilePondUploader/FilePondUploader";
 import { centralEdit } from "@/lib/api-central";
-import Image from "next/image";
+import { Image } from "@chakra-ui/react";
 
 interface EditModalProps {
   title: string; // Data to be edited
@@ -170,9 +170,11 @@ const UserManagementEditModal: React.ForwardRefRenderFunction<
               <Box display={"flex"} justifyContent={"center"} mt={4}>
                 <Image
                   src={formData.image.base64_url}
-                  width={250}
+                  width={"80%"}
                   alt="branches-img"
-                  height={100}
+                  height={"200px"}
+                  objectFit={"cover"}
+                  objectPosition={"center"}
                 />
               </Box>
             )}

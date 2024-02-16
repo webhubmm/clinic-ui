@@ -26,7 +26,7 @@ import { centralEdit } from "@/lib/api-central";
 import { EditBranches } from "@/lib/branches";
 import MulitpleFilePondUploader from "@/components/FilePondUploader/MulitpleFilePondUploader";
 import Loading from "@/components/Custom/Loading";
-import Image from "next/image";
+import { Image } from "@chakra-ui/react";
 import { PackagesDataType } from "@/types/packagesDataType";
 
 interface PackagesEditModalProps {
@@ -241,9 +241,9 @@ const PackagesEditModal: React.ForwardRefRenderFunction<
               >
                 <Image
                   src={formData.image}
-                  width={200}
+                  width={"100%"}
                   alt="branches-img"
-                  height={150}
+                  height={"200px"}
                 />
               </Box>
             )}
