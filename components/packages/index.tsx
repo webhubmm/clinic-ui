@@ -13,6 +13,7 @@ import {
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
   setDeleteLoading,
+  setFetchDataStatus,
   setFetchLoading,
   setRestoreLoading,
   setSearch,
@@ -20,6 +21,7 @@ import {
   setTrash,
 } from "@/store/slices/globalSlice";
 import {
+  removePackages,
   setPackagesData,
   setServicesDataForPackages,
 } from "@/store/slices/packagesSlice";
@@ -75,7 +77,9 @@ const PackagesComponent = () => {
     string | null
   >(null);
   const dispatch = useAppDispatch();
-  const { credential } = useAppSelector((state) => state.globalSlice);
+  const { credential, fetchDataStatus } = useAppSelector(
+    (state) => state.globalSlice
+  );
   const trash = useAppSelector((state) => state.globalSlice.credential.trash);
   const { total_count, isFetchLoading } = useAppSelector(
     (state) => state.globalSlice
@@ -116,17 +120,19 @@ const PackagesComponent = () => {
   };
 
   useEffect(() => {
-    FetchGetAllPackagesListFun();
-  }, [pagination]);
+    if (fetchDataStatus) {
+      FetchGetAllPackagesListFun();
+      dispatch(setFetchDataStatus(false));
+    }
+  }, [pagination.pageIndex, pagination.pageSize, trash, fetchDataStatus]);
 
   useEffect(() => {
     FetchGetAllServices();
   }, [perPage]);
 
   useEffect(() => {
-    onPaginationChange({ pageSize: 10, pageIndex: 0 });
-    dispatch(setSearch(""));
-  }, [trash]);
+    dispatch(setFetchDataStatus(true));
+  }, [pagination.pageIndex, pagination.pageSize, trash]);
 
   const toastFun = (
     condition: string,
@@ -175,12 +181,15 @@ const PackagesComponent = () => {
     dispatch(setDeleteLoading(true));
     if (packagesDataForDelete) {
       const delobj = { id: packagesDataForDelete };
+      const deletePackagesData = packagesData.find(
+        (item) => item.id === delobj.id
+      );
       const result = await centralDelete("createEditDeletePackagesAPI", delobj);
       if (result?.code === 200) toastFun("Success", result?.message, "success");
       if (result?.status === 400) toastFun("Error", result?.message, "error");
-      onClose();
+      dispatch(removePackages(deletePackagesData as PackagesDataType));
       dispatch(setDeleteLoading(false));
-      FetchGetAllPackagesListFun();
+      onClose();
     }
   };
 
@@ -193,12 +202,15 @@ const PackagesComponent = () => {
     dispatch(setRestoreLoading(true));
     if (packagesDataForRestore) {
       const restoreobj = { id: packagesDataForRestore };
+      const restorePackagesData = packagesData.find(
+        (item) => item.id === restoreobj.id
+      );
       const result = await centralRestore("restorePackagesAPI", restoreobj);
       if (result?.code === 200) toastFun("Success", result?.message, "success");
       if (result?.status === 400) toastFun("Error", result?.message, "error");
-      onRestoreClose();
+      dispatch(removePackages(restorePackagesData as PackagesDataType));
       dispatch(setRestoreLoading(false));
-      FetchGetAllPackagesListFun();
+      onRestoreClose();
     }
   };
 
@@ -211,12 +223,15 @@ const PackagesComponent = () => {
     dispatch(setDeleteLoading(true));
     if (packagesDataForForceDelete) {
       const delobj = { id: packagesDataForForceDelete };
+      const forceDeletePackagesData = packagesData.find(
+        (item) => item.id === delobj.id
+      );
       const result = await centralForceDelete("forceDeletePackagesAPI", delobj);
       if (result?.code === 200) toastFun("Success", result?.message, "success");
       if (result?.status === 400) toastFun("Error", result?.message, "error");
-      onForceDeleteClose();
+      dispatch(removePackages(forceDeletePackagesData as PackagesDataType));
       dispatch(setDeleteLoading(false));
-      FetchGetAllPackagesListFun();
+      onForceDeleteClose();
     }
   };
 
@@ -240,21 +255,7 @@ const PackagesComponent = () => {
       },
       {
         header: "Service Name",
-        accessorKey: "service",
-        cell: ({ row }: CellContext<PackagesDataType, React.ReactNode>) => (
-          <Badge
-            bg={"#1E293B"}
-            px={4}
-            py={2}
-            borderRadius={4}
-            width={"100%"}
-            textAlign={"center"}
-            fontSize="0.9em"
-            variant="solid"
-          >
-            {row.original.service?.name}
-          </Badge>
-        ),
+        accessorKey: "service.name",
       },
       {
         id: "actions",

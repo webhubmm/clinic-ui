@@ -19,7 +19,7 @@ import {
   setTotal_count,
   setTrash,
 } from "@/store/slices/globalSlice";
-import { setServicesData } from "@/store/slices/servicesSlice";
+import { removeServices, setServicesData } from "@/store/slices/servicesSlice";
 import { ServicesDataType } from "@/types/servicesDataType";
 import { badgeColorChangeForServicesType } from "@/utils/changes";
 import {
@@ -65,16 +65,15 @@ const ServicesComponent = () => {
     onClose: onForceDeleteClose,
   } = useDisclosure();
   const { onPaginationChange, pagination } = usePagination();
-  const [servicesDataForDelete, setBranchesDataForDelete] = useState<
+  const [servicesDataForDelete, setServicesDataForDelete] = useState<
     string | null
   >(null);
-  const [servicesDataForRestore, setBranchesDataForRestore] = useState<
+  const [servicesDataForRestore, setServicesDataForRestore] = useState<
     string | null
   >(null);
-  const [servicesDataForForceDelete, setBranchesDataForForceDelete] = useState<
+  const [servicesDataForForceDelete, setServicesDataForForceDelete] = useState<
     string | null
   >(null);
-  const accessToken = getToken();
   const dispatch = useAppDispatch();
   const { credential } = useAppSelector((state) => state.globalSlice);
   const { servicesData } = useAppSelector((state) => state.servicesSlice);
@@ -153,8 +152,8 @@ const ServicesComponent = () => {
     dispatch(setSearch(e.target.value));
   };
 
-  const handleDelete = (branches: ServicesDataType) => {
-    setBranchesDataForDelete(branches.id as string);
+  const handleDelete = (services: ServicesDataType) => {
+    setServicesDataForDelete(services.id as string);
     onOpen();
   };
 
@@ -162,17 +161,20 @@ const ServicesComponent = () => {
     dispatch(setDeleteLoading(true));
     if (servicesDataForDelete) {
       const delobj = { id: servicesDataForDelete };
+      const deleteServicesData = servicesData.find(
+        (item) => item.id === delobj.id
+      );
       const result = await centralDelete("createEditDeleteServicesAPI", delobj);
       if (result.code === 200) toastFun("Success", result.message, "success");
       if (result.status === 400) toastFun("Error", result.message, "error");
-      onClose();
+      dispatch(removeServices(deleteServicesData as ServicesDataType));
       dispatch(setDeleteLoading(false));
-      FetchGetAllServices();
+      onClose();
     }
   };
 
-  const handleRestore = (branches: ServicesDataType) => {
-    setBranchesDataForRestore(branches.id as string);
+  const handleRestore = (services: ServicesDataType) => {
+    setServicesDataForRestore(services.id as string);
     onRestoreOpen();
   };
 
@@ -180,17 +182,20 @@ const ServicesComponent = () => {
     dispatch(setRestoreLoading(true));
     if (servicesDataForRestore) {
       const restoreobj = { id: servicesDataForRestore };
+      const restoreServicesData = servicesData.find(
+        (item) => item.id === restoreobj.id
+      );
       const result = await centralRestore("restoreServicesAPI", restoreobj);
       if (result?.code === 200) toastFun("Success", result.message, "success");
       if (result?.status === 400) toastFun("Error", result.message, "error");
-      onRestoreClose();
+      dispatch(removeServices(restoreServicesData as ServicesDataType));
       dispatch(setRestoreLoading(false));
-      FetchGetAllServices();
+      onRestoreClose();
     }
   };
 
   const handleForceDelete = (services: ServicesDataType) => {
-    setBranchesDataForForceDelete(services.id as string);
+    setServicesDataForForceDelete(services.id as string);
     onForceDeleteOpen();
   };
 
@@ -198,12 +203,15 @@ const ServicesComponent = () => {
     dispatch(setDeleteLoading(true));
     if (servicesDataForForceDelete) {
       const delobj = { id: servicesDataForForceDelete };
+      const forceDeleteServicesData = servicesData.find(
+        (item) => item.id === delobj.id
+      );
       const result = await centralForceDelete("forceDeleteServicesAPI", delobj);
       if (result.code === 200) toastFun("Success", result.message, "success");
       if (result.status === 400) toastFun("Error", result.message, "error");
-      onForceDeleteClose();
+      dispatch(removeServices(forceDeleteServicesData as ServicesDataType));
       dispatch(setDeleteLoading(false));
-      FetchGetAllServices();
+      onForceDeleteClose();
     }
   };
 

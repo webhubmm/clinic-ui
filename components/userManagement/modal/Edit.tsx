@@ -23,10 +23,10 @@ import { setEditLoading } from "@/store/slices/globalSlice";
 import FilePondUploader from "@/components/FilePondUploader/FilePondUploader";
 import { centralEdit } from "@/lib/api-central";
 import { Image } from "@chakra-ui/react";
+import { updateUser } from "@/store/slices/userManagementSlice";
 
 interface EditModalProps {
   title: string; // Data to be edited
-  fetchData: () => void;
 }
 
 export interface EditModalRef {
@@ -37,7 +37,7 @@ export interface EditModalRef {
 const UserManagementEditModal: React.ForwardRefRenderFunction<
   EditModalRef,
   EditModalProps
-> = ({ title, fetchData }, ref) => {
+> = ({ title }, ref) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const accessToken = getToken();
   const [formData, setFormData] = useState<UserManagementType>({
@@ -47,7 +47,6 @@ const UserManagementEditModal: React.ForwardRefRenderFunction<
     phone: "",
     role: "",
     image: "",
-    token: accessToken,
   });
   const dispatch = useDispatch();
   const EditLoading = useAppSelector((state) => state.globalSlice.editLoading);
@@ -102,8 +101,8 @@ const UserManagementEditModal: React.ForwardRefRenderFunction<
       onClose();
     } else if (res.code === 200) {
       toastFun("Success", res.message, "success");
+      dispatch(updateUser(formData));
       onClose();
-      fetchData();
     }
     dispatch(setEditLoading(false));
   };

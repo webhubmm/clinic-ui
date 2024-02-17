@@ -1,14 +1,14 @@
 import { CookieValueTypes } from "cookies-next";
 
 export interface UserManagementType {
-  id: string;
+  id?: string;
   name: string;
   email: string;
   phone: string;
   role: string;
   updated_at?: string;
   image: any;
-  token: CookieValueTypes;
+  token?: CookieValueTypes;
 }
 
 export interface UserManagementCreateType {
@@ -19,5 +19,5 @@ export interface UserManagementCreateType {
   password_confirmation: string;
   role: string;
   image: string | null;
-  token: CookieValueTypes;
+  token?: CookieValueTypes;
 }

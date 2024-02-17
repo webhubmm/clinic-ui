@@ -27,6 +27,19 @@ export const packagesSlice = createSlice({
     setIsServiceFetching: (state, action: PayloadAction<boolean>) => {
       state.isServiceFetching = action.payload;
     },
+    addPackages: (state, action: PayloadAction<PackagesDataType>) => {
+      state.packagesData = [...state.packagesData, action.payload];
+    },
+    updatePackages: (state, action: PayloadAction<PackagesDataType>) => {
+      state.packagesData = state.packagesData.map((item) =>
+        item.id === action.payload.id ? action.payload : item
+      );
+    },
+    removePackages: (state, action: PayloadAction<PackagesDataType>) => {
+      state.packagesData = state.packagesData.filter(
+        (item) => item.id !== action.payload.id
+      );
+    },
   },
 });
 
@@ -34,5 +47,8 @@ export const {
   setPackagesData,
   setServicesDataForPackages,
   setIsServiceFetching,
+  addPackages,
+  updatePackages,
+  removePackages,
 } = packagesSlice.actions;
 export default packagesSlice.reducer;

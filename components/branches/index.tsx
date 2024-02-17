@@ -34,7 +34,6 @@ import {
   setSearch,
   setTotal_count,
   setTrash,
-  setUserData,
 } from "@/store/slices/globalSlice";
 import BranchesCreateModal, {
   BranchesCreateModalRef,
@@ -47,6 +46,7 @@ import {
 } from "@/lib/api-central";
 import { BranchesDataType } from "@/types/branchesDataType";
 import {
+  removeBranches,
   setBranchesData,
   setIsStaffFetching,
   setUserDataForBranches,
@@ -60,6 +60,7 @@ import {
 } from "@/utils/changes";
 import Loading from "../Custom/Loading";
 import { getToken } from "@/lib/auth";
+import { setUsersData } from "@/store/slices/userManagementSlice";
 
 const BranchesComponent = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -116,7 +117,6 @@ const BranchesComponent = () => {
 
   const FetchGetAllUserListFun = async () => {
     dispatch(setIsStaffFetching(true));
-    dispatch(setFetchLoading(true));
     const result = await centralGetAllLists("crudUserManagementAPI", {
       page: 1,
       per_page: perPage,
@@ -124,7 +124,7 @@ const BranchesComponent = () => {
       trash: false,
     });
     const resultWithChangeDate = changeFormatDateStringArr(result?.data.users);
-    dispatch(setUserData(resultWithChangeDate));
+    dispatch(setUsersData(resultWithChangeDate));
     dispatch(setUserDataForBranches(resultWithChangeDate));
     dispatch(setIsStaffFetching(false));
     dispatch(setTotal_count(result?.data.total_count));
@@ -194,12 +194,15 @@ const BranchesComponent = () => {
     dispatch(setDeleteLoading(true));
     if (branchesDataForDelete) {
       const delobj = { id: branchesDataForDelete };
+      const deleteBranchesData = branchesData.find(
+        (item) => item.id === delobj.id
+      );
       const result = await centralDelete("createEditDeleteBranchesAPI", delobj);
       if (result.code === 200) toastFun("Success", result.message, "success");
       if (result.status === 400) toastFun("Error", result.message, "error");
-      onClose();
+      dispatch(removeBranches(deleteBranchesData as BranchesDataType));
       dispatch(setDeleteLoading(false));
-      FetchGetAllBranches();
+      onClose();
     }
   };
 
@@ -212,12 +215,15 @@ const BranchesComponent = () => {
     dispatch(setRestoreLoading(true));
     if (branchesDataForRestore) {
       const restoreobj = { id: branchesDataForRestore };
+      const restoreBranchesData = branchesData.find(
+        (item) => item.id === restoreobj.id
+      );
       const result = await centralRestore("restoreBranchesAPI", restoreobj);
       if (result?.code === 200) toastFun("Success", result.message, "success");
       if (result?.status === 400) toastFun("Error", result.message, "error");
-      onRestoreClose();
+      dispatch(removeBranches(restoreBranchesData as BranchesDataType));
       dispatch(setRestoreLoading(false));
-      FetchGetAllBranches();
+      onRestoreClose();
     }
   };
 
@@ -230,12 +236,15 @@ const BranchesComponent = () => {
     dispatch(setDeleteLoading(true));
     if (branchesDataForForceDelete) {
       const delobj = { id: branchesDataForForceDelete };
+      const forceDeleteBranchesData = branchesData.find(
+        (item) => item.id === delobj.id
+      );
       const result = await centralForceDelete("forceDeleteBranchesAPI", delobj);
       if (result.code === 200) toastFun("Success", result.message, "success");
       if (result.status === 400) toastFun("Error", result.message, "error");
-      onForceDeleteClose();
+      dispatch(removeBranches(forceDeleteBranchesData as BranchesDataType));
       dispatch(setDeleteLoading(false));
-      FetchGetAllBranches();
+      onForceDeleteClose();
     }
   };
 
@@ -485,11 +494,7 @@ const BranchesComponent = () => {
         title={"Create Branches"}
         fetchData={FetchGetAllBranches}
       />
-      <BranchesEditModal
-        ref={branchesEditModalRef}
-        title={"Edit Branches"}
-        fetchData={FetchGetAllBranches}
-      />
+      <BranchesEditModal ref={branchesEditModalRef} title={"Edit Branches"} />
     </Box>
   );
 };

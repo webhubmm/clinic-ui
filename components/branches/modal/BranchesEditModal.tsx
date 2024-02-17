@@ -33,10 +33,10 @@ import { Pagination } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
+import { updateBranches } from "@/store/slices/branchesSlice";
 
 interface BranchesEditModalProps {
   title: string; // Data to be edited
-  fetchData: () => void;
 }
 
 export interface BranchesEditModalRef {
@@ -47,9 +47,8 @@ export interface BranchesEditModalRef {
 const BranchesEditModal: React.ForwardRefRenderFunction<
   BranchesEditModalRef,
   BranchesEditModalProps
-> = ({ title, fetchData }, ref) => {
+> = ({ title }, ref) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const accessToken = getToken();
   const [formData, setFormData] = useState<BranchesDataType>({
     id: "",
     name: "",
@@ -81,11 +80,12 @@ const BranchesEditModal: React.ForwardRefRenderFunction<
         // Copy other properties from the original object
         ...data,
         // Map over the images array and extract the base64_url values
-        images: data.images.map((image: any) => image.base64_url),
+        images: data.images.map((image: any) => image.base64_url || image),
       };
       onOpen();
       setFormData(newObj);
     },
+
     close: onClose,
   }));
 
@@ -137,8 +137,8 @@ const BranchesEditModal: React.ForwardRefRenderFunction<
       onClose();
     } else if (res.code === 200) {
       toastFun("Success", res.message, "success");
+      dispatch(updateBranches(formData));
       onClose();
-      fetchData();
     }
     dispatch(setEditLoading(false));
   };

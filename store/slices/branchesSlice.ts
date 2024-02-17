@@ -27,9 +27,28 @@ export const branchesSlice = createSlice({
     setUserDataForBranches: (state, action) => {
       state.userDataForBranches = action.payload;
     },
+    addBranches: (state, action: PayloadAction<BranchesDataType>) => {
+      state.branchesData = [...state.branchesData, action.payload];
+    },
+    updateBranches: (state, action: PayloadAction<BranchesDataType>) => {
+      state.branchesData = state.branchesData.map((item) =>
+        item.id === action.payload.id ? action.payload : item
+      );
+    },
+    removeBranches: (state, action: PayloadAction<BranchesDataType>) => {
+      state.branchesData = state.branchesData.filter(
+        (item) => item.id !== action.payload.id
+      );
+    },
   },
 });
 
-export const { setBranchesData, setIsStaffFetching, setUserDataForBranches } =
-  branchesSlice.actions;
+export const {
+  setBranchesData,
+  setIsStaffFetching,
+  setUserDataForBranches,
+  addBranches,
+  updateBranches,
+  removeBranches,
+} = branchesSlice.actions;
 export default branchesSlice.reducer;

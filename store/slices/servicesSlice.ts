@@ -16,8 +16,22 @@ export const servicesSlice = createSlice({
     setServicesData: (state, action) => {
       state.servicesData = action.payload;
     },
+    addServices: (state, action: PayloadAction<ServicesDataType>) => {
+      state.servicesData = [...state.servicesData, action.payload];
+    },
+    updateServices: (state, action: PayloadAction<ServicesDataType>) => {
+      state.servicesData = state.servicesData.map((item) =>
+        item.id === action.payload.id ? action.payload : item
+      );
+    },
+    removeServices: (state, action: PayloadAction<ServicesDataType>) => {
+      state.servicesData = state.servicesData.filter(
+        (item) => item.id !== action.payload.id
+      );
+    },
   },
 });
 
-export const { setServicesData } = servicesSlice.actions;
+export const { setServicesData, addServices, updateServices, removeServices } =
+  servicesSlice.actions;
 export default servicesSlice.reducer;

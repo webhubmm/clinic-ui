@@ -28,6 +28,7 @@ import RestoreModal from "@/components/Custom/RestoreModal";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
   setDeleteLoading,
+  setFetchDataStatus,
   setFetchLoading,
   setRestoreLoading,
   setSearch,
@@ -49,7 +50,11 @@ import DoctorsEditModal, {
 } from "./modal/DoctorsEditModal";
 import { DoctorsDataType } from "@/types/doctorsDataType";
 import { setBranchesData } from "@/store/slices/branchesSlice";
-import { setDoctorsData } from "@/store/slices/doctorsSlice";
+import {
+  removeDoctors,
+  setDoctorsData,
+  setFetchBranchesForDoctorsCpnLoading,
+} from "@/store/slices/doctorsSlice";
 
 const DoctorsComponent = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -74,14 +79,21 @@ const DoctorsComponent = () => {
     string | null
   >(null);
   const dispatch = useAppDispatch();
-  const { credential } = useAppSelector((state) => state.globalSlice);
+  const { credential, fetchDataStatus } = useAppSelector(
+    (state) => state.globalSlice
+  );
   const trash = useAppSelector((state) => state.globalSlice.credential.trash);
   const { total_count, isFetchLoading } = useAppSelector(
     (state) => state.globalSlice
   );
-  const { doctorsData } = useAppSelector((state) => state.doctorsSlice);
+  const { doctorsData, isFetchBranchesForDoctorsCpnLoading } = useAppSelector(
+    (state) => state.doctorsSlice
+  );
   const perPage = useAppSelector(
     (state) => state.globalSlice.credential.per_page
+  );
+  const branchesList = useAppSelector(
+    (state) => state.branchesSlice.branchesData
   );
   const toast = useToast();
 
@@ -106,28 +118,30 @@ const DoctorsComponent = () => {
       page: pagination.pageIndex + 1,
       per_page: pagination.pageSize,
     };
-    dispatch(setFetchLoading(true));
+    dispatch(setFetchBranchesForDoctorsCpnLoading(true));
     const result = await centralGetAllLists("getBranchesAPI", {
       ...credential,
       ...obj,
     });
     dispatch(setBranchesData(result?.data.branches));
-    dispatch(setFetchLoading(false));
+    dispatch(setFetchBranchesForDoctorsCpnLoading(false));
     dispatch(setTotal_count(result?.data.total_count));
   };
 
   useEffect(() => {
-    FetchGetAllDoctorsListFun();
-  }, [pagination]);
+    if (fetchDataStatus) {
+      FetchGetAllDoctorsListFun();
+      dispatch(setFetchDataStatus(false)); // Set the flag to false after fetching data
+    }
+  }, [pagination.pageIndex, pagination.pageSize, trash, fetchDataStatus]);
 
   useEffect(() => {
     FetchGetAllBranches();
   }, [perPage]);
 
   useEffect(() => {
-    onPaginationChange({ pageSize: 10, pageIndex: 0 });
-    dispatch(setSearch(""));
-  }, [trash]);
+    dispatch(setFetchDataStatus(true));
+  }, [pagination.pageIndex, pagination.pageSize, trash]);
 
   const toastFun = (
     condition: string,
@@ -176,12 +190,15 @@ const DoctorsComponent = () => {
     dispatch(setDeleteLoading(true));
     if (doctorsDataForDelete) {
       const delobj = { id: doctorsDataForDelete };
+      const deleteDoctorData = doctorsData.find(
+        (item) => item.id === delobj.id
+      );
       const result = await centralDelete("createEditDeleteDoctorsAPI", delobj);
       if (result?.code === 200) toastFun("Success", result?.message, "success");
       if (result?.status === 400) toastFun("Error", result?.message, "error");
-      onClose();
+      dispatch(removeDoctors(deleteDoctorData as DoctorsDataType));
       dispatch(setDeleteLoading(false));
-      FetchGetAllDoctorsListFun();
+      onClose();
     }
   };
 
@@ -194,12 +211,15 @@ const DoctorsComponent = () => {
     dispatch(setRestoreLoading(true));
     if (doctorsDataForRestore) {
       const restoreobj = { id: doctorsDataForRestore };
+      const restoreeUserData = doctorsData.find(
+        (item) => item.id === restoreobj.id
+      );
       const result = await centralRestore("restoreDoctorsAPI", restoreobj);
       if (result?.code === 200) toastFun("Success", result?.message, "success");
       if (result?.status === 400) toastFun("Error", result?.message, "error");
-      onRestoreClose();
+      dispatch(removeDoctors(restoreeUserData as DoctorsDataType));
       dispatch(setRestoreLoading(false));
-      FetchGetAllDoctorsListFun();
+      onRestoreClose();
     }
   };
 
@@ -212,12 +232,15 @@ const DoctorsComponent = () => {
     dispatch(setDeleteLoading(true));
     if (doctorsDataForForceDelete) {
       const delobj = { id: doctorsDataForForceDelete };
+      const forceDeleteDoctorData = doctorsData.find(
+        (item) => item.id === delobj.id
+      );
       const result = await centralForceDelete("forceDeleteDoctorsAPI", delobj);
       if (result?.code === 200) toastFun("Success", result?.message, "success");
       if (result?.status === 400) toastFun("Error", result?.message, "error");
-      onForceDeleteClose();
+      dispatch(removeDoctors(forceDeleteDoctorData as DoctorsDataType));
       dispatch(setDeleteLoading(false));
-      FetchGetAllDoctorsListFun();
+      onForceDeleteClose();
     }
   };
 
@@ -302,6 +325,7 @@ const DoctorsComponent = () => {
                       bgColor: "#185aca",
                     },
                   }}
+                  isLoading={isFetchBranchesForDoctorsCpnLoading}
                 >
                   <FaRegEdit />
                 </Button>
@@ -324,7 +348,7 @@ const DoctorsComponent = () => {
         ),
       },
     ],
-    [trash]
+    [trash, isFetchBranchesForDoctorsCpnLoading]
   );
 
   return (
@@ -453,11 +477,7 @@ const DoctorsComponent = () => {
         title={"Create Doctors"}
         fetchData={FetchGetAllDoctorsListFun}
       />
-      <DoctorsEditModal
-        ref={doctorsEditModalRef}
-        title={"Edit Doctors"}
-        fetchData={FetchGetAllDoctorsListFun}
-      />
+      <DoctorsEditModal ref={doctorsEditModalRef} title={"Edit Doctors"} />
     </Box>
   );
 };

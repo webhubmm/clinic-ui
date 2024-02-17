@@ -43,7 +43,6 @@ const BranchesCreateModal: React.ForwardRefRenderFunction<
   BranchesCreateModalRef,
   BranchesCreateModalProps
 > = ({ title, children, fetchData }, ref) => {
-  const accessToken = getToken();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [formData, setFormData] = useState<BranchesDataType>({
     name: "",
@@ -117,7 +116,6 @@ const BranchesCreateModal: React.ForwardRefRenderFunction<
       lng: "",
       open_hour: "",
       close_hour: "",
-      token: accessToken,
     });
   };
 

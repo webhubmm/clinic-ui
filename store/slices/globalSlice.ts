@@ -11,20 +11,19 @@ interface CredientialType {
 interface GlobalState {
   isFetchLoading: boolean;
   init: boolean;
-  userData: UserManagementType[];
   total_count: number;
   credential: CredientialType;
   createLoading: boolean;
   editLoading: boolean;
   restoreLoading: boolean;
   deleteLoading: boolean;
+  fetchDataStatus: boolean;
   error: Error | null;
 }
 
 const initialState: GlobalState = {
   isFetchLoading: false,
   init: false,
-  userData: [],
   total_count: 0,
   credential: {
     trash: false,
@@ -36,6 +35,7 @@ const initialState: GlobalState = {
   editLoading: false,
   restoreLoading: false,
   deleteLoading: false,
+  fetchDataStatus: true,
   error: null,
 };
 
@@ -76,8 +76,8 @@ export const globalSlice = createSlice({
     setDeleteLoading: (state, action: PayloadAction<boolean>) => {
       state.deleteLoading = action.payload;
     },
-    setUserData: (state, action) => {
-      state.userData = action.payload;
+    setFetchDataStatus: (state, action: PayloadAction<boolean>) => {
+      state.fetchDataStatus = action.payload;
     },
   },
 });
@@ -94,7 +94,7 @@ export const {
   setDeleteLoading,
   setPage,
   setPerPage,
-  setUserData,
+  setFetchDataStatus,
 } = globalSlice.actions;
 
 export default globalSlice.reducer;

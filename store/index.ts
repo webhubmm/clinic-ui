@@ -4,12 +4,14 @@ import branchesSlice from "./slices/branchesSlice";
 import servicesSlice from "./slices/servicesSlice";
 import packagesSlice from "./slices/packagesSlice";
 import doctorsSlice from "./slices/doctorsSlice";
+import usersSlice from "./slices/userManagementSlice";
 
 // ...
 
 export const store = configureStore({
   reducer: {
     globalSlice: globalSlice,
+    usersSlice: usersSlice,
     branchesSlice: branchesSlice,
     servicesSlice: servicesSlice,
     packagesSlice: packagesSlice,

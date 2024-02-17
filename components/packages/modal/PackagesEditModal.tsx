@@ -28,6 +28,7 @@ import MulitpleFilePondUploader from "@/components/FilePondUploader/MulitpleFile
 import Loading from "@/components/Custom/Loading";
 import { Image } from "@chakra-ui/react";
 import { PackagesDataType } from "@/types/packagesDataType";
+import { updatePackages } from "@/store/slices/packagesSlice";
 
 interface PackagesEditModalProps {
   title: string; // Data to be edited
@@ -69,7 +70,7 @@ const PackagesEditModal: React.ForwardRefRenderFunction<
         // Copy other properties from the original object
         ...data,
         // Map over the images array and extract the base64_url values
-        image: data.image?.base64_url,
+        image: data.image?.base64_url || data.image,
       };
       onOpen();
       setFormData(newObj);
@@ -102,15 +103,18 @@ const PackagesEditModal: React.ForwardRefRenderFunction<
   const handleIsServicesListChange = (
     e: React.ChangeEvent<HTMLSelectElement>
   ) => {
+    const serviceChange = servicesList.find((item) => {
+      return item.id?.toString() === e.target.value;
+    });
     setFormData((prevData) => ({
       ...prevData,
       service_id: e.target.value,
+      service: serviceChange,
     }));
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     dispatch(setEditLoading(true));
     const res = await centralEdit("createEditDeletePackagesAPI", formData);
     if (res === undefined) {
@@ -121,8 +125,8 @@ const PackagesEditModal: React.ForwardRefRenderFunction<
       onClose();
     } else if (res.code === 200) {
       toastFun("Success", res.message, "success");
+      dispatch(updatePackages(formData));
       onClose();
-      fetchData();
     }
     dispatch(setEditLoading(false));
   };

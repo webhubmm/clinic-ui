@@ -92,7 +92,6 @@ export const centralGetAllLists = async (
 export const centralEdit = async (endpoint: keyof typeof API, data: any) => {
   const accessToken = getToken();
   const finalObj = { ...data };
-  console.log("finalObj :: ", finalObj);
 
   try {
     const response = await fetch(
@@ -148,7 +147,6 @@ export const centralCreate = async (endpoint: keyof typeof API, data: any) => {
 //Delete
 export const centralDelete = async (endpoint: keyof typeof API, data: any) => {
   const finalObj = { ...data };
-  console.log("finalObj :: ", finalObj);
   const accessToken = getToken();
   try {
     const response = await fetch(

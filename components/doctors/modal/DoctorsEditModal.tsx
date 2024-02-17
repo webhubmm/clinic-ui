@@ -26,10 +26,10 @@ import { centralEdit } from "@/lib/api-central";
 import makeAnimated from "react-select/animated";
 import Loading from "@/components/Custom/Loading";
 import { DoctorsDataType } from "@/types/doctorsDataType";
+import { updateDoctors } from "@/store/slices/doctorsSlice";
 
 interface DoctorsEditModalProps {
   title: string; // Data to be edited
-  fetchData: () => void;
 }
 
 export interface DoctorsEditModalRef {
@@ -40,7 +40,7 @@ export interface DoctorsEditModalRef {
 const DoctorsEditModal: React.ForwardRefRenderFunction<
   DoctorsEditModalRef,
   DoctorsEditModalProps
-> = ({ title, fetchData }, ref) => {
+> = ({ title }, ref) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [
     clickedBranchForSelectedBranches,
@@ -58,6 +58,7 @@ const DoctorsEditModal: React.ForwardRefRenderFunction<
   });
   const dispatch = useDispatch();
   const EditLoading = useAppSelector((state) => state.globalSlice.editLoading);
+
   const animatedComponents = makeAnimated();
   let perPage = useAppSelector(
     (state) => state.globalSlice.credential.per_page
@@ -73,14 +74,18 @@ const DoctorsEditModal: React.ForwardRefRenderFunction<
         // Copy other properties from the original object
         ...data,
         // Map over the images array and extract the base64_url values
-        image: data.image?.base64_url,
-        branches: data.branches?.map((item: any) => item.id),
+        image: data.image?.base64_url || data.image,
+        branches: data.branches?.map((item: any) => item.id || item),
       };
       onOpen();
       setFormData(newObj);
-
-      const changeClickedBranches = data.branches;
-      setClickedBranchForSelectedBranches(changeClickedBranches as any);
+      const outPutNewBranches = data.branches?.map((ele: any) => ele.id || ele);
+      const selectedClickedBranches = branchesList.filter(
+        (item: any) =>
+          outPutNewBranches.includes(item) ||
+          outPutNewBranches.includes(item.id)
+      );
+      setClickedBranchForSelectedBranches(selectedClickedBranches as any);
     },
     close: onClose,
   }));
@@ -134,8 +139,8 @@ const DoctorsEditModal: React.ForwardRefRenderFunction<
       onClose();
     } else if (res.code === 200) {
       toastFun("Success", res.message, "success");
+      dispatch(updateDoctors(formData));
       onClose();
-      fetchData();
     }
     dispatch(setEditLoading(false));
   };

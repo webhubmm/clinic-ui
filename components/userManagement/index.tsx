@@ -37,13 +37,13 @@ import RestoreModal from "@/components/Custom/RestoreModal";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
   setDeleteLoading,
+  setFetchDataStatus,
   setFetchLoading,
   setInit,
   setRestoreLoading,
   setSearch,
   setTotal_count,
   setTrash,
-  setUserData,
 } from "@/store/slices/globalSlice";
 import {
   centralDelete,
@@ -51,6 +51,7 @@ import {
   centralGetAllLists,
   centralRestore,
 } from "@/lib/api-central";
+import { removeUser, setUsersData } from "@/store/slices/userManagementSlice";
 
 const UserManagementComponent = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -76,12 +77,18 @@ const UserManagementComponent = () => {
   >(null);
   const accessToken = getToken();
   const dispatch = useAppDispatch();
-  const { credential, userData } = useAppSelector((state) => state.globalSlice);
+  const { credential, fetchDataStatus } = useAppSelector(
+    (state) => state.globalSlice
+  );
   const trash = useAppSelector((state) => state.globalSlice.credential.trash);
+  const userData = useAppSelector((state) => state.usersSlice.usersData);
   const { total_count, isFetchLoading } = useAppSelector(
     (state) => state.globalSlice
   );
   const toast = useToast();
+  const pageCount = total_count
+    ? Math.ceil(total_count / pagination.pageSize)
+    : 0;
 
   const FetchGetAllUserListFun = async () => {
     const obj = {
@@ -93,21 +100,23 @@ const UserManagementComponent = () => {
       ...credential,
       ...obj,
     });
-    const resultWithChangeDate = changeFormatDateStringArr(result?.data.users);
-    dispatch(setUserData(resultWithChangeDate));
+    dispatch(setUsersData(result?.data.users));
     dispatch(setFetchLoading(false));
     dispatch(setInit(true));
     dispatch(setTotal_count(result?.data.total_count));
   };
 
   useEffect(() => {
-    FetchGetAllUserListFun();
-  }, [pagination]);
+    if (fetchDataStatus) {
+      FetchGetAllUserListFun();
+      dispatch(setFetchDataStatus(false)); // Set the flag to false after fetching data
+    }
+  }, [pagination.pageIndex, pagination.pageSize, trash, fetchDataStatus]);
 
   useEffect(() => {
-    onPaginationChange({ pageSize: 10, pageIndex: 0 });
-    dispatch(setSearch(""));
-  }, [trash]);
+    // Reset the flag to true whenever pagination or trash condition changes
+    dispatch(setFetchDataStatus(true));
+  }, [pagination.pageIndex, pagination.pageSize, trash]);
 
   const toastFun = (
     condition: string,
@@ -124,10 +133,6 @@ const UserManagementComponent = () => {
     });
   };
 
-  const pageCount = total_count
-    ? Math.ceil(total_count / pagination.pageSize)
-    : 0;
-
   const createModalRef = useRef<MyModalRef>(null);
   const editModalRef = useRef<EditModalRef>(null);
 
@@ -139,7 +144,7 @@ const UserManagementComponent = () => {
 
   const handleEditModal = (userManagement: UserManagementType) => {
     if (editModalRef.current) {
-      editModalRef.current.open({ ...userManagement, token: accessToken });
+      editModalRef.current.open({ ...userManagement });
     }
   };
 
@@ -148,7 +153,7 @@ const UserManagementComponent = () => {
   };
 
   const handleDelete = (user: UserManagementType) => {
-    setUserDataForDelete(user.id);
+    setUserDataForDelete(user.id as string);
     onOpen();
   };
 
@@ -156,17 +161,18 @@ const UserManagementComponent = () => {
     dispatch(setDeleteLoading(true));
     if (userDataForDelete) {
       const delobj = { id: userDataForDelete };
+      const deleteUserData = userData.find((item) => item.id === delobj.id);
       const result = await centralDelete("crudUserManagementAPI", delobj);
       if (result?.code === 200) toastFun("Success", result?.message, "success");
       if (result?.status === 400) toastFun("Error", result?.message, "error");
-      onClose();
       dispatch(setDeleteLoading(false));
-      FetchGetAllUserListFun();
+      dispatch(removeUser(deleteUserData as UserManagementType));
+      onClose();
     }
   };
 
   const handleRestore = (user: UserManagementType) => {
-    setUserDataForRestore(user.id);
+    setUserDataForRestore(user.id as string);
     onRestoreOpen();
   };
 
@@ -174,20 +180,24 @@ const UserManagementComponent = () => {
     dispatch(setRestoreLoading(true));
     if (userDataForRestore) {
       const restoreobj = { id: userDataForRestore };
+      const restoreUserData = userData.find(
+        (item) => item.id === restoreobj.id
+      );
       const result = await centralRestore(
         "restoreUserManagementAPI",
         restoreobj
       );
       if (result?.code === 200) toastFun("Success", result?.message, "success");
       if (result?.status === 400) toastFun("Error", result?.message, "error");
-      onRestoreClose();
+      dispatch(removeUser(restoreUserData as UserManagementType));
       dispatch(setRestoreLoading(false));
-      FetchGetAllUserListFun();
+      onRestoreClose();
+      // FetchGetAllUserListFun();
     }
   };
 
   const handleForceDelete = (user: UserManagementType) => {
-    setUserDataForForceDelete(user.id);
+    setUserDataForForceDelete(user.id as string);
     onForceDeleteOpen();
   };
 
@@ -195,6 +205,9 @@ const UserManagementComponent = () => {
     dispatch(setDeleteLoading(true));
     if (userDataForForceDelete) {
       const delobj = { id: userDataForForceDelete };
+      const forceDeleteUserData = userData.find(
+        (item) => item.id === delobj.id
+      );
       const result = await centralForceDelete(
         "forceDeleteUserManagementAPI",
         delobj
@@ -202,8 +215,8 @@ const UserManagementComponent = () => {
       if (result?.code === 200) toastFun("Success", result?.message, "success");
       if (result?.status === 400) toastFun("Error", result?.message, "error");
       onForceDeleteClose();
+      dispatch(removeUser(forceDeleteUserData as UserManagementType));
       dispatch(setDeleteLoading(false));
-      FetchGetAllUserListFun();
     }
   };
 
@@ -242,10 +255,6 @@ const UserManagementComponent = () => {
             {row.original.role}
           </Badge>
         ),
-      },
-      {
-        header: "Date & Time",
-        accessorKey: "updated_at",
       },
       {
         id: "actions",
@@ -447,11 +456,7 @@ const UserManagementComponent = () => {
         title={"Create User"}
         fetchData={FetchGetAllUserListFun}
       />
-      <UserManagementEditModal
-        ref={editModalRef}
-        title={"Edit User"}
-        fetchData={FetchGetAllUserListFun}
-      />
+      <UserManagementEditModal ref={editModalRef} title={"Edit User"} />
     </Box>
   );
 };

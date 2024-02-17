@@ -61,7 +61,9 @@ const CustomTable: React.FC<TableProps<any>> = ({
           <Flex ml={{ base: 5, md: 0 }}>
             <Select
               value={table.getState().pagination.pageSize}
-              onChange={(e) => table.setPageSize(parseInt(e.target.value))}
+              onChange={(e) => {
+                table.setPageSize(parseInt(e.target.value));
+              }}
             >
               {[10, 20, 30, 50, 100].map((size) => (
                 <option key={size} value={size}>

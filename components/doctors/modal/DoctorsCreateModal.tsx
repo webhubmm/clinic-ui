@@ -212,7 +212,7 @@ const DoctorsCreateModal: React.ForwardRefRenderFunction<
 
                 <FormControl mt={4}>
                   <FormLabel>Branches</FormLabel>
-                  {branchesList.length > 0 ? (
+                  {branchesList && branchesList.length > 0 ? (
                     <Box display={"flex"}>
                       <Select
                         required

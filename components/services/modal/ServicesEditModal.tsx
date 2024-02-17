@@ -27,6 +27,7 @@ import { EditBranches } from "@/lib/branches";
 import MulitpleFilePondUploader from "@/components/FilePondUploader/MulitpleFilePondUploader";
 import { Image } from "@chakra-ui/react";
 import { ServicesDataType } from "@/types/servicesDataType";
+import { updateServices } from "@/store/slices/servicesSlice";
 
 interface ServicesEditModalProps {
   title: string; // Data to be edited
@@ -60,7 +61,7 @@ const ServicesEditModal: React.ForwardRefRenderFunction<
         // Copy other properties from the original object
         ...data,
         // Map over the images array and extract the base64_url values
-        image: data.image?.base64_url,
+        image: data.image?.base64_url || data.image,
       };
       onOpen();
       setFormData(newObj);
@@ -110,8 +111,8 @@ const ServicesEditModal: React.ForwardRefRenderFunction<
       onClose();
     } else if (res.code === 200) {
       toastFun("Success", res.message, "success");
+      dispatch(updateServices(formData));
       onClose();
-      fetchData();
     }
     dispatch(setEditLoading(false));
   };
