@@ -29,6 +29,7 @@ import Loading from "@/components/Custom/Loading";
 import { Image } from "@chakra-ui/react";
 import { PackagesDataType } from "@/types/packagesDataType";
 import { updatePackages } from "@/store/slices/packagesSlice";
+import { FaWindowClose } from "react-icons/fa";
 
 interface PackagesEditModalProps {
   title: string; // Data to be edited
@@ -67,10 +68,9 @@ const PackagesEditModal: React.ForwardRefRenderFunction<
   useImperativeHandle(ref, () => ({
     open: (data: PackagesDataType) => {
       const newObj = {
-        // Copy other properties from the original object
         ...data,
-        // Map over the images array and extract the base64_url values
-        image: data.image?.base64_url || data.image,
+        image: data.image?.url,
+        isOldImage: true,
       };
       onOpen();
       setFormData(newObj);
@@ -113,6 +113,13 @@ const PackagesEditModal: React.ForwardRefRenderFunction<
     }));
   };
 
+  const removeFile = () => {
+    setFormData((prevData) => ({
+      ...prevData,
+      image: null,
+    }));
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     dispatch(setEditLoading(true));
@@ -125,7 +132,7 @@ const PackagesEditModal: React.ForwardRefRenderFunction<
       onClose();
     } else if (res.code === 200) {
       toastFun("Success", res.message, "success");
-      dispatch(updatePackages(formData));
+      dispatch(updatePackages(res.data));
       onClose();
     }
     dispatch(setEditLoading(false));
@@ -135,6 +142,7 @@ const PackagesEditModal: React.ForwardRefRenderFunction<
     setFormData((prevData) => ({
       ...prevData,
       image: base64Image,
+      isOldImage: false,
     }));
   };
 
@@ -236,18 +244,20 @@ const PackagesEditModal: React.ForwardRefRenderFunction<
             </FormControl>
 
             {formData.image && (
-              <Box
-                display={"flex"}
-                gap={2}
-                flexWrap={"wrap"}
-                justifyContent={"space-evenly"}
-                mt={4}
-              >
+              <Box display={"flex"} justifyContent={"center"} mt={4}>
+                <FaWindowClose
+                  className="removeImg"
+                  onClick={() => {
+                    removeFile();
+                  }}
+                />
                 <Image
                   src={formData.image}
-                  width={"100%"}
-                  alt="branches-img"
+                  width={"80%"}
+                  alt="services-img"
                   height={"200px"}
+                  objectFit={"cover"}
+                  objectPosition={"center"}
                 />
               </Box>
             )}

@@ -17,7 +17,7 @@ export const usersSlice = createSlice({
       state.usersData = action.payload;
     },
     addUser: (state, action: PayloadAction<UserManagementType>) => {
-      state.usersData = [...state.usersData, action.payload];
+      state.usersData = [action.payload, ...state.usersData];
     },
     updateUser: (state, action: PayloadAction<UserManagementType>) => {
       state.usersData = state.usersData.map((item) =>

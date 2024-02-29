@@ -5,6 +5,7 @@ import servicesSlice from "./slices/servicesSlice";
 import packagesSlice from "./slices/packagesSlice";
 import doctorsSlice from "./slices/doctorsSlice";
 import usersSlice from "./slices/userManagementSlice";
+import teethSlice from "./slices/teethSlice";
 
 // ...
 
@@ -16,6 +17,7 @@ export const store = configureStore({
     servicesSlice: servicesSlice,
     packagesSlice: packagesSlice,
     doctorsSlice: doctorsSlice,
+    teethSlice: teethSlice,
   },
 });
 

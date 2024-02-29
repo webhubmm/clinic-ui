@@ -4,7 +4,6 @@ import "filepond/dist/filepond.min.css";
 import FilePondPluginFileEncode from "filepond-plugin-file-encode";
 import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size";
 import { Box } from "@chakra-ui/react";
-import { Image } from "@chakra-ui/react";
 
 registerPlugin(FilePondPluginFileEncode);
 registerPlugin(FilePondPluginFileValidateSize);
@@ -17,7 +16,6 @@ const FilePondUploader: React.FC<FilePondUploaderProps> = ({
   onFileChange,
 }) => {
   const pond = useRef<FilePond | null>(null);
-  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
 
   const handleUpdateFiles = (fileItems: any[]) => {
     if (fileItems.length > 0) {
@@ -29,8 +27,6 @@ const FilePondUploader: React.FC<FilePondUploaderProps> = ({
         const reader = new FileReader();
         reader.onloadend = () => {
           const base64 = reader.result as string;
-          setUploadedImage(base64);
-          // Pass the base64 image to the parent component
           onFileChange(base64);
         };
         reader.readAsDataURL(file);
@@ -40,23 +36,12 @@ const FilePondUploader: React.FC<FilePondUploaderProps> = ({
 
   return (
     <Box mt={4}>
-      {uploadedImage && (
-        <Image
-          src={uploadedImage}
-          alt="Uploaded"
-          style={{
-            marginTop: "10px",
-            objectFit: "cover",
-          }}
-          width={"100%"}
-          height={"200px"}
-        />
-      )}
       <FilePond
         ref={pond}
         allowMultiple={false}
         maxFileSize="2MB"
         onupdatefiles={handleUpdateFiles}
+        allowRevert={false}
         server={{
           process: (
             fieldName,

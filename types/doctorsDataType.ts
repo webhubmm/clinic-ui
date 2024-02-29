@@ -13,5 +13,5 @@ export interface DoctorsDataType {
   updated_at?: string;
   branches: BranchesDataType[] | string[];
   image: any;
-  token?: CookieValueTypes;
+  isOldImage?: boolean;
 }

@@ -1,4 +1,4 @@
-import { forwardRef, useImperativeHandle, useState } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import {
   Modal,
   ModalOverlay,
@@ -15,7 +15,6 @@ import {
   useToast,
   Box,
 } from "@chakra-ui/react";
-import { getToken } from "@/lib/auth";
 import { UserManagementType } from "@/types/userManagementType";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "@/store/hooks";
@@ -24,6 +23,7 @@ import FilePondUploader from "@/components/FilePondUploader/FilePondUploader";
 import { centralEdit } from "@/lib/api-central";
 import { Image } from "@chakra-ui/react";
 import { updateUser } from "@/store/slices/userManagementSlice";
+import { FaWindowClose } from "react-icons/fa";
 
 interface EditModalProps {
   title: string; // Data to be edited
@@ -31,7 +31,7 @@ interface EditModalProps {
 
 export interface EditModalRef {
   open: (data: UserManagementType) => void; // Updated to accept data object
-  close: () => void;
+  close: (data: any) => void;
 }
 
 const UserManagementEditModal: React.ForwardRefRenderFunction<
@@ -39,7 +39,6 @@ const UserManagementEditModal: React.ForwardRefRenderFunction<
   EditModalProps
 > = ({ title }, ref) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const accessToken = getToken();
   const [formData, setFormData] = useState<UserManagementType>({
     id: "",
     name: "",
@@ -54,8 +53,13 @@ const UserManagementEditModal: React.ForwardRefRenderFunction<
 
   useImperativeHandle(ref, () => ({
     open: (data: UserManagementType) => {
+      const newObj = {
+        ...data,
+        image: data.image?.url,
+        isOldImage: true,
+      };
       onOpen();
-      setFormData(data);
+      setFormData(newObj);
     },
     close: onClose,
   }));
@@ -101,16 +105,24 @@ const UserManagementEditModal: React.ForwardRefRenderFunction<
       onClose();
     } else if (res.code === 200) {
       toastFun("Success", res.message, "success");
-      dispatch(updateUser(formData));
+      dispatch(updateUser(res.data));
       onClose();
     }
     dispatch(setEditLoading(false));
+  };
+
+  const removeFile = () => {
+    setFormData((prevData) => ({
+      ...prevData,
+      image: null,
+    }));
   };
 
   const handleFileChange = (base64Image: string | null) => {
     setFormData((prevData) => ({
       ...prevData,
       image: base64Image,
+      isOldImage: false,
     }));
   };
 
@@ -167,10 +179,16 @@ const UserManagementEditModal: React.ForwardRefRenderFunction<
 
             {formData.image && (
               <Box display={"flex"} justifyContent={"center"} mt={4}>
+                <FaWindowClose
+                  className="removeImg"
+                  onClick={() => {
+                    removeFile();
+                  }}
+                />
                 <Image
-                  src={formData.image.base64_url}
+                  src={formData.image}
                   width={"80%"}
-                  alt="branches-img"
+                  alt="users-img"
                   height={"200px"}
                   objectFit={"cover"}
                   objectPosition={"center"}

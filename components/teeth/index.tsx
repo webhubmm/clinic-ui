@@ -35,6 +35,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
   setCreateLoading,
   setDeleteLoading,
+  setFetchDataStatus,
   setFetchLoading,
   setInit,
   setRestoreLoading,
@@ -48,16 +49,12 @@ import {
   centralGetAllLists,
   centralRestore,
 } from "@/lib/api-central";
-import {
-  TeethManagmentCreateType,
-  TeethManagmentType,
-} from "@/types/teethDataType";
 import CustomModal from "../Custom/CustomModal";
 import TeethCreateModal, { MyTeethModalRef } from "./modal/TeethCreateModal";
-import { setTeethData } from "@/store/slices/teethSlice";
-import TeethEditModal, { TeethEditModalRef } from "./modal/TeethEditModal";
-import TeethRestoreModal from "./modal/TeethRestoreModal";
-import { setUsersData } from "@/store/slices/userManagementSlice";
+import { removeTeeth, setTeethData } from "@/store/slices/teethSlice";
+import TeethEditModal, { EditTeethModalRef } from "./modal/TeethEditModal";
+import RestoreModal from "../Custom/RestoreModal";
+import { TeethDataType } from "@/types/teethDataType";
 const TeethManagementComponent = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
@@ -80,27 +77,46 @@ const TeethManagementComponent = () => {
   const [teethDataForForceDelete, setTeethDataForForceDelete] = useState<
     string | null
   >(null);
-  const accessToken = getToken();
-
   const dispatch = useAppDispatch();
-  const { credential } = useAppSelector((state) => state.globalSlice);
-  const userData = useAppSelector((state) => state.usersSlice.usersData);
+  const { credential, fetchDataStatus } = useAppSelector(
+    (state) => state.globalSlice
+  );
   const trash = useAppSelector((state) => state.globalSlice.credential.trash);
+  const { teethData } = useAppSelector((state) => state.teethSlice);
   const { total_count, isFetchLoading } = useAppSelector(
     (state) => state.globalSlice
   );
-
   const toast = useToast();
+  const pageCount = total_count
+    ? Math.ceil(total_count / pagination.pageSize)
+    : 0;
 
-  // for data fetch
-  useEffect(() => {
-    FetchGetAllTeeth();
-  }, [pagination]);
+  const FetchGetAllTeethListFun = async () => {
+    const obj = {
+      page: pagination.pageIndex + 1,
+      per_page: pagination.pageSize,
+    };
+    dispatch(setFetchLoading(true));
+    const result = await centralGetAllLists("getTeethAPI", {
+      ...credential,
+      ...obj,
+    });
+    dispatch(setTeethData(result?.data.teeths));
+    dispatch(setFetchLoading(false));
+    dispatch(setTotal_count(result?.data.total_count));
+  };
 
   useEffect(() => {
-    onPaginationChange({ pageSize: 10, pageIndex: 0 });
-    dispatch(setSearch(""));
-  }, [trash]);
+    if (fetchDataStatus) {
+      FetchGetAllTeethListFun();
+      dispatch(setFetchDataStatus(false)); // Set the flag to false after fetching data
+    }
+  }, [pagination.pageIndex, pagination.pageSize, trash, fetchDataStatus]);
+
+  useEffect(() => {
+    // Reset the flag to true whenever pagination or trash condition changes
+    dispatch(setFetchDataStatus(true));
+  }, [pagination.pageIndex, pagination.pageSize, trash]);
 
   const toastFun = (
     condition: string,
@@ -117,24 +133,18 @@ const TeethManagementComponent = () => {
     });
   };
 
-  const pageCount = total_count
-    ? Math.ceil(total_count / pagination.pageSize)
-    : 0;
-
-  const teethCreateModalRef = useRef<MyTeethModalRef>(null);
-  const teethEditModalRef = useRef<TeethEditModalRef>(null);
-
-  //  for handle function
+  const createTeethModalRef = useRef<MyTeethModalRef>(null);
+  const editTeethModalRef = useRef<EditTeethModalRef>(null);
 
   const handleCreateModal = () => {
-    if (teethCreateModalRef.current) {
-      teethCreateModalRef.current.open();
+    if (createTeethModalRef.current) {
+      createTeethModalRef.current.open();
     }
   };
 
-  const handleEditModal = (teethManagment: TeethManagmentType) => {
-    if (teethEditModalRef.current) {
-      teethEditModalRef.current.open({ ...teethManagment, token: accessToken });
+  const handleEditModal = (teeth: TeethDataType) => {
+    if (editTeethModalRef.current) {
+      editTeethModalRef.current.open({ ...teeth });
     }
   };
 
@@ -142,9 +152,8 @@ const TeethManagementComponent = () => {
     dispatch(setSearch(e.target.value));
   };
 
-  // start delete
-  const handleDelete = (user: TeethManagmentType) => {
-    setTeethDataForDelete(user.id);
+  const handleDelete = (user: TeethDataType) => {
+    setTeethDataForDelete(user.id as string);
     onOpen();
   };
 
@@ -152,45 +161,21 @@ const TeethManagementComponent = () => {
     dispatch(setDeleteLoading(true));
     if (teethDataForDelete) {
       const delobj = { id: teethDataForDelete };
+      const deleteTeethData = teethData.find((item) => item.id === delobj.id);
       const result = await centralDelete(
         "createEditDeleteTeethManagmentAPI",
         delobj
       );
       if (result?.code === 200) toastFun("Success", result?.message, "success");
       if (result?.status === 400) toastFun("Error", result?.message, "error");
+      dispatch(setDeleteLoading(false));
+      dispatch(removeTeeth(deleteTeethData as TeethDataType));
       onClose();
-      dispatch(setDeleteLoading(false));
-      FetchGetAllTeeth();
     }
   };
-  // end delete
 
-  //start force_delete
-  const handleForceDelete = (user: TeethManagmentType) => {
-    setTeethDataForForceDelete(user.id);
-    onForceDeleteOpen();
-  };
-
-  const forceDeleteComfirmFun = async () => {
-    dispatch(setDeleteLoading(true));
-    if (teethDataForForceDelete) {
-      const delobj = { id: teethDataForForceDelete };
-      const result = await centralForceDelete(
-        "forceDeleteTeethManagmentAPI",
-        delobj
-      );
-      if (result?.code === 200) toastFun("Success", result?.message, "success");
-      if (result?.status === 400) toastFun("Error", result?.message, "error");
-      onForceDeleteClose();
-      dispatch(setDeleteLoading(false));
-      FetchGetAllTeeth();
-    }
-  };
-  // end start force delete
-
-  // for start restore
-  const handleRestore = (user: TeethManagmentType) => {
-    setTeethDataForRestore(user.id);
+  const handleRestore = (user: TeethDataType) => {
+    setTeethDataForRestore(user.id as string);
     onRestoreOpen();
   };
 
@@ -198,38 +183,46 @@ const TeethManagementComponent = () => {
     dispatch(setRestoreLoading(true));
     if (teethDataForRestore) {
       const restoreobj = { id: teethDataForRestore };
+      const restoreUserData = teethData.find(
+        (item) => item.id === restoreobj.id
+      );
       const result = await centralRestore(
         "restoreTeethManagmentAPI",
         restoreobj
       );
       if (result?.code === 200) toastFun("Success", result?.message, "success");
       if (result?.status === 400) toastFun("Error", result?.message, "error");
-      onRestoreClose();
+      dispatch(removeTeeth(restoreUserData as TeethDataType));
       dispatch(setRestoreLoading(false));
-      FetchGetAllTeeth();
+      onRestoreClose();
     }
   };
 
-  const FetchGetAllTeeth = async () => {
-    const obj = {
-      page: pagination.pageIndex + 1,
-      per_page: pagination.pageSize,
-    };
-    dispatch(setFetchLoading(true));
-    const result = await centralGetAllLists("getTeethAPI", {
-      ...credential,
-      ...obj,
-    });
-    const resultWithChangeDate = changeFormatDateStringArr(result?.data.teeths);
-
-    dispatch(setTeethData(resultWithChangeDate));
-    dispatch(setInit(true));
-    dispatch(setTotal_count(result?.data.total_count));
-    dispatch(setUsersData(resultWithChangeDate));
-    dispatch(setFetchLoading(false));
+  const handleForceDelete = (user: TeethDataType) => {
+    setTeethDataForForceDelete(user.id as string);
+    onForceDeleteOpen();
   };
 
-  const columns = useMemo<ColumnDef<TeethManagmentType, React.ReactNode>[]>(
+  const forceDeleteComfirmFun = async () => {
+    dispatch(setDeleteLoading(true));
+    if (teethDataForForceDelete) {
+      const delobj = { id: teethDataForForceDelete };
+      const forceDeleteTeethData = teethData.find(
+        (item) => item.id === delobj.id
+      );
+      const result = await centralForceDelete(
+        "forceDeleteTeethManagmentAPI",
+        delobj
+      );
+      if (result?.code === 200) toastFun("Success", result?.message, "success");
+      if (result?.status === 400) toastFun("Error", result?.message, "error");
+      onForceDeleteClose();
+      dispatch(removeTeeth(forceDeleteTeethData as TeethDataType));
+      dispatch(setDeleteLoading(false));
+    }
+  };
+
+  const columns = useMemo<ColumnDef<TeethDataType, React.ReactNode>[]>(
     () => [
       {
         header: "Id",
@@ -240,17 +233,13 @@ const TeethManagementComponent = () => {
         accessorKey: "type",
       },
       {
-        header: "Type_number",
+        header: "Type Number",
         accessorKey: "type_number",
       },
 
       {
-        header: "Date & Time",
-        accessorKey: "updated_at",
-      },
-      {
         id: "actions",
-        cell: ({ row }: CellContext<TeethManagmentType, React.ReactNode>) => (
+        cell: ({ row }: CellContext<TeethDataType, React.ReactNode>) => (
           <>
             {trash ? (
               <Flex gap={3}>
@@ -326,7 +315,7 @@ const TeethManagementComponent = () => {
     <Box mb={5}>
       <Box>
         <Text fontSize={"30px"} fontWeight={"bold"}>
-          Teeth Table
+          Teeth
         </Text>
         <Box display={"flex"} mt={3}>
           <Box display={"flex"} width={{ base: "90%", md: "50%", lg: "35%" }}>
@@ -347,7 +336,7 @@ const TeethManagementComponent = () => {
                 },
               }}
               onClick={() => {
-                FetchGetAllTeeth();
+                FetchGetAllTeethListFun();
               }}
             >
               <FaSistrix />
@@ -406,7 +395,7 @@ const TeethManagementComponent = () => {
         ) : (
           <TableContainer>
             <CustomTable
-              data={userData}
+              data={teethData}
               columns={columns}
               pagination={pagination}
               onPaginationChange={onPaginationChange}
@@ -418,15 +407,15 @@ const TeethManagementComponent = () => {
 
       <CustomModal
         modalTitle={"Delete"}
-        modalText={`Are you sure to Delete User Id ${teethDataForDelete} ?`}
+        modalText={`Are you sure to Delete Teeth Id ${teethDataForDelete} ?`}
         isOpen={isOpen}
         onOpen={onOpen}
         onClose={onClose}
         actionFun={deleteComfirmFun}
         actionText={"Delete"}
       />
-      <TeethRestoreModal
-        modalText={`Are you sure to Restore User Id ${teethDataForRestore} ?`}
+      <RestoreModal
+        modalText={`Are you sure to Restore Teeth Id ${teethDataForRestore} ?`}
         modalTitle={"Restore"}
         isOpen={isRestoreOpen}
         onOpen={onRestoreOpen}
@@ -434,27 +423,21 @@ const TeethManagementComponent = () => {
         actionFun={restoreComfirmFun}
         actionText={"Restore"}
       />
-
       <CustomModal
         modalTitle={"Delete Permanent"}
-        modalText={`Are you sure to Delete User Id ${teethDataForDelete} permanently?`}
+        modalText={`Are you sure to Delete Teeth Id ${teethDataForDelete} permanently?`}
         isOpen={isForceDeleteOpen}
         onOpen={onForceDeleteOpen}
         onClose={onForceDeleteClose}
         actionFun={forceDeleteComfirmFun}
         actionText={"Force Delete"}
       />
-
       <TeethCreateModal
-        ref={teethCreateModalRef}
+        ref={createTeethModalRef}
         title={"Create Teeth"}
-        fetchData={FetchGetAllTeeth}
+        fetchData={FetchGetAllTeethListFun}
       />
-      <TeethEditModal
-        ref={teethEditModalRef}
-        title={"Edit Teeth"}
-        fetchData={FetchGetAllTeeth}
-      />
+      <TeethEditModal ref={editTeethModalRef} title={"Edit Teeth"} />
     </Box>
   );
 };

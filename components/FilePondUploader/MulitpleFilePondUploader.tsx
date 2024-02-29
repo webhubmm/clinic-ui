@@ -39,31 +39,12 @@ const MulitpleFilePondUploader: React.FC<FilePondUploaderProps> = ({
 
   return (
     <Box mt={4}>
-      <Box
-        display={"flex"}
-        gap={2}
-        flexWrap={"wrap"}
-        justifyContent={"space-between"}
-      >
-        {uploadedImages.map((image, index) => (
-          <Image
-            key={index}
-            src={image}
-            alt={`Uploaded ${index}`}
-            style={{
-              marginTop: "10px",
-              objectFit: "cover",
-            }}
-            width={"100%"}
-            height={"200px"}
-          />
-        ))}
-      </Box>
       <FilePond
         ref={pond}
         allowMultiple={true}
         maxFileSize="2MB"
         onupdatefiles={handleUpdateFiles}
+        allowRevert={false}
         server={{
           process: (
             fieldName,

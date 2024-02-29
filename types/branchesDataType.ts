@@ -22,5 +22,5 @@ export interface BranchesDataType {
   lng: string;
   user_id: string;
   pivot?: PivotType;
-  token?: CookieValueTypes;
+  isOldImage?: boolean;
 }

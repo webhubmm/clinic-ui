@@ -27,6 +27,7 @@ import makeAnimated from "react-select/animated";
 import Loading from "@/components/Custom/Loading";
 import { DoctorsDataType } from "@/types/doctorsDataType";
 import { updateDoctors } from "@/store/slices/doctorsSlice";
+import { FaWindowClose } from "react-icons/fa";
 
 interface DoctorsEditModalProps {
   title: string; // Data to be edited
@@ -71,12 +72,12 @@ const DoctorsEditModal: React.ForwardRefRenderFunction<
   useImperativeHandle(ref, () => ({
     open: (data: DoctorsDataType) => {
       const newObj = {
-        // Copy other properties from the original object
         ...data,
-        // Map over the images array and extract the base64_url values
-        image: data.image?.base64_url || data.image,
+        image: data.image?.url,
         branches: data.branches?.map((item: any) => item.id || item),
+        isOldImage: true,
       };
+
       onOpen();
       setFormData(newObj);
       const outPutNewBranches = data.branches?.map((ele: any) => ele.id || ele);
@@ -116,6 +117,7 @@ const DoctorsEditModal: React.ForwardRefRenderFunction<
     setFormData((prevData) => ({
       ...prevData,
       image: base64Image,
+      isOldImage: false,
     }));
   };
 
@@ -136,13 +138,19 @@ const DoctorsEditModal: React.ForwardRefRenderFunction<
     }
     if (res.code === 400) {
       toastFun("Error", res.message || res.data, "error");
-      onClose();
     } else if (res.code === 200) {
       toastFun("Success", res.message, "success");
-      dispatch(updateDoctors(formData));
-      onClose();
+      dispatch(updateDoctors(res.data));
     }
+    onClose();
     dispatch(setEditLoading(false));
+  };
+
+  const removeFile = () => {
+    setFormData((prevData) => ({
+      ...prevData,
+      image: null,
+    }));
   };
 
   const selectedBranches = clickedBranchForSelectedBranches.map((item: any) => {
@@ -166,6 +174,7 @@ const DoctorsEditModal: React.ForwardRefRenderFunction<
                 <FormControl>
                   <FormLabel>Name</FormLabel>
                   <Input
+                    required
                     type="text"
                     name="name"
                     value={formData.name}
@@ -175,6 +184,7 @@ const DoctorsEditModal: React.ForwardRefRenderFunction<
                 <FormControl mt={4}>
                   <FormLabel>Email</FormLabel>
                   <Input
+                    required
                     type="email"
                     name="email"
                     value={formData.email}
@@ -184,6 +194,7 @@ const DoctorsEditModal: React.ForwardRefRenderFunction<
                 <FormControl mt={4}>
                   <FormLabel>Phone No.</FormLabel>
                   <Input
+                    required
                     type="text"
                     name="phone"
                     value={formData.phone}
@@ -194,14 +205,14 @@ const DoctorsEditModal: React.ForwardRefRenderFunction<
                 <FormControl mt={4}>
                   <FormLabel>Address</FormLabel>
                   <Input
+                    required
                     type="text"
                     name="address"
                     value={formData.address}
                     onChange={handleInputChange}
                   />
                 </FormControl>
-              </Box>
-              <Box width={{ base: "100%", md: "50%" }}>
+
                 <FormControl mt={4}>
                   <FormLabel>Degree</FormLabel>
                   <Input
@@ -211,7 +222,8 @@ const DoctorsEditModal: React.ForwardRefRenderFunction<
                     onChange={handleInputChange}
                   />
                 </FormControl>
-
+              </Box>
+              <Box width={{ base: "100%", md: "50%" }}>
                 <FormControl mt={4}>
                   <FormLabel>Specialize</FormLabel>
                   <Input
@@ -221,7 +233,6 @@ const DoctorsEditModal: React.ForwardRefRenderFunction<
                     onChange={handleInputChange}
                   />
                 </FormControl>
-
                 <FormControl mt={4}>
                   <FormLabel>Branches</FormLabel>
                   {branchesList.length > 0 && selectedBranches ? (
@@ -258,19 +269,24 @@ const DoctorsEditModal: React.ForwardRefRenderFunction<
                     <Loading />
                   )}
                 </FormControl>
-                <Box
-                  width={"100%"}
-                  display={"flex"}
-                  justifyContent={"center"}
-                  mt={4}
-                >
-                  <Image
-                    src={formData.image}
-                    width={"80%"}
-                    alt="branches-img"
-                    height={"200px"}
-                  />
-                </Box>
+                {formData.image && (
+                  <Box display={"flex"} justifyContent={"center"} mt={4}>
+                    <FaWindowClose
+                      className="removeImg"
+                      onClick={() => {
+                        removeFile();
+                      }}
+                    />
+                    <Image
+                      src={formData.image}
+                      width={"80%"}
+                      alt="services-img"
+                      height={"200px"}
+                      objectFit={"cover"}
+                      objectPosition={"center"}
+                    />
+                  </Box>
+                )}
                 <FilePondUploader onFileChange={handleFileChange} />
               </Box>
             </Box>

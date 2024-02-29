@@ -3,6 +3,7 @@ import { centralCreate } from "@/lib/api-central";
 import { getToken } from "@/lib/auth";
 import { useAppSelector } from "@/store/hooks";
 import { setCreateLoading } from "@/store/slices/globalSlice";
+import { addUser } from "@/store/slices/userManagementSlice";
 import { UserManagementCreateType } from "@/types/userManagementType";
 import {
   Box,
@@ -19,8 +20,10 @@ import {
   Select,
   useDisclosure,
   useToast,
+  Image,
 } from "@chakra-ui/react";
 import React, { forwardRef, useImperativeHandle, useState } from "react";
+import { FaWindowClose } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 
 interface MyModalProps {
@@ -48,7 +51,7 @@ const UserManagementCreateModal: React.ForwardRefRenderFunction<
     password_confirmation: "",
     role: "staff",
     image: "",
-    token: accessToken,
+    isOldImage: true,
   });
   const dispatch = useDispatch();
   const createLoading = useAppSelector(
@@ -77,18 +80,18 @@ const UserManagementCreateModal: React.ForwardRefRenderFunction<
   };
 
   const handleSubmit = async (e: any) => {
-    dispatch(setCreateLoading(true));
     e.preventDefault();
+    dispatch(setCreateLoading(true));
     const res = await centralCreate("crudUserManagementAPI", formData);
     if (res?.code === 400) {
       toastFun("Error", res.data, "error");
     }
     if (res?.code === 200) {
       toastFun("Success", res.message, "success");
+      dispatch(addUser(res.data));
     }
     dispatch(setCreateLoading(false));
     onClose();
-    fetchData();
     setFormData({
       name: "",
       email: "",
@@ -97,7 +100,7 @@ const UserManagementCreateModal: React.ForwardRefRenderFunction<
       password_confirmation: "",
       role: "staff",
       image: "",
-      token: accessToken,
+      isOldImage: true,
     });
   };
 
@@ -115,10 +118,18 @@ const UserManagementCreateModal: React.ForwardRefRenderFunction<
     }));
   };
 
+  const removeFile = () => {
+    setFormData((prevData) => ({
+      ...prevData,
+      image: null,
+    }));
+  };
+
   const handleFileChange = (base64Image: string | null) => {
     setFormData((prevData) => ({
       ...prevData,
       image: base64Image,
+      isOldImage: false,
     }));
   };
 
@@ -133,6 +144,7 @@ const UserManagementCreateModal: React.ForwardRefRenderFunction<
             <FormControl>
               <FormLabel>Name</FormLabel>
               <Input
+                required
                 type="text"
                 name="name"
                 value={formData.name}
@@ -142,6 +154,7 @@ const UserManagementCreateModal: React.ForwardRefRenderFunction<
             <FormControl mt={4}>
               <FormLabel>Email</FormLabel>
               <Input
+                required
                 type="email"
                 name="email"
                 value={formData.email}
@@ -151,6 +164,7 @@ const UserManagementCreateModal: React.ForwardRefRenderFunction<
             <FormControl mt={4}>
               <FormLabel>Phone No.</FormLabel>
               <Input
+                required
                 type="text"
                 name="phone"
                 value={formData.phone}
@@ -160,6 +174,7 @@ const UserManagementCreateModal: React.ForwardRefRenderFunction<
             <FormControl mt={4}>
               <FormLabel>Password</FormLabel>
               <Input
+                required
                 type="password"
                 name="password"
                 value={formData.password}
@@ -169,6 +184,7 @@ const UserManagementCreateModal: React.ForwardRefRenderFunction<
             <FormControl mt={4}>
               <FormLabel>Confirm Password</FormLabel>
               <Input
+                required
                 type="password"
                 name="password_confirmation"
                 value={formData.password_confirmation}
@@ -178,6 +194,7 @@ const UserManagementCreateModal: React.ForwardRefRenderFunction<
             <FormControl mt={4}>
               <FormLabel>Role</FormLabel>
               <Select
+                required
                 value={formData.role}
                 onChange={(e) => handleRoleChange(e)}
               >
@@ -186,6 +203,29 @@ const UserManagementCreateModal: React.ForwardRefRenderFunction<
                 <option value="user">User</option>
               </Select>
             </FormControl>
+
+            {formData.image && (
+              <Box
+                display={"flex"}
+                gap={2}
+                flexWrap={"wrap"}
+                justifyContent={"space-evenly"}
+                mt={4}
+              >
+                <FaWindowClose
+                  className="removeImg"
+                  onClick={() => {
+                    removeFile();
+                  }}
+                />
+                <Image
+                  src={formData.image}
+                  width={"100%"}
+                  alt="services-img"
+                  height={"200px"}
+                />
+              </Box>
+            )}
             <FilePondUploader onFileChange={handleFileChange} />
 
             <Button

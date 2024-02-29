@@ -5,6 +5,7 @@ import { centralCreate } from "@/lib/api-central";
 import { getToken } from "@/lib/auth";
 import { useAppSelector } from "@/store/hooks";
 import { setCreateLoading, setPerPage } from "@/store/slices/globalSlice";
+import { addPackages, updatePackages } from "@/store/slices/packagesSlice";
 import { BranchesDataType } from "@/types/branchesDataType";
 import { PackagesDataType } from "@/types/packagesDataType";
 import { UserManagementCreateType } from "@/types/userManagementType";
@@ -25,8 +26,10 @@ import {
   useDisclosure,
   useToast,
   Text,
+  Image,
 } from "@chakra-ui/react";
 import React, { forwardRef, useImperativeHandle, useState } from "react";
+import { FaWindowClose } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 
 interface PackagesCreateModalProps {
@@ -44,7 +47,6 @@ const PackagesCreateModal: React.ForwardRefRenderFunction<
   PackagesCreateModalRef,
   PackagesCreateModalProps
 > = ({ title, children, fetchData }, ref) => {
-  const accessToken = getToken();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [formData, setFormData] = useState<PackagesDataType>({
     name: "",
@@ -54,6 +56,7 @@ const PackagesCreateModal: React.ForwardRefRenderFunction<
     note: "",
     timeline: "",
     image: "",
+    isOldImage: true,
   });
   const dispatch = useDispatch();
   const createLoading = useAppSelector(
@@ -98,8 +101,8 @@ const PackagesCreateModal: React.ForwardRefRenderFunction<
       toastFun("Success", res.message, "success");
     }
     dispatch(setCreateLoading(false));
+    dispatch(addPackages(res.data));
     onClose();
-    fetchData();
     setFormData({
       name: "",
       service_id: "",
@@ -127,10 +130,18 @@ const PackagesCreateModal: React.ForwardRefRenderFunction<
     }));
   };
 
+  const removeFile = () => {
+    setFormData((prevData) => ({
+      ...prevData,
+      image: null,
+    }));
+  };
+
   const handleFileChange = (base64Image: string | null) => {
     setFormData((prevData) => ({
       ...prevData,
       image: base64Image,
+      isOldImage: false,
     }));
   };
 
@@ -227,6 +238,29 @@ const PackagesCreateModal: React.ForwardRefRenderFunction<
                 <Loading />
               )}
             </FormControl>
+
+            {formData.image && (
+              <Box
+                display={"flex"}
+                gap={2}
+                flexWrap={"wrap"}
+                justifyContent={"space-evenly"}
+                mt={4}
+              >
+                <FaWindowClose
+                  className="removeImg"
+                  onClick={() => {
+                    removeFile();
+                  }}
+                />
+                <Image
+                  src={formData.image}
+                  width={"100%"}
+                  alt="packages-img"
+                  height={"200px"}
+                />
+              </Box>
+            )}
 
             <FilePondUploader onFileChange={handleFileChange} />
 

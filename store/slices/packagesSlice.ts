@@ -28,7 +28,7 @@ export const packagesSlice = createSlice({
       state.isServiceFetching = action.payload;
     },
     addPackages: (state, action: PayloadAction<PackagesDataType>) => {
-      state.packagesData = [...state.packagesData, action.payload];
+      state.packagesData = [action.payload, ...state.packagesData];
     },
     updatePackages: (state, action: PayloadAction<PackagesDataType>) => {
       state.packagesData = state.packagesData.map((item) =>

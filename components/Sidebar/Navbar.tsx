@@ -42,7 +42,7 @@ const Navbar = ({ showSidebarButton = true, onShowSidebar }: Props) => {
       <Box flex="1">
         {showSidebarButton && (
           <CiMenuFries
-            style={{ fontSize: "25px", color: "#000" }}
+            style={{ fontSize: "20px", color: "#000", cursor: "pointer" }}
             onClick={onShowSidebar}
           />
         )}

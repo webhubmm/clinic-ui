@@ -28,7 +28,7 @@ export const branchesSlice = createSlice({
       state.userDataForBranches = action.payload;
     },
     addBranches: (state, action: PayloadAction<BranchesDataType>) => {
-      state.branchesData = [...state.branchesData, action.payload];
+      state.branchesData = [action.payload, ...state.branchesData];
     },
     updateBranches: (state, action: PayloadAction<BranchesDataType>) => {
       state.branchesData = state.branchesData.map((item) =>

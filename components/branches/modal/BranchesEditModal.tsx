@@ -29,7 +29,7 @@ import MulitpleFilePondUploader from "@/components/FilePondUploader/MulitpleFile
 import Loading from "@/components/Custom/Loading";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
-
+import { FaWindowClose } from "react-icons/fa";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -77,15 +77,13 @@ const BranchesEditModal: React.ForwardRefRenderFunction<
   useImperativeHandle(ref, () => ({
     open: (data: BranchesDataType) => {
       const newObj = {
-        // Copy other properties from the original object
         ...data,
-        // Map over the images array and extract the base64_url values
-        images: data.images.map((image: any) => image.base64_url || image),
+        images: data.images.map((image: any) => image.url || image),
+        isOldImage: true,
       };
       onOpen();
       setFormData(newObj);
     },
-
     close: onClose,
   }));
 
@@ -134,19 +132,19 @@ const BranchesEditModal: React.ForwardRefRenderFunction<
     }
     if (res.code === 400) {
       toastFun("Error", res.message || res.data, "error");
-      onClose();
     } else if (res.code === 200) {
       toastFun("Success", res.message, "success");
-      dispatch(updateBranches(formData));
-      onClose();
+      dispatch(updateBranches(res.data));
     }
     dispatch(setEditLoading(false));
+    onClose();
   };
 
   const handleFileChange = (base64Images: string[]) => {
     setFormData((prevData) => ({
       ...prevData,
-      images: base64Images,
+      images: formData.images?.concat(base64Images),
+      isOldImage: false,
     }));
   };
 
@@ -293,6 +291,17 @@ const BranchesEditModal: React.ForwardRefRenderFunction<
                   justifyContent={"space-evenly"}
                   mt={4}
                 >
+                  {formData.images?.length > 0 && (
+                    <FaWindowClose
+                      className="removeImg"
+                      onClick={() => {
+                        setFormData((prevData) => ({
+                          ...prevData,
+                          images: null,
+                        }));
+                      }}
+                    />
+                  )}
                   <Swiper
                     autoHeight={true}
                     slidesPerView={1}
@@ -302,7 +311,7 @@ const BranchesEditModal: React.ForwardRefRenderFunction<
                     }}
                     modules={[Pagination]}
                   >
-                    {formData.images.map((item: any, index: number) => {
+                    {formData.images?.map((item: any, index: number) => {
                       return (
                         <SwiperSlide key={index}>
                           <Image

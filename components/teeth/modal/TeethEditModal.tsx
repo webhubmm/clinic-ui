@@ -1,4 +1,4 @@
-import { forwardRef, useImperativeHandle, useState } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import {
   Modal,
   ModalOverlay,
@@ -15,42 +15,53 @@ import {
   useToast,
   Box,
 } from "@chakra-ui/react";
-import { getToken } from "@/lib/auth";
-import { UserManagementType } from "@/types/userManagementType";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "@/store/hooks";
 import { setEditLoading } from "@/store/slices/globalSlice";
 import FilePondUploader from "@/components/FilePondUploader/FilePondUploader";
 import { centralEdit } from "@/lib/api-central";
-import Image from "next/image";
-import { TeethManagmentType } from "@/types/teethDataType";
+import { Image } from "@chakra-ui/react";
+import { updateUser } from "@/store/slices/userManagementSlice";
+import { FaWindowClose } from "react-icons/fa";
+import { TeethDataType } from "@/types/teethDataType";
+import { updateTeeth } from "@/store/slices/teethSlice";
 
-interface TeethEditModalProps {
+interface EditTeethModalProps {
   title: string; // Data to be edited
-  fetchData: () => void;
 }
 
-export interface TeethEditModalRef {
-  open: (data: TeethManagmentType) => void; // Updated to accept data object
-  close: () => void;
+export interface EditTeethModalRef {
+  open: (data: TeethDataType) => void; // Updated to accept data object
+  close: (data: any) => void;
 }
 
-const TeethManagementEditModal: React.ForwardRefRenderFunction<
-  TeethEditModalProps,
-  TeethEditModalRef
-> = ({ title, fetchData }, ref) => {
+const UserManagementEditModal: React.ForwardRefRenderFunction<
+  EditTeethModalRef,
+  EditTeethModalProps
+> = ({ title }, ref) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const accessToken = getToken();
-  const [formData, setFormData] = useState<TeethManagmentType>({
+  const [formData, setFormData] = useState<TeethDataType>({
     id: "",
     type: "",
     type_number: "",
     image: "",
-    token: accessToken,
   });
   const dispatch = useDispatch();
   const EditLoading = useAppSelector((state) => state.globalSlice.editLoading);
   const toast = useToast();
+
+  useImperativeHandle(ref, () => ({
+    open: (data: TeethDataType) => {
+      const newObj = {
+        ...data,
+        image: data.image?.url,
+        isOldImage: true,
+      };
+      onOpen();
+      setFormData(newObj);
+    },
+    close: onClose,
+  }));
 
   const toastFun = (
     condition: string,
@@ -67,20 +78,12 @@ const TeethManagementEditModal: React.ForwardRefRenderFunction<
     });
   };
 
-  useImperativeHandle(ref, () => ({
-    open: (data: TeethManagmentType) => {
-      onOpen();
-      setFormData(data);
-    },
-    close: onClose,
-  }));
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prevData) => ({
       ...prevData,
       [e.target.name]: e.target.value,
     }));
   };
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     dispatch(setEditLoading(true));
@@ -96,16 +99,25 @@ const TeethManagementEditModal: React.ForwardRefRenderFunction<
       onClose();
     } else if (res.code === 200) {
       toastFun("Success", res.message, "success");
+      dispatch(updateTeeth(res.data));
       onClose();
-      fetchData();
     }
     dispatch(setEditLoading(false));
+    console.log("res :: ", res);
+  };
+
+  const removeFile = () => {
+    setFormData((prevData) => ({
+      ...prevData,
+      image: null,
+    }));
   };
 
   const handleFileChange = (base64Image: string | null) => {
     setFormData((prevData) => ({
       ...prevData,
       image: base64Image,
+      isOldImage: false,
     }));
   };
 
@@ -129,7 +141,7 @@ const TeethManagementEditModal: React.ForwardRefRenderFunction<
               />
             </FormControl>
             <FormControl mt={4}>
-              <FormLabel>Type_Number</FormLabel>
+              <FormLabel>Type Number</FormLabel>
               <Input
                 type="text"
                 name="type_number"
@@ -141,11 +153,19 @@ const TeethManagementEditModal: React.ForwardRefRenderFunction<
 
             {formData.image && (
               <Box display={"flex"} justifyContent={"center"} mt={4}>
+                <FaWindowClose
+                  className="removeImg"
+                  onClick={() => {
+                    removeFile();
+                  }}
+                />
                 <Image
-                  src={formData.image.base64_url}
-                  width={250}
-                  alt="branches-img"
-                  height={100}
+                  src={formData.image}
+                  width={"80%"}
+                  alt="teeth-img"
+                  height={"200px"}
+                  objectFit={"cover"}
+                  objectPosition={"center"}
                 />
               </Box>
             )}
@@ -177,4 +197,4 @@ const TeethManagementEditModal: React.ForwardRefRenderFunction<
   );
 };
 
-export default forwardRef(TeethManagementEditModal);
+export default forwardRef(UserManagementEditModal);

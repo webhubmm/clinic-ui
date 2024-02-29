@@ -11,5 +11,20 @@
 }
 
 .active-class {
-  /* background-color: aqua; */
+  background-color: #384a68;
+}
+
+.removeImg {
+  position: absolute;
+  right: 0;
+  margin-right: 1.6rem;
+  color: red;
+  font-size: 1.5rem;
+  transition-duration: 500ms;
+  z-index: 5;
+  cursor: pointer;
+}
+
+.removeImg:hover {
+  transform: scale(1.1);
 }

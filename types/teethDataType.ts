@@ -1,17 +1,11 @@
 import { CookieValueTypes } from "cookies-next";
 
-export interface TeethManagmentType{
-    id:string;
-    type:string;
-    type_number:string;
+export interface TeethDataType {
+  id?: string;
+  type: string;
+  type_number: string;
+  created_at?: string;
   updated_at?: string;
-   image:any;
-   token:CookieValueTypes  
-}
-
-export interface TeethManagmentCreateType{
-    type:string;
-    type_number:string;
-     image: string | null;
-   token:CookieValueTypes  
+  image: any;
+  isOldImage?: boolean;
 }

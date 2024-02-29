@@ -23,10 +23,12 @@ import {
   ModalOverlay,
   useDisclosure,
   useToast,
+  Image,
   Text,
 } from "@chakra-ui/react";
 import React, { forwardRef, useImperativeHandle, useState } from "react";
 import { useDispatch } from "react-redux";
+import { FaWindowClose } from "react-icons/fa";
 
 interface DoctorsCreateModalProps {
   title: string;
@@ -53,6 +55,7 @@ const DoctorsCreateModal: React.ForwardRefRenderFunction<
     branches: [],
     address: "",
     image: "",
+    isOldImage: true,
   });
   const dispatch = useDispatch();
   const animatedComponents = makeAnimated();
@@ -87,9 +90,16 @@ const DoctorsCreateModal: React.ForwardRefRenderFunction<
     });
   };
 
+  const removeFile = () => {
+    setFormData((prevData) => ({
+      ...prevData,
+      image: null,
+    }));
+  };
+
   const handleSubmit = async (e: any) => {
-    dispatch(setCreateLoading(true));
     e.preventDefault();
+    dispatch(setCreateLoading(true));
     const res = await centralCreate("createEditDeleteDoctorsAPI", formData);
     if (res.code === 400) {
       toastFun("Error", res.data, "error");
@@ -131,6 +141,7 @@ const DoctorsCreateModal: React.ForwardRefRenderFunction<
     setFormData((prevData) => ({
       ...prevData,
       image: base64Image,
+      isOldImage: false,
     }));
   };
 
@@ -246,6 +257,29 @@ const DoctorsCreateModal: React.ForwardRefRenderFunction<
                     <Loading />
                   )}
                 </FormControl>
+
+                {formData.image && (
+                  <Box
+                    display={"flex"}
+                    gap={2}
+                    flexWrap={"wrap"}
+                    justifyContent={"space-evenly"}
+                    mt={4}
+                  >
+                    <FaWindowClose
+                      className="removeImg"
+                      onClick={() => {
+                        removeFile();
+                      }}
+                    />
+                    <Image
+                      src={formData.image}
+                      width={"100%"}
+                      alt="services-img"
+                      height={"200px"}
+                    />
+                  </Box>
+                )}
 
                 <FilePondUploader onFileChange={handleFileChange} />
               </Box>

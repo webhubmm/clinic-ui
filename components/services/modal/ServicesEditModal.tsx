@@ -28,6 +28,7 @@ import MulitpleFilePondUploader from "@/components/FilePondUploader/MulitpleFile
 import { Image } from "@chakra-ui/react";
 import { ServicesDataType } from "@/types/servicesDataType";
 import { updateServices } from "@/store/slices/servicesSlice";
+import { FaWindowClose } from "react-icons/fa";
 
 interface ServicesEditModalProps {
   title: string; // Data to be edited
@@ -44,7 +45,6 @@ const ServicesEditModal: React.ForwardRefRenderFunction<
   ServicesEditModalProps
 > = ({ title, fetchData }, ref) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const accessToken = getToken();
   const [formData, setFormData] = useState<ServicesDataType>({
     id: "",
     name: "",
@@ -61,7 +61,8 @@ const ServicesEditModal: React.ForwardRefRenderFunction<
         // Copy other properties from the original object
         ...data,
         // Map over the images array and extract the base64_url values
-        image: data.image?.base64_url || data.image,
+        image: data.image?.url,
+        isOldImage: true,
       };
       onOpen();
       setFormData(newObj);
@@ -91,6 +92,13 @@ const ServicesEditModal: React.ForwardRefRenderFunction<
     }));
   };
 
+  const removeFile = () => {
+    setFormData((prevData) => ({
+      ...prevData,
+      image: null,
+    }));
+  };
+
   const handleIsUserIdChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setFormData((prevData) => ({
       ...prevData,
@@ -100,7 +108,6 @@ const ServicesEditModal: React.ForwardRefRenderFunction<
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     dispatch(setEditLoading(true));
     const res = await centralEdit("createEditDeleteServicesAPI", formData);
     if (res === undefined) {
@@ -111,16 +118,17 @@ const ServicesEditModal: React.ForwardRefRenderFunction<
       onClose();
     } else if (res.code === 200) {
       toastFun("Success", res.message, "success");
-      dispatch(updateServices(formData));
+      dispatch(updateServices(res.data));
       onClose();
     }
     dispatch(setEditLoading(false));
   };
 
-  const handleFileChange = (base64Images: string[]) => {
+  const handleFileChange = (base64Image: string | null) => {
     setFormData((prevData) => ({
       ...prevData,
-      images: base64Images,
+      image: base64Image,
+      isOldImage: false,
     }));
   };
 
@@ -156,23 +164,25 @@ const ServicesEditModal: React.ForwardRefRenderFunction<
             </FormControl>
 
             {formData.image && (
-              <Box
-                display={"flex"}
-                gap={2}
-                flexWrap={"wrap"}
-                justifyContent={"space-evenly"}
-                mt={4}
-              >
+              <Box display={"flex"} justifyContent={"center"} mt={4}>
+                <FaWindowClose
+                  className="removeImg"
+                  onClick={() => {
+                    removeFile();
+                  }}
+                />
                 <Image
                   src={formData.image}
-                  width={"100%"}
-                  alt="branches-img"
+                  width={"80%"}
+                  alt="services-img"
                   height={"200px"}
+                  objectFit={"cover"}
+                  objectPosition={"center"}
                 />
               </Box>
             )}
 
-            <MulitpleFilePondUploader onFileChange={handleFileChange} />
+            <FilePondUploader onFileChange={handleFileChange} />
 
             <Button
               isLoading={EditLoading}

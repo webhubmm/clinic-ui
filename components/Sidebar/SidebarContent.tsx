@@ -4,7 +4,6 @@ import { Center, Flex } from "@chakra-ui/react";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import NavLink from "../NavLink/NavLink";
-
 import dantxLogo from "@/public/assets/asset 6.svg";
 import { navItems } from "@/constants/constants";
 
@@ -23,7 +22,13 @@ const SidebarContent: React.FC<SidebarContentProps> = ({ onClose }) => {
       </Center>
       <Flex direction="column" rowGap={5}>
         {navItems.map((item) => (
-          <NavLink color={'white'} key={item.title} href={item.link}>
+          <NavLink
+            color={"white"}
+            key={item.title}
+            href={item.link}
+            _hover={{ backgroundColor: "#384a68" }}
+            px={4}
+          >
             {item.title}
           </NavLink>
         ))}

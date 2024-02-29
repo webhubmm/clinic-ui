@@ -75,7 +75,6 @@ const UserManagementComponent = () => {
   const [userDataForForceDelete, setUserDataForForceDelete] = useState<
     string | null
   >(null);
-  const accessToken = getToken();
   const dispatch = useAppDispatch();
   const { credential, fetchDataStatus } = useAppSelector(
     (state) => state.globalSlice
@@ -333,7 +332,7 @@ const UserManagementComponent = () => {
   return (
     <Box mb={5}>
       <Box>
-        <Text fontSize={"30px"} fontWeight={"bold"}>
+        <Text fontSize={"30px"} fontWeight={"bold"} cursor={"pointer"}>
           User Table
         </Text>
         <Box display={"flex"} mt={3}>

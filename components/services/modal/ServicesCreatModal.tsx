@@ -6,8 +6,6 @@ import { getToken } from "@/lib/auth";
 import { useAppSelector } from "@/store/hooks";
 import { setCreateLoading, setPerPage } from "@/store/slices/globalSlice";
 import { ServicesDataType } from "@/types/servicesDataType";
-import { UserManagementCreateType } from "@/types/userManagementType";
-import { getBase64 } from "@/utils/changes";
 import {
   Box,
   Button,
@@ -24,8 +22,10 @@ import {
   useDisclosure,
   useToast,
   Text,
+  Image,
 } from "@chakra-ui/react";
 import React, { forwardRef, useImperativeHandle, useState } from "react";
+import { FaWindowClose } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 
 interface ServicesCreateModalProps {
@@ -48,6 +48,7 @@ const ServicesCreateModal: React.ForwardRefRenderFunction<
     name: "",
     type: "multiple_visit",
     image: "",
+    isOldImage: true,
   });
   const dispatch = useDispatch();
 
@@ -80,10 +81,10 @@ const ServicesCreateModal: React.ForwardRefRenderFunction<
     e.preventDefault();
     dispatch(setCreateLoading(true));
     const res = await centralCreate("createEditDeleteServicesAPI", formData);
-    if (res.code === 400) {
+    if (res?.code === 400) {
       toastFun("Error", res.data, "error");
     }
-    if (res.code === 200) {
+    if (res?.code === 200) {
       toastFun("Success", res.message, "success");
     }
     dispatch(setCreateLoading(false));
@@ -110,10 +111,18 @@ const ServicesCreateModal: React.ForwardRefRenderFunction<
     }));
   };
 
+  const removeFile = () => {
+    setFormData((prevData) => ({
+      ...prevData,
+      image: null,
+    }));
+  };
+
   const handleFileChange = (base64Image: string | null) => {
     setFormData((prevData) => ({
       ...prevData,
       image: base64Image,
+      isOldImage: false,
     }));
   };
 
@@ -145,6 +154,29 @@ const ServicesCreateModal: React.ForwardRefRenderFunction<
                 <option value="one_visit">one_visit</option>
               </Select>
             </FormControl>
+
+            {formData.image && (
+              <Box
+                display={"flex"}
+                gap={2}
+                flexWrap={"wrap"}
+                justifyContent={"space-evenly"}
+                mt={4}
+              >
+                <FaWindowClose
+                  className="removeImg"
+                  onClick={() => {
+                    removeFile();
+                  }}
+                />
+                <Image
+                  src={formData.image}
+                  width={"100%"}
+                  alt="services-img"
+                  height={"200px"}
+                />
+              </Box>
+            )}
 
             <FilePondUploader onFileChange={handleFileChange} />
 

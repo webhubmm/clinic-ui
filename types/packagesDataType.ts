@@ -12,4 +12,5 @@ export interface PackagesDataType {
   updated_at?: string;
   service?: ServicesDataType;
   image: any;
+  isOldImage?: boolean;
 }

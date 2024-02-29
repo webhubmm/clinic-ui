@@ -1,13 +1,11 @@
 import Loading from "@/components/Custom/Loading";
-import FilePondUploader from "@/components/FilePondUploader/FilePondUploader";
 import MulitpleFilePondUploader from "@/components/FilePondUploader/MulitpleFilePondUploader";
 import { centralCreate } from "@/lib/api-central";
-import { getToken } from "@/lib/auth";
 import { useAppSelector } from "@/store/hooks";
+import { addBranches } from "@/store/slices/branchesSlice";
 import { setCreateLoading, setPerPage } from "@/store/slices/globalSlice";
 import { BranchesDataType } from "@/types/branchesDataType";
-import { UserManagementCreateType } from "@/types/userManagementType";
-import { getBase64 } from "@/utils/changes";
+import { FaWindowClose } from "react-icons/fa";
 import {
   Box,
   Button,
@@ -24,9 +22,16 @@ import {
   useDisclosure,
   useToast,
   Text,
+  Image,
 } from "@chakra-ui/react";
 import React, { forwardRef, useImperativeHandle, useState } from "react";
 import { useDispatch } from "react-redux";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Pagination } from "swiper/modules";
+
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
 interface BranchesCreateModalProps {
   title: string;
@@ -57,6 +62,7 @@ const BranchesCreateModal: React.ForwardRefRenderFunction<
     lng: "",
     open_hour: "",
     close_hour: "",
+    isOldImage: true,
   });
   const dispatch = useDispatch();
   const createLoading = useAppSelector(
@@ -91,18 +97,18 @@ const BranchesCreateModal: React.ForwardRefRenderFunction<
   };
 
   const handleSubmit = async (e: any) => {
-    dispatch(setCreateLoading(true));
     e.preventDefault();
+    dispatch(setCreateLoading(true));
     const res = await centralCreate("createEditDeleteBranchesAPI", formData);
     if (res.code === 400) {
       toastFun("Error", res.data, "error");
     }
     if (res.code === 200) {
       toastFun("Success", res.message, "success");
+      dispatch(addBranches(res.data));
     }
     dispatch(setCreateLoading(false));
     onClose();
-    fetchData();
     setFormData({
       name: "",
       email: "",
@@ -116,6 +122,7 @@ const BranchesCreateModal: React.ForwardRefRenderFunction<
       lng: "",
       open_hour: "",
       close_hour: "",
+      isOldImage: true,
     });
   };
 
@@ -144,6 +151,7 @@ const BranchesCreateModal: React.ForwardRefRenderFunction<
     setFormData((prevData) => ({
       ...prevData,
       images: base64Images,
+      isOldImage: false,
     }));
   };
 
@@ -158,6 +166,7 @@ const BranchesCreateModal: React.ForwardRefRenderFunction<
             <FormControl>
               <FormLabel>Name</FormLabel>
               <Input
+                required
                 type="text"
                 name="name"
                 value={formData.name}
@@ -167,6 +176,7 @@ const BranchesCreateModal: React.ForwardRefRenderFunction<
             <FormControl mt={4}>
               <FormLabel>Email</FormLabel>
               <Input
+                required
                 type="email"
                 name="email"
                 value={formData.email}
@@ -176,6 +186,7 @@ const BranchesCreateModal: React.ForwardRefRenderFunction<
             <FormControl mt={4}>
               <FormLabel>Phone No.</FormLabel>
               <Input
+                required
                 type="text"
                 name="phone"
                 value={formData.phone}
@@ -188,6 +199,7 @@ const BranchesCreateModal: React.ForwardRefRenderFunction<
               {staffList.length > 0 ? (
                 <Box display={"flex"}>
                   <Select
+                    required
                     placeholder="Select Staff"
                     value={formData.user_id}
                     onChange={(e) => handleIsUserIdChange(e)}
@@ -232,6 +244,7 @@ const BranchesCreateModal: React.ForwardRefRenderFunction<
             <FormControl mt={4}>
               <FormLabel>Is Open?</FormLabel>
               <Select
+                required
                 value={formData.is_open}
                 onChange={(e) => handleIsOpenChange(e)}
               >
@@ -271,6 +284,49 @@ const BranchesCreateModal: React.ForwardRefRenderFunction<
                 required
               />
             </FormControl>
+
+            <Box
+              display={"flex"}
+              gap={2}
+              flexWrap={"wrap"}
+              justifyContent={"space-evenly"}
+              mt={4}
+            >
+              {formData.images?.length > 0 && (
+                <FaWindowClose
+                  className="removeImg"
+                  onClick={() => {
+                    setFormData((prevData) => ({
+                      ...prevData,
+                      images: null,
+                    }));
+                  }}
+                />
+              )}
+              <Swiper
+                autoHeight={true}
+                slidesPerView={1}
+                spaceBetween={30}
+                pagination={{
+                  clickable: true,
+                }}
+                modules={[Pagination]}
+              >
+                {formData.images?.map((item: any, index: number) => {
+                  return (
+                    <SwiperSlide key={index}>
+                      <Image
+                        src={item}
+                        key={index}
+                        width={"100%"}
+                        alt="branches-img"
+                        height={"200px"}
+                      />
+                    </SwiperSlide>
+                  );
+                })}
+              </Swiper>
+            </Box>
 
             <MulitpleFilePondUploader onFileChange={handleFileChange} />
 

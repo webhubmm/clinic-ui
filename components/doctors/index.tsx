@@ -137,7 +137,7 @@ const DoctorsComponent = () => {
 
   useEffect(() => {
     FetchGetAllBranches();
-  }, [perPage]);
+  }, [perPage, trash]);
 
   useEffect(() => {
     dispatch(setFetchDataStatus(true));
@@ -261,19 +261,33 @@ const DoctorsComponent = () => {
       {
         header: "Phone",
         accessorKey: "phone",
+        cell: ({ row }: CellContext<DoctorsDataType, React.ReactNode>) => (
+          <Text>{row.original.phone ? row.original.phone : " - "}</Text>
+        ),
       },
       {
         header: "Address",
         accessorKey: "address",
+        cell: ({ row }: CellContext<DoctorsDataType, React.ReactNode>) => (
+          <Text>{row.original.address ? row.original.address : " - "}</Text>
+        ),
       },
       {
         header: "Degree",
         accessorKey: "degree",
+        cell: ({ row }: CellContext<DoctorsDataType, React.ReactNode>) => (
+          <Text>{row.original.degree ? row.original.degree : " - "}</Text>
+        ),
       },
 
       {
         header: "Specialize",
         accessorKey: "specialize",
+        cell: ({ row }: CellContext<DoctorsDataType, React.ReactNode>) => (
+          <Text>
+            {row.original.specialize ? row.original.specialize : " - "}
+          </Text>
+        ),
       },
 
       {

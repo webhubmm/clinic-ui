@@ -7,8 +7,8 @@ export interface UserManagementType {
   phone: string;
   role: string;
   updated_at?: string;
+  isOldImage?: boolean;
   image: any;
-  token?: CookieValueTypes;
 }
 
 export interface UserManagementCreateType {
@@ -19,5 +19,5 @@ export interface UserManagementCreateType {
   password_confirmation: string;
   role: string;
   image: string | null;
-  token?: CookieValueTypes;
+  isOldImage?: boolean;
 }
