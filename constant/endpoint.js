@@ -38,4 +38,10 @@ export const api = {
   createEditDeleteDoctorsAPI: "/admin/doctors",
   restoreDoctorsAPI: "/admin/doctors/restore",
   forceDeleteDoctorsAPI: "/admin/doctors/force_delete",
+
+  //faqs
+  getFAQSAPI: "/faqs",
+  createEditDeleteFAQSAPI: "/admin/faqs",
+  restoreFAQSAPI: "/admin/faqs/restore",
+  forceDeleteFAQSAPI: "/admin/faqs/force_delete",
 };
