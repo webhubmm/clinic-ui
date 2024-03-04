@@ -44,4 +44,10 @@ export const api = {
   createEditDeleteFAQSAPI: "/admin/faqs",
   restoreFAQSAPI: "/admin/faqs/restore",
   forceDeleteFAQSAPI: "/admin/faqs/force_delete",
+
+  //holiday_Management
+  getHolidayManagementAPI: "/holiday_management",
+  createEditDeleteholidayManagementAPI: "/admin/holiday_management",
+  restoreHolidayManagementAPI: "/admin/holiday_management/restore",
+  forceDeleteHolidayManagementAPI: "/admin/holiday_management/force_delete",
 };

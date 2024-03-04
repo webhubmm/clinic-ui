@@ -7,6 +7,8 @@ import doctorsSlice from "./slices/doctorsSlice";
 import usersSlice from "./slices/userManagementSlice";
 import teethSlice from "./slices/teethSlice";
 import faqsSLice from "./slices/faqsSlice";
+import holidayManagementSLice from "./slices/holidayManagementSlice";
+import calendarSlice from "./slices/calendarSlice";
 
 // ...
 
@@ -20,6 +22,8 @@ export const store = configureStore({
     doctorsSlice: doctorsSlice,
     teethSlice: teethSlice,
     faqsSlice: faqsSLice,
+    holidayManagementSlice: holidayManagementSLice,
+    calendarSlice: calendarSlice,
   },
 });
 

@@ -42,3 +42,14 @@ export const getBase64 = (file: any, cb: any) => {
     console.log("Error: ", error);
   };
 };
+
+export const formatDateYYMMDD = (date: any) => {
+  if (date) {
+    const year = date.getFullYear();
+    const month = `${date.getMonth() + 1}`.padStart(2, "0");
+    const day = `${date.getDate()}`.padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  }
+
+  return;
+};

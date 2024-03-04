@@ -173,13 +173,13 @@ const FAQSComponent = () => {
     dispatch(setRestoreLoading(true));
     if (faqsDataForRestore) {
       const restoreobj = { id: faqsDataForRestore };
-      const restoreeUserData = faqsData.find(
+      const restoreFaqsData = faqsData.find(
         (item) => item.id === restoreobj.id
       );
       const result = await centralRestore("restoreFAQSAPI", restoreobj);
       if (result?.code === 200) toastFun("Success", result?.message, "success");
       if (result?.status === 400) toastFun("Error", result?.message, "error");
-      dispatch(removeFAQS(restoreeUserData as FAQSDataType));
+      dispatch(removeFAQS(restoreFaqsData as FAQSDataType));
       dispatch(setRestoreLoading(false));
       onRestoreClose();
     }

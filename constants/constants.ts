@@ -6,5 +6,6 @@ export const navItems = [
   { id: 5, title: "Packages", link: "/dashboard/packages" },
   { id: 6, title: "Teeth", link: "/dashboard/teeth" },
   { id: 7, title: "Doctors", link: "/dashboard/doctors" },
-  { id: 8, title: "FAQS", link: "/dashboard//faqs" },
+  { id: 8, title: "FAQS", link: "/dashboard/faqs" },
+  { id: 9, title: "Holiday Management", link: "/dashboard/holiday_management" },
 ];

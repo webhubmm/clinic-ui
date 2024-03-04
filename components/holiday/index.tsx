@@ -23,8 +23,6 @@ import {
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import usePagination from "@/hooks/usePagination";
 import Loading from "@/components/Custom/Loading";
-import CustomModal from "@/components/Custom/CustomModal";
-import RestoreModal from "@/components/Custom/RestoreModal";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import {
   setDeleteLoading,
@@ -41,22 +39,25 @@ import {
   centralGetAllLists,
   centralRestore,
 } from "@/lib/api-central";
-import { setPackagesData } from "@/store/slices/packagesSlice";
-import DoctorsCreateModal, {
-  DoctorsCreateModalRef,
-} from "./modal/DoctorsCreateModal";
-import DoctorsEditModal, {
-  DoctorsEditModalRef,
-} from "./modal/DoctorsEditModal";
-import { DoctorsDataType } from "@/types/doctorsDataType";
-import { setBranchesData } from "@/store/slices/branchesSlice";
+import { removeFAQS, setFAQSData } from "@/store/slices/faqsSlice";
+import TruncatedText from "../Custom/TruncatedText";
+import CustomModal from "../Custom/CustomModal";
+import RestoreModal from "../Custom/RestoreModal";
 import {
-  removeDoctors,
-  setDoctorsData,
-  setFetchBranchesForDoctorsCpnLoading,
-} from "@/store/slices/doctorsSlice";
+  removeHolidayManagement,
+  setHolidayManagementData,
+} from "@/store/slices/holidayManagementSlice";
+import { HolidayManagementDataType } from "@/types/holidayManagementType";
+import { formatDateString } from "@/utils/changes";
+import HolidayManagementCreateModal, {
+  HolidayManagementModalRef,
+} from "./modal/HolidayManagementCreateModal";
+import { setCalendarData } from "@/store/slices/calendarSlice";
+import HolidayManagementEditModal, {
+  EditHolidayManagementModalRef,
+} from "./modal/HolidayManagementEditModal";
 
-const DoctorsComponent = () => {
+const HolidayManagementComponent = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: isRestoreOpen,
@@ -69,13 +70,13 @@ const DoctorsComponent = () => {
     onClose: onForceDeleteClose,
   } = useDisclosure();
   const { onPaginationChange, pagination } = usePagination();
-  const [doctorsDataForDelete, setDoctorsDataForDelete] = useState<
+  const [holidayDataForDelete, setHolidayDataForDelete] = useState<
     string | null
   >(null);
-  const [doctorsDataForRestore, setDoctorsDataForRestore] = useState<
+  const [holidayDataForRestore, setHolidayDataForRestore] = useState<
     string | null
   >(null);
-  const [doctorsDataForForceDelete, setDoctorsDataForForceDelete] = useState<
+  const [holidayDataForForceDelete, setHolidayDataForForceDelete] = useState<
     string | null
   >(null);
   const dispatch = useAppDispatch();
@@ -86,58 +87,38 @@ const DoctorsComponent = () => {
   const { total_count, isFetchLoading } = useAppSelector(
     (state) => state.globalSlice
   );
-  const { doctorsData, isFetchBranchesForDoctorsCpnLoading } = useAppSelector(
-    (state) => state.doctorsSlice
-  );
-  const perPage = useAppSelector(
-    (state) => state.globalSlice.credential.per_page
-  );
-  const branchesList = useAppSelector(
-    (state) => state.branchesSlice.branchesData
+  const { holidayManagementData } = useAppSelector(
+    (state) => state.holidayManagementSlice
   );
   const toast = useToast();
 
-  const FetchGetAllDoctorsListFun = async () => {
+  const FetchGetAllHolidayListFun = async () => {
     const obj = {
       page: pagination.pageIndex + 1,
       per_page: pagination.pageSize,
     };
     dispatch(setFetchLoading(true));
-    const result = await centralGetAllLists("getDoctorsAPI", {
+    const result = await centralGetAllLists("getHolidayManagementAPI", {
       ...credential,
       ...obj,
     });
 
-    dispatch(setDoctorsData(result?.data.doctors));
+    const closedHolidayDates = result?.data.holidays.map(
+      (item: any) => item.date
+    );
+
+    dispatch(setHolidayManagementData(result?.data.holidays));
+    dispatch(setCalendarData(closedHolidayDates));
     dispatch(setFetchLoading(false));
-    dispatch(setTotal_count(result?.data.total_count));
-  };
-
-  const FetchGetAllBranches = async () => {
-    const obj = {
-      page: pagination.pageIndex + 1,
-      per_page: pagination.pageSize,
-    };
-    dispatch(setFetchBranchesForDoctorsCpnLoading(true));
-    const result = await centralGetAllLists("getBranchesAPI", {
-      ...credential,
-      ...obj,
-    });
-    dispatch(setBranchesData(result?.data.branches));
-    dispatch(setFetchBranchesForDoctorsCpnLoading(false));
     dispatch(setTotal_count(result?.data.total_count));
   };
 
   useEffect(() => {
     if (fetchDataStatus) {
-      FetchGetAllDoctorsListFun();
-      dispatch(setFetchDataStatus(false)); // Set the flag to false after fetching data
+      FetchGetAllHolidayListFun();
+      dispatch(setFetchDataStatus(false));
     }
   }, [pagination.pageIndex, pagination.pageSize, trash, fetchDataStatus]);
-
-  useEffect(() => {
-    FetchGetAllBranches();
-  }, [perPage, trash]);
 
   useEffect(() => {
     dispatch(setFetchDataStatus(true));
@@ -162,18 +143,20 @@ const DoctorsComponent = () => {
     ? Math.ceil(total_count / pagination.pageSize)
     : 0;
 
-  const doctorsCreateModalRef = useRef<DoctorsCreateModalRef>(null);
-  const doctorsEditModalRef = useRef<DoctorsEditModalRef>(null);
+  const holidayManagementCreateModalRef =
+    useRef<HolidayManagementModalRef>(null);
+  const holidayManagementEditModalRef =
+    useRef<EditHolidayManagementModalRef>(null);
 
   const handleCreateModal = () => {
-    if (doctorsCreateModalRef.current) {
-      doctorsCreateModalRef.current.open();
+    if (holidayManagementCreateModalRef.current) {
+      holidayManagementCreateModalRef.current.open();
     }
   };
 
-  const handleEditModal = (doctors: DoctorsDataType) => {
-    if (doctorsEditModalRef.current) {
-      doctorsEditModalRef.current.open({ ...doctors });
+  const handleEditModal = (holidayManagement: HolidayManagementDataType) => {
+    if (holidayManagementEditModalRef.current) {
+      holidayManagementEditModalRef.current.open({ ...holidayManagement });
     }
   };
 
@@ -181,118 +164,128 @@ const DoctorsComponent = () => {
     dispatch(setSearch(e.target.value));
   };
 
-  const handleDelete = (doctors: DoctorsDataType) => {
-    setDoctorsDataForDelete(doctors.id as string);
+  const handleDelete = (holiday: HolidayManagementDataType) => {
+    setHolidayDataForDelete(holiday.id as string);
     onOpen();
   };
 
   const deleteComfirmFun = async () => {
     dispatch(setDeleteLoading(true));
-    if (doctorsDataForDelete) {
-      const delobj = { id: doctorsDataForDelete };
-      const deleteDoctorData = doctorsData.find(
+    if (holidayDataForDelete) {
+      const delobj = { id: holidayDataForDelete };
+      const deleteHolidayManagementData = holidayManagementData.find(
         (item) => item.id === delobj.id
       );
-      const result = await centralDelete("createEditDeleteDoctorsAPI", delobj);
+      const result = await centralDelete(
+        "createEditDeleteholidayManagementAPI",
+        delobj
+      );
       if (result?.code === 200) toastFun("Success", result?.message, "success");
       if (result?.status === 400) toastFun("Error", result?.message, "error");
-      dispatch(removeDoctors(deleteDoctorData as DoctorsDataType));
+      dispatch(
+        removeHolidayManagement(
+          deleteHolidayManagementData as HolidayManagementDataType
+        )
+      );
       dispatch(setDeleteLoading(false));
       onClose();
     }
   };
 
-  const handleRestore = (doctors: DoctorsDataType) => {
-    setDoctorsDataForRestore(doctors.id as string);
+  const handleRestore = (holiday: HolidayManagementDataType) => {
+    setHolidayDataForRestore(holiday.id as string);
     onRestoreOpen();
   };
 
   const restoreComfirmFun = async () => {
     dispatch(setRestoreLoading(true));
-    if (doctorsDataForRestore) {
-      const restoreobj = { id: doctorsDataForRestore };
-      const restoreDoctorData = doctorsData.find(
+    if (holidayDataForRestore) {
+      const restoreobj = { id: holidayDataForRestore };
+      const restoreHolidayManagementData = holidayManagementData.find(
         (item) => item.id === restoreobj.id
       );
-      const result = await centralRestore("restoreDoctorsAPI", restoreobj);
+      const result = await centralRestore(
+        "restoreHolidayManagementAPI",
+        restoreobj
+      );
       if (result?.code === 200) toastFun("Success", result?.message, "success");
       if (result?.status === 400) toastFun("Error", result?.message, "error");
-      dispatch(removeDoctors(restoreDoctorData as DoctorsDataType));
+      dispatch(
+        removeHolidayManagement(
+          restoreHolidayManagementData as HolidayManagementDataType
+        )
+      );
       dispatch(setRestoreLoading(false));
       onRestoreClose();
     }
   };
 
-  const handleForceDelete = (doctors: DoctorsDataType) => {
-    setDoctorsDataForForceDelete(doctors.id as string);
+  const handleForceDelete = (holiday: HolidayManagementDataType) => {
+    setHolidayDataForForceDelete(holiday.id as string);
     onForceDeleteOpen();
   };
 
   const forceDeleteComfirmFun = async () => {
     dispatch(setDeleteLoading(true));
-    if (doctorsDataForForceDelete) {
-      const delobj = { id: doctorsDataForForceDelete };
-      const forceDeleteDoctorData = doctorsData.find(
+    if (holidayDataForForceDelete) {
+      const delobj = { id: holidayDataForForceDelete };
+      const forceDeleteDoctorData = holidayManagementData.find(
         (item) => item.id === delobj.id
       );
-      const result = await centralForceDelete("forceDeleteDoctorsAPI", delobj);
+      const result = await centralForceDelete(
+        "forceDeleteHolidayManagementAPI",
+        delobj
+      );
       if (result?.code === 200) toastFun("Success", result?.message, "success");
       if (result?.status === 400) toastFun("Error", result?.message, "error");
-      dispatch(removeDoctors(forceDeleteDoctorData as DoctorsDataType));
+      dispatch(
+        removeHolidayManagement(
+          forceDeleteDoctorData as HolidayManagementDataType
+        )
+      );
       dispatch(setDeleteLoading(false));
       onForceDeleteClose();
     }
   };
 
-  const columns = useMemo<ColumnDef<DoctorsDataType, React.ReactNode>[]>(
+  const columns = useMemo<
+    ColumnDef<HolidayManagementDataType, React.ReactNode>[]
+  >(
     () => [
       {
         header: "Id",
         accessorKey: "id",
       },
       {
-        header: "Name",
-        accessorKey: "name",
+        header: "Date",
+        accessorKey: "date",
       },
       {
-        header: "Email",
-        accessorKey: "email",
+        header: "Note",
+        accessorKey: "note",
       },
-      {
-        header: "Phone",
-        accessorKey: "phone",
-        cell: ({ row }: CellContext<DoctorsDataType, React.ReactNode>) => (
-          <Text>{row.original.phone ? row.original.phone : " - "}</Text>
-        ),
-      },
-      {
-        header: "Address",
-        accessorKey: "address",
-        cell: ({ row }: CellContext<DoctorsDataType, React.ReactNode>) => (
-          <Text>{row.original.address ? row.original.address : " - "}</Text>
-        ),
-      },
-      {
-        header: "Degree",
-        accessorKey: "degree",
-        cell: ({ row }: CellContext<DoctorsDataType, React.ReactNode>) => (
-          <Text>{row.original.degree ? row.original.degree : " - "}</Text>
-        ),
-      },
-
-      {
-        header: "Specialize",
-        accessorKey: "specialize",
-        cell: ({ row }: CellContext<DoctorsDataType, React.ReactNode>) => (
-          <Text>
-            {row.original.specialize ? row.original.specialize : " - "}
-          </Text>
-        ),
-      },
-
+      ...(!trash
+        ? []
+        : [
+            {
+              header: "Delete Time",
+              accessorKey: "deleted_at",
+              cell: ({
+                row,
+              }: CellContext<HolidayManagementDataType, React.ReactNode>) => (
+                <Text>
+                  {row.original.deleted_at
+                    ? formatDateString(row.original.deleted_at)
+                    : " - "}
+                </Text>
+              ),
+            },
+          ]),
       {
         id: "actions",
-        cell: ({ row }: CellContext<DoctorsDataType, React.ReactNode>) => (
+        cell: ({
+          row,
+        }: CellContext<HolidayManagementDataType, React.ReactNode>) => (
           <>
             {trash ? (
               <Flex gap={3}>
@@ -339,7 +332,6 @@ const DoctorsComponent = () => {
                       bgColor: "#185aca",
                     },
                   }}
-                  isLoading={isFetchBranchesForDoctorsCpnLoading}
                 >
                   <FaRegEdit />
                 </Button>
@@ -362,14 +354,14 @@ const DoctorsComponent = () => {
         ),
       },
     ],
-    [trash, isFetchBranchesForDoctorsCpnLoading]
+    [trash]
   );
 
   return (
     <Box mb={5}>
       <Box>
         <Text fontSize={"30px"} fontWeight={"bold"}>
-          Doctors
+          FAQS
         </Text>
         <Box display={"flex"} mt={3}>
           <Box display={"flex"} width={{ base: "90%", md: "50%", lg: "35%" }}>
@@ -390,7 +382,7 @@ const DoctorsComponent = () => {
                 },
               }}
               onClick={() => {
-                FetchGetAllDoctorsListFun();
+                FetchGetAllHolidayListFun();
               }}
             >
               <FaSistrix />
@@ -449,7 +441,7 @@ const DoctorsComponent = () => {
         ) : (
           <TableContainer>
             <CustomTable
-              data={doctorsData}
+              data={holidayManagementData}
               columns={columns}
               pagination={pagination}
               onPaginationChange={onPaginationChange}
@@ -461,7 +453,7 @@ const DoctorsComponent = () => {
 
       <CustomModal
         modalTitle={"Delete"}
-        modalText={`Are you sure to Delete User Id ${doctorsDataForDelete} ?`}
+        modalText={`Are you sure to Delete User Id ${holidayDataForDelete} ?`}
         isOpen={isOpen}
         onOpen={onOpen}
         onClose={onClose}
@@ -469,7 +461,7 @@ const DoctorsComponent = () => {
         actionText={"Delete"}
       />
       <RestoreModal
-        modalText={`Are you sure to Restore User Id ${doctorsDataForRestore} ?`}
+        modalText={`Are you sure to Restore User Id ${holidayDataForRestore} ?`}
         modalTitle={"Restore"}
         isOpen={isRestoreOpen}
         onOpen={onRestoreOpen}
@@ -479,21 +471,24 @@ const DoctorsComponent = () => {
       />
       <CustomModal
         modalTitle={"Delete Permanent"}
-        modalText={`Are you sure to Delete User Id ${doctorsDataForDelete} permanently?`}
+        modalText={`Are you sure to Delete User Id ${holidayDataForDelete} permanently?`}
         isOpen={isForceDeleteOpen}
         onOpen={onForceDeleteOpen}
         onClose={onForceDeleteClose}
         actionFun={forceDeleteComfirmFun}
         actionText={"Force Delete"}
       />
-      <DoctorsCreateModal
-        ref={doctorsCreateModalRef}
-        title={"Create Doctors"}
-        fetchData={FetchGetAllDoctorsListFun}
+      <HolidayManagementCreateModal
+        ref={holidayManagementCreateModalRef}
+        title={"Create Holiday Management"}
       />
-      <DoctorsEditModal ref={doctorsEditModalRef} title={"Edit Doctors"} />
+
+      <HolidayManagementEditModal
+        ref={holidayManagementEditModalRef}
+        title={"Edit Holiday Management"}
+      />
     </Box>
   );
 };
 
-export default DoctorsComponent;
+export default HolidayManagementComponent;

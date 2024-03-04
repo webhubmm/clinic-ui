@@ -21,29 +21,28 @@ import {
 } from "@chakra-ui/react";
 import React, { forwardRef, useImperativeHandle, useState } from "react";
 import { useDispatch } from "react-redux";
-import { TeethDataType } from "@/types/teethDataType";
 import { FaWindowClose } from "react-icons/fa";
-import { addTeeth } from "@/store/slices/teethSlice";
+import { HolidayManagementDataType } from "@/types/holidayManagementType";
+import CustomCalendar from "@/components/Custom/Calendar";
+import { addHolidayManagement } from "@/store/slices/holidayManagementSlice";
 
-interface MyTeethModalProps {
+interface HolidayManagementModalProps {
   title: string;
   children?: React.ReactNode;
 }
 
-export interface MyTeethModalRef {
+export interface HolidayManagementModalRef {
   open: () => void;
   close: () => void;
 }
-const TeethCreateModal: React.ForwardRefRenderFunction<
-  MyTeethModalRef,
-  MyTeethModalProps
+const HolidayManagementCreateModal: React.ForwardRefRenderFunction<
+  HolidayManagementModalRef,
+  HolidayManagementModalProps
 > = ({ title, children }, ref) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [formData, setFormData] = useState<TeethDataType>({
-    type: "",
-    type_number: "",
-    image: "",
-    isOldImage: true,
+  const [formData, setFormData] = useState<HolidayManagementDataType>({
+    date: "",
+    note: "",
   });
 
   const dispatch = useDispatch();
@@ -75,47 +74,39 @@ const TeethCreateModal: React.ForwardRefRenderFunction<
   // for all handle function
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-
     dispatch(setCreateLoading(true));
-    const res = await centralCreate(
-      "createEditDeleteTeethManagmentAPI",
-      formData
-    );
-    if (res.code === 400) {
-      toastFun("Error", res.data, "error");
+    if (formData.date.length > 0) {
+      const res = await centralCreate(
+        "createEditDeleteholidayManagementAPI",
+        formData
+      );
+      if (res.code === 400) {
+        toastFun("Error", res.data, "error");
+      }
+      if (res.code === 200) {
+        toastFun("Success", res.message, "success");
+      }
+      dispatch(setCreateLoading(false));
+      dispatch(addHolidayManagement(res?.data));
+      onClose();
+      setFormData({
+        date: "",
+        note: "",
+      });
+    } else {
+      toastFun("Error", "Please select date !!!", "error");
+      onClose();
+      setFormData({
+        date: "",
+        note: "",
+      });
     }
-    if (res.code === 200) {
-      toastFun("Success", res.message, "success");
-    }
-    dispatch(setCreateLoading(false));
-    dispatch(addTeeth(res?.data));
-    onClose();
-    setFormData({
-      type: "",
-      type_number: "",
-      image: "",
-    });
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prevData) => ({
       ...prevData,
       [e.target.name]: e.target.value,
-    }));
-  };
-
-  const handleFileChange = (base64Image: string | null) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      image: base64Image,
-      isOldImage: false,
-    }));
-  };
-
-  const removeFile = () => {
-    setFormData((prevData) => ({
-      ...prevData,
-      image: null,
     }));
   };
 
@@ -128,50 +119,19 @@ const TeethCreateModal: React.ForwardRefRenderFunction<
         <ModalBody>
           <form onSubmit={(e) => handleSubmit(e)}>
             <FormControl>
-              <FormLabel>Type</FormLabel>
-              <Input
-                type="text"
-                name="type"
-                required
-                value={formData.type}
-                onChange={handleInputChange}
-              />
+              <FormLabel>Date</FormLabel>
+              <CustomCalendar formData={formData} setFormData={setFormData} />
             </FormControl>
             <FormControl mt={4}>
-              <FormLabel>Type_Number</FormLabel>
+              <FormLabel>Note</FormLabel>
               <Input
                 required
                 type="text"
-                name="type_number"
-                value={formData.type_number}
+                name="note"
+                value={formData.note}
                 onChange={handleInputChange}
               />
             </FormControl>
-
-            {formData.image && (
-              <Box
-                display={"flex"}
-                gap={2}
-                flexWrap={"wrap"}
-                justifyContent={"space-evenly"}
-                mt={4}
-              >
-                <FaWindowClose
-                  className="removeImg"
-                  onClick={() => {
-                    removeFile();
-                  }}
-                />
-                <Image
-                  src={formData.image}
-                  width={"100%"}
-                  alt="services-img"
-                  height={"200px"}
-                />
-              </Box>
-            )}
-
-            <FilePondUploader onFileChange={handleFileChange} />
 
             <Button
               isLoading={createLoading}
@@ -198,4 +158,4 @@ const TeethCreateModal: React.ForwardRefRenderFunction<
   );
 };
 
-export default forwardRef(TeethCreateModal);
+export default forwardRef(HolidayManagementCreateModal);

@@ -31,7 +31,7 @@
     "next": "14.0.4",
     "react": "^18",
     "react-apexcharts": "^1.4.1",
-    "react-calendar": "^4.7.0",
+    "react-calendar": "^4.8.0",
     "react-dom": "^18",
     "react-filepond": "^7.1.2",
     "react-hook-form": "^7.49.3",

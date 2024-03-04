@@ -183,7 +183,7 @@ const TeethManagementComponent = () => {
     dispatch(setRestoreLoading(true));
     if (teethDataForRestore) {
       const restoreobj = { id: teethDataForRestore };
-      const restoreUserData = teethData.find(
+      const restoreTeethData = teethData.find(
         (item) => item.id === restoreobj.id
       );
       const result = await centralRestore(
@@ -192,7 +192,7 @@ const TeethManagementComponent = () => {
       );
       if (result?.code === 200) toastFun("Success", result?.message, "success");
       if (result?.status === 400) toastFun("Error", result?.message, "error");
-      dispatch(removeTeeth(restoreUserData as TeethDataType));
+      dispatch(removeTeeth(restoreTeethData as TeethDataType));
       dispatch(setRestoreLoading(false));
       onRestoreClose();
     }
@@ -371,10 +371,9 @@ const TeethManagementComponent = () => {
                 Trash List
               </Button>
             )}
-
             <Button
               colorScheme={"blue"}
-              isDisabled={isFetchLoading}
+              isDisabled={isFetchLoading || trash}
               ml={4}
               onClick={handleCreateModal}
               sx={{
@@ -432,11 +431,7 @@ const TeethManagementComponent = () => {
         actionFun={forceDeleteComfirmFun}
         actionText={"Force Delete"}
       />
-      <TeethCreateModal
-        ref={createTeethModalRef}
-        title={"Create Teeth"}
-        fetchData={FetchGetAllTeethListFun}
-      />
+      <TeethCreateModal ref={createTeethModalRef} title={"Create Teeth"} />
       <TeethEditModal ref={editTeethModalRef} title={"Edit Teeth"} />
     </Box>
   );
