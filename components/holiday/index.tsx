@@ -361,7 +361,7 @@ const HolidayManagementComponent = () => {
     <Box mb={5}>
       <Box>
         <Text fontSize={"30px"} fontWeight={"bold"}>
-          FAQS
+          Holiday Management
         </Text>
         <Box display={"flex"} mt={3}>
           <Box display={"flex"} width={{ base: "90%", md: "50%", lg: "35%" }}>
