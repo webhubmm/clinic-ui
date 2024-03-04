@@ -2,7 +2,7 @@ import { UserManagementType } from "@/types/userManagementType";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 interface CredientialType {
-  trash: boolean | number;
+  trash: boolean;
   search: string;
   page: number;
   per_page: number;

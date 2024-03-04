@@ -392,7 +392,7 @@ const UserManagementComponent = () => {
 
             <Button
               colorScheme={"blue"}
-              isDisabled={isFetchLoading}
+              isDisabled={isFetchLoading || trash}
               ml={4}
               onClick={handleCreateModal}
               sx={{

@@ -429,7 +429,7 @@ const BranchesComponent = () => {
             )}
 
             <Button
-              isDisabled={isFetchLoading}
+              isDisabled={isFetchLoading || trash}
               colorScheme={"blue"}
               ml={4}
               onClick={handleCreateModal}
