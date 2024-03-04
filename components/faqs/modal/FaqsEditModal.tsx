@@ -14,51 +14,42 @@ import {
   Select,
   useToast,
   Box,
+  Textarea,
 } from "@chakra-ui/react";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "@/store/hooks";
 import { setEditLoading } from "@/store/slices/globalSlice";
-import FilePondUploader from "@/components/FilePondUploader/FilePondUploader";
 import { centralEdit } from "@/lib/api-central";
-import { Image } from "@chakra-ui/react";
-import { updateUser } from "@/store/slices/userManagementSlice";
-import { FaWindowClose } from "react-icons/fa";
-import { TeethDataType } from "@/types/teethDataType";
-import { updateTeeth } from "@/store/slices/teethSlice";
+import { FAQSDataType } from "@/types/faqsDataType";
+import { updateFAQS } from "@/store/slices/faqsSlice";
 
-interface EditTeethModalProps {
+interface EditFaqsModalProps {
   title: string; // Data to be edited
 }
 
-export interface EditTeethModalRef {
-  open: (data: TeethDataType) => void; // Updated to accept data object
+export interface EditFaqsModalRef {
+  open: (data: FAQSDataType) => void; // Updated to accept data object
   close: (data: any) => void;
 }
 
-const TeethEditModal: React.ForwardRefRenderFunction<
-  EditTeethModalRef,
-  EditTeethModalProps
+const FaqsEditModal: React.ForwardRefRenderFunction<
+  EditFaqsModalRef,
+  EditFaqsModalProps
 > = ({ title }, ref) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [formData, setFormData] = useState<TeethDataType>({
+  const [formData, setFormData] = useState<FAQSDataType>({
     id: "",
-    type: "",
-    type_number: "",
-    image: "",
+    question: "",
+    answer: "",
   });
   const dispatch = useDispatch();
   const EditLoading = useAppSelector((state) => state.globalSlice.editLoading);
   const toast = useToast();
 
   useImperativeHandle(ref, () => ({
-    open: (data: TeethDataType) => {
-      const newObj = {
-        ...data,
-        image: data.image?.url,
-        isOldImage: true,
-      };
+    open: (data: FAQSDataType) => {
       onOpen();
-      setFormData(newObj);
+      setFormData(data);
     },
     close: onClose,
   }));
@@ -78,7 +69,7 @@ const TeethEditModal: React.ForwardRefRenderFunction<
     });
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setFormData((prevData) => ({
       ...prevData,
       [e.target.name]: e.target.value,
@@ -87,10 +78,7 @@ const TeethEditModal: React.ForwardRefRenderFunction<
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     dispatch(setEditLoading(true));
-    const res = await centralEdit(
-      "createEditDeleteTeethManagmentAPI",
-      formData
-    );
+    const res = await centralEdit("createEditDeleteFAQSAPI", formData);
     if (res === undefined) {
       return;
     }
@@ -99,26 +87,10 @@ const TeethEditModal: React.ForwardRefRenderFunction<
       onClose();
     } else if (res.code === 200) {
       toastFun("Success", res.message, "success");
-      dispatch(updateTeeth(res.data));
+      dispatch(updateFAQS(res.data));
       onClose();
     }
     dispatch(setEditLoading(false));
-    console.log("res :: ", res);
-  };
-
-  const removeFile = () => {
-    setFormData((prevData) => ({
-      ...prevData,
-      image: null,
-    }));
-  };
-
-  const handleFileChange = (base64Image: string | null) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      image: base64Image,
-      isOldImage: false,
-    }));
   };
 
   // Render modal content
@@ -131,46 +103,25 @@ const TeethEditModal: React.ForwardRefRenderFunction<
         <ModalBody>
           <form onSubmit={(e) => handleSubmit(e)}>
             <FormControl>
-              <FormLabel>Type</FormLabel>
-              <Input
-                type="text"
-                name="type"
-                value={formData.type}
-                onChange={handleInputChange}
+              <FormLabel>Question</FormLabel>
+              <Textarea
+                name="question"
                 required
+                value={formData.question}
+                onChange={handleInputChange}
+                placeholder="Question"
               />
             </FormControl>
             <FormControl mt={4}>
-              <FormLabel>Type Number</FormLabel>
-              <Input
-                type="text"
-                name="type_number"
-                value={formData.type_number}
-                onChange={handleInputChange}
+              <FormLabel>Answer</FormLabel>
+              <Textarea
+                name="answer"
                 required
+                value={formData.answer}
+                onChange={handleInputChange}
+                placeholder="Answer"
               />
             </FormControl>
-
-            {formData.image && (
-              <Box display={"flex"} justifyContent={"center"} mt={4}>
-                <FaWindowClose
-                  className="removeImg"
-                  onClick={() => {
-                    removeFile();
-                  }}
-                />
-                <Image
-                  src={formData.image}
-                  width={"80%"}
-                  alt="teeth-img"
-                  height={"200px"}
-                  objectFit={"cover"}
-                  objectPosition={"center"}
-                />
-              </Box>
-            )}
-
-            <FilePondUploader onFileChange={handleFileChange} />
 
             <Button
               isLoading={EditLoading}
@@ -197,4 +148,4 @@ const TeethEditModal: React.ForwardRefRenderFunction<
   );
 };
 
-export default forwardRef(TeethEditModal);
+export default forwardRef(FaqsEditModal);

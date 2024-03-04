@@ -1,14 +1,20 @@
 import React from "react";
-import {  Container} from '@chakra-ui/react'
+import { Container } from "@chakra-ui/react";
 
 interface ContainerProp {
-  children: React.ReactElement;
+  children: React.ReactNode;
 }
 
 const ContainerBox = ({ children }: ContainerProp) => {
   return (
-    <Container maxW={{sm:'container.sm',md:'container.md',xl:'container.xl',lg:'container.xl'}} >
-
+    <Container
+      maxW={{
+        sm: "container.sm",
+        md: "container.md",
+        xl: "container.xl",
+        lg: "container.xl",
+      }}
+    >
       {children}
     </Container>
   );

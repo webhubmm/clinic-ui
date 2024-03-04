@@ -1,5 +1,3 @@
-import { CookieValueTypes } from "cookies-next";
-
 export interface TeethDataType {
   id?: string;
   type: string;
