@@ -120,7 +120,6 @@ export const centralEdit = async (endpoint: keyof typeof API, data: any) => {
 export const centralCreate = async (endpoint: keyof typeof API, data: any) => {
   const finalObj = { ...data };
   const accessToken = getToken();
-
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}${API[endpoint]}`,
@@ -208,6 +207,34 @@ export const centralRestore = async (endpoint: keyof typeof API, data: any) => {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}${API[endpoint]}/${finalObj.id}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    const data = await response.json();
+    if (data === undefined || data === null) {
+      return;
+    } else {
+      return data;
+    }
+  } catch (error) {
+    console.log("error ::: ", error);
+  }
+};
+
+//Show
+export const centralShow = async (endpoint: keyof typeof API, data: any) => {
+  const finalObj = data;
+  console.log("finalObj :: ", finalObj);
+  const accessToken = getToken();
+
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}${API[endpoint]}/${finalObj}`,
       {
         method: "GET",
         headers: {

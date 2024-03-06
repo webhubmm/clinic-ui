@@ -8,4 +8,5 @@ export const navItems = [
   { id: 7, title: "Doctors", link: "/dashboard/doctors" },
   { id: 8, title: "FAQS", link: "/dashboard/faqs" },
   { id: 9, title: "Holiday Management", link: "/dashboard/holiday_management" },
+  { id: 10, title: "Blogs", link: "/dashboard/blogs" },
 ];

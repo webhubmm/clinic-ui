@@ -1,5 +1,5 @@
 import { Box } from "@chakra-ui/react";
-import { useState } from "react";
+import { ReactComponentElement, useState } from "react";
 
 const TruncatedText = ({ text }: { text: string }) => {
   const [isExpanded, setIsExpanded] = useState(false);

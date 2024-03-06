@@ -50,4 +50,10 @@ export const api = {
   createEditDeleteholidayManagementAPI: "/admin/holiday_management",
   restoreHolidayManagementAPI: "/admin/holiday_management/restore",
   forceDeleteHolidayManagementAPI: "/admin/holiday_management/force_delete",
+
+  //blogs
+  getBlogsAPI: "/blogs",
+  createEditDeleteBlogsAPI: "/admin/blogs",
+  restoreBlogsAPI: "/admin/blogs/restore",
+  forceDeleteBlogsAPI: "/admin/blogs/force_delete",
 };

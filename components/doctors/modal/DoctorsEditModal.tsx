@@ -152,7 +152,6 @@ const DoctorsEditModal: React.ForwardRefRenderFunction<
       image: null,
     }));
   };
-
   const selectedBranches = clickedBranchForSelectedBranches.map((item: any) => {
     const branch = branchesList.find((branch) => branch.id === item.id);
     return { value: branch?.id, label: branch?.name };
