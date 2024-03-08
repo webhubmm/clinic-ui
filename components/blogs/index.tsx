@@ -250,20 +250,6 @@ const BlogsComponent = () => {
         accessorKey: "title",
       },
       {
-        header: "Content",
-        accessorKey: "content",
-        cell: ({ row }: CellContext<BlogsDataType, React.ReactNode>) => (
-          <Box
-            display={"flex"}
-            flexWrap={"wrap"}
-            width={"350px"}
-            whiteSpace={"pre-line"}
-          >
-            <div dangerouslySetInnerHTML={{ __html: row.original.content }} />
-          </Box>
-        ),
-      },
-      {
         header: "Author",
         accessorKey: "author",
       },

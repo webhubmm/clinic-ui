@@ -25,7 +25,7 @@ import FilePondUploader from "@/components/FilePondUploader/FilePondUploader";
 import { BranchesDataType } from "@/types/branchesDataType";
 import { centralEdit } from "@/lib/api-central";
 import { EditBranches } from "@/lib/branches";
-import MulitpleFilePondUploader from "@/components/FilePondUploader/MulitpleFilePondUploader";
+import MulitpleFilePondUploader from "@/components/FilePondUploader/MultipleFilePondUploader";
 import Loading from "@/components/Custom/Loading";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination } from "swiper/modules";
@@ -145,6 +145,13 @@ const BranchesEditModal: React.ForwardRefRenderFunction<
       ...prevData,
       images: formData.images?.concat(base64Images),
       isOldImage: false,
+    }));
+  };
+
+  const imageRemoveToNull = () => {
+    setFormData((prevData) => ({
+      ...prevData,
+      images: null,
     }));
   };
 
@@ -320,6 +327,7 @@ const BranchesEditModal: React.ForwardRefRenderFunction<
                             width={"100%"}
                             alt="branches-img"
                             height={"200px"}
+                            objectFit={"contain"}
                           />
                         </SwiperSlide>
                       );
@@ -327,7 +335,11 @@ const BranchesEditModal: React.ForwardRefRenderFunction<
                   </Swiper>
                 </Box>
 
-                <MulitpleFilePondUploader onFileChange={handleFileChange} />
+                <MulitpleFilePondUploader
+                  onFileChange={handleFileChange}
+                  formDataImages={formData.images}
+                  setFormDataImages={imageRemoveToNull}
+                />
               </Box>
             </Box>
 

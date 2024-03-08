@@ -103,7 +103,6 @@ const TeethEditModal: React.ForwardRefRenderFunction<
       onClose();
     }
     dispatch(setEditLoading(false));
-    console.log("res :: ", res);
   };
 
   const removeFile = () => {
@@ -170,7 +169,11 @@ const TeethEditModal: React.ForwardRefRenderFunction<
               </Box>
             )}
 
-            <FilePondUploader onFileChange={handleFileChange} />
+            <FilePondUploader
+              onFileChange={handleFileChange}
+              formDataImages={formData.image}
+              setFormDataImages={removeFile}
+            />
 
             <Button
               isLoading={EditLoading}

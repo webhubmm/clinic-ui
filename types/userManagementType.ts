@@ -18,6 +18,6 @@ export interface UserManagementCreateType {
   password: string;
   password_confirmation: string;
   role: string;
-  image: string | null;
+  image: any;
   isOldImage?: boolean;
 }

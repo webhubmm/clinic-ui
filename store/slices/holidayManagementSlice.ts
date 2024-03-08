@@ -13,39 +13,9 @@ export const holidayManagementSLice = createSlice({
     setHolidayManagementData: (state, action) => {
       state.holidayManagementData = action.payload;
     },
-    addHolidayManagement: (
-      state,
-      action: PayloadAction<HolidayManagementDataType>
-    ) => {
-      state.holidayManagementData = [
-        action.payload,
-        ...state.holidayManagementData,
-      ];
-    },
-    updateHolidayManagement: (
-      state,
-      action: PayloadAction<HolidayManagementDataType>
-    ) => {
-      state.holidayManagementData = state.holidayManagementData.map((item) =>
-        item.id === action.payload.id ? action.payload : item
-      );
-    },
-    removeHolidayManagement: (
-      state,
-      action: PayloadAction<HolidayManagementDataType>
-    ) => {
-      state.holidayManagementData = state.holidayManagementData.filter(
-        (item) => item.id !== action.payload.id
-      );
-    },
   },
 });
 
-export const {
-  setHolidayManagementData,
-  addHolidayManagement,
-  updateHolidayManagement,
-  removeHolidayManagement,
-} = holidayManagementSLice.actions;
+export const { setHolidayManagementData } = holidayManagementSLice.actions;
 
 export default holidayManagementSLice.reducer;

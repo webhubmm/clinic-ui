@@ -1,6 +1,6 @@
 import Loading from "@/components/Custom/Loading";
 import FilePondUploader from "@/components/FilePondUploader/FilePondUploader";
-import MulitpleFilePondUploader from "@/components/FilePondUploader/MulitpleFilePondUploader";
+import MulitpleFilePondUploader from "@/components/FilePondUploader/MultipleFilePondUploader";
 import { centralCreate } from "@/lib/api-central";
 import { getToken } from "@/lib/auth";
 import { useAppSelector } from "@/store/hooks";
@@ -262,7 +262,11 @@ const PackagesCreateModal: React.ForwardRefRenderFunction<
               </Box>
             )}
 
-            <FilePondUploader onFileChange={handleFileChange} />
+            <FilePondUploader
+              onFileChange={handleFileChange}
+              formDataImages={formData.image}
+              setFormDataImages={removeFile}
+            />
 
             <Button
               isLoading={createLoading}

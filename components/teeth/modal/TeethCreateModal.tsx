@@ -171,7 +171,11 @@ const TeethCreateModal: React.ForwardRefRenderFunction<
               </Box>
             )}
 
-            <FilePondUploader onFileChange={handleFileChange} />
+            <FilePondUploader
+              onFileChange={handleFileChange}
+              formDataImages={formData.image}
+              setFormDataImages={removeFile}
+            />
 
             <Button
               isLoading={createLoading}

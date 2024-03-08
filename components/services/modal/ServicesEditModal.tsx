@@ -24,7 +24,7 @@ import { setEditLoading, setPerPage } from "@/store/slices/globalSlice";
 import FilePondUploader from "@/components/FilePondUploader/FilePondUploader";
 import { centralEdit } from "@/lib/api-central";
 import { EditBranches } from "@/lib/branches";
-import MulitpleFilePondUploader from "@/components/FilePondUploader/MulitpleFilePondUploader";
+import MulitpleFilePondUploader from "@/components/FilePondUploader/MultipleFilePondUploader";
 import { Image } from "@chakra-ui/react";
 import { ServicesDataType } from "@/types/servicesDataType";
 import { updateServices } from "@/store/slices/servicesSlice";
@@ -182,7 +182,11 @@ const ServicesEditModal: React.ForwardRefRenderFunction<
               </Box>
             )}
 
-            <FilePondUploader onFileChange={handleFileChange} />
+            <FilePondUploader
+              onFileChange={handleFileChange}
+              formDataImages={formData.image}
+              setFormDataImages={removeFile}
+            />
 
             <Button
               isLoading={EditLoading}

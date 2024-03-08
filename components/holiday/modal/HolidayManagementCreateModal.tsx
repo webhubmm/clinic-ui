@@ -24,11 +24,11 @@ import { useDispatch } from "react-redux";
 import { FaWindowClose } from "react-icons/fa";
 import { HolidayManagementDataType } from "@/types/holidayManagementType";
 import CustomCalendar from "@/components/Custom/Calendar";
-import { addHolidayManagement } from "@/store/slices/holidayManagementSlice";
 
 interface HolidayManagementModalProps {
   title: string;
   children?: React.ReactNode;
+  fetchData: () => void;
 }
 
 export interface HolidayManagementModalRef {
@@ -38,7 +38,7 @@ export interface HolidayManagementModalRef {
 const HolidayManagementCreateModal: React.ForwardRefRenderFunction<
   HolidayManagementModalRef,
   HolidayManagementModalProps
-> = ({ title, children }, ref) => {
+> = ({ title, children, fetchData }, ref) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [formData, setFormData] = useState<HolidayManagementDataType>({
     date: "",
@@ -87,12 +87,8 @@ const HolidayManagementCreateModal: React.ForwardRefRenderFunction<
         toastFun("Success", res.message, "success");
       }
       dispatch(setCreateLoading(false));
-      dispatch(addHolidayManagement(res?.data));
       onClose();
-      setFormData({
-        date: "",
-        note: "",
-      });
+      fetchData();
     } else {
       toastFun("Error", "Please select date !!!", "error");
       onClose();

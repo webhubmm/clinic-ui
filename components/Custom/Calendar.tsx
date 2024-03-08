@@ -19,18 +19,9 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({
   const dispatch = useAppDispatch();
   const closedDates = useAppSelector((state) => state.calendarSlice.date);
 
-  useEffect(() => {
-    // Any additional logic you want to perform when closedDates changes
-  }, [closedDates]);
-
-  const disablePreviousDates = (date: any) => {
-    const currentDate = new Date();
-    return date <= currentDate;
-  };
-
   const handleDateChange = (value: any) => {
-    const test = formatDateYYMMDD(value);
-    setFormData({ ...formData, date: test });
+    const date = formatDateYYMMDD(value);
+    setFormData({ ...formData, date: date });
   };
 
   const tileClassName = ({ date }: { date: Date }) => {
@@ -56,9 +47,7 @@ const CustomCalendar: React.FC<CustomCalendarProps> = ({
       <Calendar
         onChange={(value: any) => handleDateChange(value)}
         className="calendar-container"
-        tileDisabled={({ date }) =>
-          disablePreviousDates(date) || isDateDisabled(date)
-        }
+        tileDisabled={({ date }) => isDateDisabled(date)}
         tileClassName={tileClassName}
       />
     </Box>

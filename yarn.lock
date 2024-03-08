@@ -2488,14 +2488,29 @@ filepond-plugin-file-encode@^2.1.14:
   resolved "https://registry.npmjs.org/filepond-plugin-file-encode/-/filepond-plugin-file-encode-2.1.14.tgz"
   integrity sha512-uWHCyO9ZwMSime025TCRN7/Nay4+MvTh6DLjzV7i9BaAZ1FOvK1sACLydyjv0rL82rabyTSFEG0M1dA2nnshWg==
 
+filepond-plugin-file-poster@^2.5.1:
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/filepond-plugin-file-poster/-/filepond-plugin-file-poster-2.5.1.tgz#8f899593660623b7967f26a7991d18de3e82a639"
+  integrity sha512-WMB6Iww//U7KJR9Yt/zZ3cxC7SVySXGTrWPnAQokYSFfDp4uD31JLtyjYAVJnEg6T+niJvNwH48jKn/X3o75og==
+
 filepond-plugin-file-validate-size@^2.2.8:
   version "2.2.8"
   resolved "https://registry.yarnpkg.com/filepond-plugin-file-validate-size/-/filepond-plugin-file-validate-size-2.2.8.tgz#2018c7e1110d7452cfd2a384725869786b8260f7"
   integrity sha512-yzb8scATmkWqPTP7oKQz6L8WwJm6Xmgc/fuq6DFGRaLz0I7372BUvBsxagBk/hypMIjvieNzhggm33Y60x3rcw==
 
+filepond-plugin-file-validate-type@^1.2.9:
+  version "1.2.9"
+  resolved "https://registry.yarnpkg.com/filepond-plugin-file-validate-type/-/filepond-plugin-file-validate-type-1.2.9.tgz#84787c027354a459d91382e77adc9463ceb0182d"
+  integrity sha512-Tzv07aNdZvjUXDRA3XL16QMEvh6llDrXlcZ6W0eTHQ+taHaVg/JKJTFs/AViO+6ZcpPCcQStbhYEL2HoS+vldw==
+
+filepond-plugin-image-crop@^2.0.6:
+  version "2.0.6"
+  resolved "https://registry.yarnpkg.com/filepond-plugin-image-crop/-/filepond-plugin-image-crop-2.0.6.tgz#56521fa08bc56b7bc5c0b422f16d0141b4978aad"
+  integrity sha512-bSy/KND4EP/QtW8MxIj23qgSEPUVRrT8XdktJ+OU9y8xRjFjTG+qcuw1LsycARQYRtzi8cZrD3P4POOITfkywQ==
+
 filepond@^4.30.6:
   version "4.30.6"
-  resolved "https://registry.npmjs.org/filepond/-/filepond-4.30.6.tgz"
+  resolved "https://registry.yarnpkg.com/filepond/-/filepond-4.30.6.tgz#59ef22196f810be169c77f3f1fc1439931844a3a"
   integrity sha512-gBsVKJgr5HFTkQSA/3R6utne4Qt6Pue0O3+k3IjjVBbaQxMgGMI0fXwoob9SdRRoULCs8BAhWjttM28hOAi/0w==
 
 fill-range@^7.0.1:
@@ -3626,7 +3641,7 @@ react-fast-compare@3.2.2:
 
 react-filepond@^7.1.2:
   version "7.1.2"
-  resolved "https://registry.npmjs.org/react-filepond/-/react-filepond-7.1.2.tgz"
+  resolved "https://registry.yarnpkg.com/react-filepond/-/react-filepond-7.1.2.tgz#8f04d06396a59b5980dda479c095ed23e6d1f68b"
   integrity sha512-vrlx9o/n+jGikh6jLey+PpUGYtEZn8MdeB6JFeX/5/N/Mu75IHG+MFQbv8R27bNXvS41mDtV9Fo5DG+s6siVIA==
 
 react-focus-lock@^2.9.4:

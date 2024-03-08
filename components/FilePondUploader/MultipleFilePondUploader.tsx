@@ -2,10 +2,10 @@ import React, { useEffect, useRef, useState } from "react";
 import { FilePond, registerPlugin } from "react-filepond";
 import "filepond/dist/filepond.min.css";
 import FilePondPluginFileEncode from "filepond-plugin-file-encode";
-import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size";
 import { Box } from "@chakra-ui/react";
 import FilePondPluginFileValidateType from "filepond-plugin-file-validate-type";
 import FilePondPluginFilePoster from "filepond-plugin-file-poster";
+import FilePondPluginFileValidateSize from "filepond-plugin-file-validate-size";
 
 registerPlugin(
   FilePondPluginFileEncode,
@@ -15,12 +15,12 @@ registerPlugin(
 );
 
 interface FilePondUploaderProps {
-  onFileChange: (base64Image: string | null) => void;
+  onFileChange: (base64Images: string[]) => void;
   formDataImages: [];
   setFormDataImages: (value: any) => void;
 }
 
-const FilePondUploader: React.FC<FilePondUploaderProps> = ({
+const MultipleFilePondUploader: React.FC<FilePondUploaderProps> = ({
   onFileChange,
   formDataImages,
   setFormDataImages,
@@ -28,21 +28,24 @@ const FilePondUploader: React.FC<FilePondUploaderProps> = ({
   const pond = useRef<FilePond | null>(null);
 
   const handleUpdateFiles = (fileItems: any[] | null) => {
-    if (fileItems) {
-      if (fileItems.length > 0) {
-        // Extract File object from fileItems
-        const file = fileItems[0].file;
+    const newUploadedImages: string[] = [];
 
-        // Convert the uploaded file to base64
+    if (fileItems) {
+      fileItems?.forEach((fileItem) => {
+        const file = fileItem.file;
         if (file) {
           const reader = new FileReader();
           reader.onloadend = () => {
             const base64 = reader.result as string;
-            onFileChange(base64);
+            newUploadedImages.push(base64);
+            if (newUploadedImages.length === fileItems.length) {
+              setFormDataImages({ ...formDataImages, newUploadedImages });
+              onFileChange(newUploadedImages);
+            }
           };
           reader.readAsDataURL(file);
         }
-      }
+      });
     } else if (!fileItems) {
       pond.current?.removeFiles();
     }
@@ -56,7 +59,7 @@ const FilePondUploader: React.FC<FilePondUploaderProps> = ({
     <Box mt={4}>
       <FilePond
         ref={pond}
-        allowMultiple={false}
+        allowMultiple={true}
         maxFileSize="2MB"
         onupdatefiles={handleUpdateFiles}
         allowRevert={false}
@@ -70,8 +73,6 @@ const FilePondUploader: React.FC<FilePondUploaderProps> = ({
             progress,
             abort
           ) => {
-            // You can handle the file upload logic here
-            // For simplicity, let's assume it's synchronous and we encode the file to base64
             const reader = new FileReader();
             reader.onloadend = () => {
               load(reader.result as string);
@@ -84,4 +85,4 @@ const FilePondUploader: React.FC<FilePondUploaderProps> = ({
   );
 };
 
-export default FilePondUploader;
+export default MultipleFilePondUploader;

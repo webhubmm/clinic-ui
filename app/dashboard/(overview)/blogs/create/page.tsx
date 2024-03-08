@@ -1,6 +1,6 @@
 "use client";
 import Loading from "@/components/Custom/Loading";
-import MulitpleFilePondUploader from "@/components/FilePondUploader/MulitpleFilePondUploader";
+import MultipleFilePondUploader from "@/components/FilePondUploader/MultipleFilePondUploader";
 import { centralCreate } from "@/lib/api-central";
 import { useAppSelector } from "@/store/hooks";
 import { addBranches } from "@/store/slices/branchesSlice";
@@ -120,6 +120,13 @@ const BlogsCreate = () => {
       ...prevData,
       images: base64Images,
       isOldImage: false,
+    }));
+  };
+
+  const imageRemoveToNull = () => {
+    setFormData((prevData) => ({
+      ...prevData,
+      images: null,
     }));
   };
 
@@ -257,7 +264,11 @@ const BlogsCreate = () => {
               </Swiper>
             </Box>
 
-            <MulitpleFilePondUploader onFileChange={handleFileChange} />
+            <MultipleFilePondUploader
+              onFileChange={handleFileChange}
+              formDataImages={formData.images}
+              setFormDataImages={imageRemoveToNull}
+            />
 
             <Button
               isLoading={createLoading}

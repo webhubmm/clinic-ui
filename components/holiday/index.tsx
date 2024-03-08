@@ -43,10 +43,7 @@ import { removeFAQS, setFAQSData } from "@/store/slices/faqsSlice";
 import TruncatedText from "../Custom/TruncatedText";
 import CustomModal from "../Custom/CustomModal";
 import RestoreModal from "../Custom/RestoreModal";
-import {
-  removeHolidayManagement,
-  setHolidayManagementData,
-} from "@/store/slices/holidayManagementSlice";
+import { setHolidayManagementData } from "@/store/slices/holidayManagementSlice";
 import { HolidayManagementDataType } from "@/types/holidayManagementType";
 import { formatDateString } from "@/utils/changes";
 import HolidayManagementCreateModal, {
@@ -90,6 +87,8 @@ const HolidayManagementComponent = () => {
   const { holidayManagementData } = useAppSelector(
     (state) => state.holidayManagementSlice
   );
+  const closedDates = useAppSelector((state) => state.calendarSlice.date);
+
   const toast = useToast();
 
   const FetchGetAllHolidayListFun = async () => {
@@ -182,13 +181,10 @@ const HolidayManagementComponent = () => {
       );
       if (result?.code === 200) toastFun("Success", result?.message, "success");
       if (result?.status === 400) toastFun("Error", result?.message, "error");
-      dispatch(
-        removeHolidayManagement(
-          deleteHolidayManagementData as HolidayManagementDataType
-        )
-      );
+
       dispatch(setDeleteLoading(false));
       onClose();
+      FetchGetAllHolidayListFun();
     }
   };
 
@@ -210,13 +206,10 @@ const HolidayManagementComponent = () => {
       );
       if (result?.code === 200) toastFun("Success", result?.message, "success");
       if (result?.status === 400) toastFun("Error", result?.message, "error");
-      dispatch(
-        removeHolidayManagement(
-          restoreHolidayManagementData as HolidayManagementDataType
-        )
-      );
+
       dispatch(setRestoreLoading(false));
       onRestoreClose();
+      FetchGetAllHolidayListFun();
     }
   };
 
@@ -238,13 +231,9 @@ const HolidayManagementComponent = () => {
       );
       if (result?.code === 200) toastFun("Success", result?.message, "success");
       if (result?.status === 400) toastFun("Error", result?.message, "error");
-      dispatch(
-        removeHolidayManagement(
-          forceDeleteDoctorData as HolidayManagementDataType
-        )
-      );
       dispatch(setDeleteLoading(false));
       onForceDeleteClose();
+      FetchGetAllHolidayListFun();
     }
   };
 
@@ -481,11 +470,13 @@ const HolidayManagementComponent = () => {
       <HolidayManagementCreateModal
         ref={holidayManagementCreateModalRef}
         title={"Create Holiday Management"}
+        fetchData={FetchGetAllHolidayListFun}
       />
 
       <HolidayManagementEditModal
         ref={holidayManagementEditModalRef}
         title={"Edit Holiday Management"}
+        fetchData={FetchGetAllHolidayListFun}
       />
     </Box>
   );

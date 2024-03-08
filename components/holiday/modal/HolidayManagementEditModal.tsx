@@ -26,11 +26,10 @@ import { FaWindowClose } from "react-icons/fa";
 import { updateTeeth } from "@/store/slices/teethSlice";
 import { HolidayManagementDataType } from "@/types/holidayManagementType";
 import CustomCalendar from "@/components/Custom/Calendar";
-import { updateHolidayManagement } from "@/store/slices/holidayManagementSlice";
-import { updateCalendarData } from "@/store/slices/calendarSlice";
 
 interface EditHolidayManagementModalProps {
   title: string; // Data to be edited
+  fetchData: () => void;
 }
 
 export interface EditHolidayManagementModalRef {
@@ -41,7 +40,7 @@ export interface EditHolidayManagementModalRef {
 const HolidayManagementEditModal: React.ForwardRefRenderFunction<
   EditHolidayManagementModalRef,
   EditHolidayManagementModalProps
-> = ({ title }, ref) => {
+> = ({ title, fetchData }, ref) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [formData, setFormData] = useState<HolidayManagementDataType>({
     date: "",
@@ -95,8 +94,7 @@ const HolidayManagementEditModal: React.ForwardRefRenderFunction<
       onClose();
     } else if (res.code === 200) {
       toastFun("Success", res.message, "success");
-      dispatch(updateHolidayManagement(res.data));
-      dispatch(updateCalendarData(res.data.date));
+      fetchData();
       onClose();
     }
     dispatch(setEditLoading(false));

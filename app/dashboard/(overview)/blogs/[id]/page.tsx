@@ -1,6 +1,6 @@
 "use client";
 import Loading from "@/components/Custom/Loading";
-import MulitpleFilePondUploader from "@/components/FilePondUploader/MulitpleFilePondUploader";
+import MultipleFilePondUploader from "@/components/FilePondUploader/MultipleFilePondUploader";
 import { centralCreate, centralShow } from "@/lib/api-central";
 import { useAppSelector } from "@/store/hooks";
 import {
@@ -112,19 +112,25 @@ const IdBlogsComponent = ({ params }: { params: { id: string } }) => {
     });
   };
 
+  const imageRemoveToNull = () => {
+    setFormData((prevData) => ({
+      ...prevData,
+      images: null,
+    }));
+  };
+
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    // dispatch(setCreateLoading(true));
-    // const res = await centralCreate("createEditDeleteBlogsAPI", formData);
-    // if (res.code === 400) {
-    //   toastFun("Error", res.data, "error");
-    // }
-    // if (res.code === 200) {
-    //   toastFun("Success", res.message, "success");
-    // }
-    // dispatch(setCreateLoading(false));
-    // router.push("/dashboard/blogs");
-    console.log("formData :: ", formData);
+    dispatch(setCreateLoading(true));
+    const res = await centralCreate("createEditDeleteBlogsAPI", formData);
+    if (res.code === 400) {
+      toastFun("Error", res.data, "error");
+    }
+    if (res.code === 200) {
+      toastFun("Success", res.message, "success");
+    }
+    dispatch(setCreateLoading(false));
+    router.push("/dashboard/blogs");
   };
 
   const handleInputChange = (
@@ -145,8 +151,6 @@ const IdBlogsComponent = ({ params }: { params: { id: string } }) => {
       services: selectedServices,
     }));
   };
-
-  console.log("formData :: ", formData.images);
 
   const handleFileChange = (base64Images: string[]) => {
     setFormData((prevData) => ({
@@ -226,7 +230,6 @@ const IdBlogsComponent = ({ params }: { params: { id: string } }) => {
                     onChange={(servicesList) =>
                       handleServicesIdChange(servicesList)
                     }
-                    required
                     defaultValue={clickedServices}
                     isMulti
                     options={servicesList.map((item) => ({
@@ -278,10 +281,7 @@ const IdBlogsComponent = ({ params }: { params: { id: string } }) => {
                 <FaWindowClose
                   className="removeImg"
                   onClick={() => {
-                    setFormData((prevData) => ({
-                      ...prevData,
-                      images: null,
-                    }));
+                    imageRemoveToNull();
                   }}
                 />
               )}
@@ -310,7 +310,11 @@ const IdBlogsComponent = ({ params }: { params: { id: string } }) => {
               </Swiper>
             </Box>
 
-            <MulitpleFilePondUploader onFileChange={handleFileChange} />
+            <MultipleFilePondUploader
+              onFileChange={handleFileChange}
+              formDataImages={formData.images}
+              setFormDataImages={imageRemoveToNull}
+            />
 
             <Button
               isLoading={createLoading}
