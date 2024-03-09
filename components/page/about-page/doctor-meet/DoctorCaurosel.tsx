@@ -80,7 +80,7 @@ export default function DoctorCaurosel() {
           clickable: true,
         }}
         modules={[Pagination]}
-        onSwiper={(swiper) => console.log(swiper)}
+        onSwiper={() => {}}
         className="h-96 w-full rounded-lg"
         breakpoints={{
           // when window width is >= 320px

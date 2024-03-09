@@ -15,11 +15,17 @@ import Link from "next/link";
 import { FaPhoneAlt } from "react-icons/fa";
 import { CiMenuFries } from "react-icons/ci";
 import ContainerBox from "../container/Container";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { RxCross2 } from "react-icons/rx";
+import { getAuth } from "@/lib/auth";
 
 export default function UserNavBar() {
   const [isRes, setIsRes] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
   const handleRes = () => {
     setIsRes((prev) => !prev);
   };
@@ -27,6 +33,8 @@ export default function UserNavBar() {
     // Toggle the visibility of the navbar
     setIsRes(false);
   };
+
+  const auth = getAuth();
 
   const navLinks = [
     {
@@ -59,6 +67,29 @@ export default function UserNavBar() {
 
   const activeLink = (url: string, pathname: string) =>
     pathname === url ? "neat.primary" : "neat.secondary";
+
+  const test = () => {
+    if (typeof window !== "undefined") {
+      if (auth) {
+        return (
+          <Link href={"/dashboard"}>
+            <ButtonPrimary
+              placeholder="Profile"
+              onClick={() => {}}
+            ></ButtonPrimary>
+          </Link>
+        );
+      } else
+        return (
+          <Link href={"/dashboard"}>
+            <ButtonPrimary
+              placeholder="Log In"
+              onClick={() => {}}
+            ></ButtonPrimary>
+          </Link>
+        );
+    }
+  };
 
   return (
     <Box
@@ -121,12 +152,7 @@ export default function UserNavBar() {
                   1800-749-8000
                 </Text>
               </Box>
-              <Link href={"/login"}>
-                <ButtonPrimary
-                  placeholder="Sign In"
-                  onClick={() => {}}
-                ></ButtonPrimary>
-              </Link>
+              {isClient && test()}
             </Box>
           </Box>
 
@@ -177,17 +203,7 @@ export default function UserNavBar() {
                   fontSize="lg"
                   fontWeight="600"
                 >
-                  {navLinks?.map((link, index) => (
-                    <ListItem
-                      key={index}
-                      cursor="pointer"
-                      color={`${activeLink(link.href, pathName)}`}
-                    >
-                      <Link href={link.href} onClick={closeNavbar}>
-                        {link?.name}
-                      </Link>
-                    </ListItem>
-                  ))}
+                  {isClient && test()}
                 </List>
               </Box>
 

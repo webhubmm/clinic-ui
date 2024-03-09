@@ -1,60 +1,78 @@
-import { Box, Container, Heading, Text,Wrap } from "@chakra-ui/react";
-import blogOne from '@/public/assets/blogOne_image13.png';
-import blogTwo  from "@/public/assets/blog_imageTwo.png";
-import blogThree from '@/public/assets/blog_imageThree14.png';
+"use client";
+import { Box, Container, Heading, Text, Wrap } from "@chakra-ui/react";
+import blogOne from "@/public/assets/blogOne_image13.png";
+import blogTwo from "@/public/assets/blog_imageTwo.png";
+import blogThree from "@/public/assets/blog_imageThree14.png";
 import BlogsCard from "@/components/common/blogscard/BlogsCard";
 import ContainerBox from "@/components/common/container/Container";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { setFetchLoading } from "@/store/slices/globalSlice";
+import { centralGetAllLists } from "@/lib/api-central";
+import { BlogsDataType } from "@/types/blogsDataType";
+import { useAppSelector } from "@/store/hooks";
+import Loading from "@/components/Custom/Loading";
 
-const blogsLists =[
-       {
-        id:44,
-        blogImg:blogOne,
-        title:" How Oral Health Affects You Overall",
+export default function HomeBlogShow() {
+  const [blogState, setBlogState] = useState<BlogsDataType[]>([]);
+  const dispatch = useDispatch();
+  const { isFetchLoading } = useAppSelector((item) => item.globalSlice);
 
-    },
-    {
-        id:45,
-        blogImg:blogTwo,
-        title:"Say goodbye to stains and discoloration",
+  const FetchGetAllBlogs = async () => {
+    dispatch(setFetchLoading(true));
+    const result = await centralGetAllLists("getBlogsAPI", {
+      page: 1,
+      per_page: 10,
+      search: "",
+      trash: false,
+    });
+    setBlogState(result.data.blogs);
+    dispatch(setFetchLoading(false));
+  };
 
-    },
-      {
-        id:46,
-        blogImg:blogThree,
-        title:"Top foods to keep your teeth healthy",
-        
-    }
-]
-    export default function HomeBlogShow() {
-    return (
-        <Box paddingY='8rem'>
-            {/* <Container maxW='container.xl'> */}
-    <ContainerBox>
-        <Box display='grid' justifyItems='center' alignItems='center' gap='5'>
-            <Text color='neat.primary' fontWeight='600'>
-                Our blogs
+  useEffect(() => {
+    FetchGetAllBlogs();
+  }, []);
 
-            </Text>
-            <Heading color='neat.secondary'>
-               Separating fact from fiction
-
-            </Heading>
+  return (
+    <Box paddingY="8rem">
+      {/* <Container maxW='container.xl'> */}
+      <ContainerBox>
+        <Box display="grid" justifyItems="center" alignItems="center" gap="5">
+          <Text color="neat.primary" fontWeight="600">
+            Our blogs
+          </Text>
+          <Heading color="neat.secondary">Separating fact from fiction</Heading>
         </Box>
 
-        <Box marginTop='4rem' display='flex' flexDir={{sm:"column",lg:'row'}} alignItems='center' justifyContent={{lg:'space-between'}}  gap={{sm:'5',lg:'0'}}>
-            {
-                blogsLists?.map((item) =>(
-                    
-                    
-                        <BlogsCard  key={item.id} blogImg={item.blogImg} title={item?.title} md="90%"/>
-                   
-                ))
-            }
-            
-
+        <Box
+          marginTop="4rem"
+          display="flex"
+          flexDir={{ sm: "column", lg: "row" }}
+          alignItems="center"
+          justifyContent={{ lg: "space-evenly" }}
+          gap={{ sm: "5", lg: "0" }}
+        >
+          {isFetchLoading ? (
+            <Loading />
+          ) : (
+            blogState?.slice(0, 3).map((item) => (
+              <Box
+                key={item.id}
+                onClick={() => console.log("item :: ", item)}
+                width={{ base: "100%", sm: "85%", md: "60%", lg: "31%" }}
+              >
+                <BlogsCard
+                  key={item.id}
+                  blogImg={item.images}
+                  title={item.title}
+                />
+              </Box>
+            ))
+          )}
         </Box>
-</ContainerBox>
-        {/* </Container> */}
-        </Box>
-    )
-    }
+      </ContainerBox>
+      {/* </Container> */}
+    </Box>
+  );
+}

@@ -257,6 +257,7 @@ const BlogsCreate = () => {
                         width={"100%"}
                         alt="branches-img"
                         height={"200px"}
+                        objectFit={"contain"}
                       />
                     </SwiperSlide>
                   );

@@ -1,34 +1,34 @@
-import { Box, Card, CardHeader, Heading, Text } from "@chakra-ui/react";
-import Image, { StaticImageData } from "next/image";
-import blogImg from "@/public/assets/blogOne_image13.png";
+import { Box, Card, CardHeader, Heading, Text, Image } from "@chakra-ui/react";
 import { FaArrowRight } from "react-icons/fa6";
 
-interface blogProps {
-  blogImg: string;
-  title: string;
+interface BlogImgType {
+  id: number;
+  url: string;
 }
+
 export default function BlogsCard({
   blogImg,
   title,
   md,
 }: {
-  blogImg: StaticImageData;
+  blogImg: BlogImgType[];
   title: string;
   md?: string;
 }) {
   return (
-    <Card width={{ sm: "auto", md: `${md}`, lg: "380px" }} borderRadius="10px">
-      <Box pos="relative">
+    <Card width={"100%"} borderRadius="10px" overflow={"hidden"}>
+      <Box>
         <Image
-          src={blogImg}
+          src={blogImg[0].url}
           alt="blogs app"
-          height="0"
+          width={"100%"}
+          height={"300px"}
           sizes="100vw"
           className="w-full h-auto"
         />
       </Box>
       <CardHeader maxW={{ sm: "lg", lg: "sm" }}>
-        <Heading size="md" color="neat.secondary" fontSize="1.5rem">
+        <Heading size="md" color="neat.secondary" fontSize="1.3rem">
           {title}
         </Heading>
         <Text
@@ -39,10 +39,10 @@ export default function BlogsCard({
           gap="5"
           cursor="pointer"
         >
-          <Text as="span" color="neat.primary">
+          <Text as="span" color="neat.primary" className="readMore">
             <FaArrowRight />
           </Text>
-          <Text as="span" color="neat.secondary">
+          <Text as="span" color="neat.secondary" className="readMore">
             Read More
           </Text>
         </Text>
