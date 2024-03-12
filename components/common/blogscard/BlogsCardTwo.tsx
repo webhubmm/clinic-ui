@@ -29,7 +29,7 @@ export default function BlogsCard({
         />
       </Box>
       <CardHeader maxW={{ sm: "lg", lg: "sm" }}>
-        <Heading size="md" color="neat.secondary" fontSize="1.3rem">
+        <Heading size="md" color="neat.secondary" fontSize="1.8rem">
           {title}
         </Heading>
         <Box

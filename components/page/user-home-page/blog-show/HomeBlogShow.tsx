@@ -12,11 +12,12 @@ import { centralGetAllLists } from "@/lib/api-central";
 import { BlogsDataType } from "@/types/blogsDataType";
 import { useAppSelector } from "@/store/hooks";
 import Loading from "@/components/Custom/Loading";
+import { setBlogsData } from "@/store/slices/blogsSlice";
 
 export default function HomeBlogShow() {
-  const [blogState, setBlogState] = useState<BlogsDataType[]>([]);
   const dispatch = useDispatch();
   const { isFetchLoading } = useAppSelector((item) => item.globalSlice);
+  const { blogsData } = useAppSelector((item) => item.blogsSlice);
 
   const FetchGetAllBlogs = async () => {
     dispatch(setFetchLoading(true));
@@ -26,7 +27,7 @@ export default function HomeBlogShow() {
       search: "",
       trash: false,
     });
-    setBlogState(result.data.blogs);
+    dispatch(setBlogsData(result.data.blogs));
     dispatch(setFetchLoading(false));
   };
 
@@ -56,10 +57,10 @@ export default function HomeBlogShow() {
           {isFetchLoading ? (
             <Loading />
           ) : (
-            blogState?.slice(0, 3).map((item) => (
+            blogsData?.slice(0, 3).map((item) => (
               <Box
                 key={item.id}
-                onClick={() => console.log("item :: ", item)}
+                // onClick={() => console.log("item :: ", item)}
                 width={{ base: "100%", sm: "85%", md: "60%", lg: "31%" }}
               >
                 <BlogsCard

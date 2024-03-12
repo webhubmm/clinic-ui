@@ -60,11 +60,6 @@
   background-color: #ee5d50; /* Background color for disabled dates */
 }
 
-.readMore {
-  transition: all;
-  transition-duration: 500ms;
-}
-
-:hover.readMore {
-  transform: scale(1.1);
+.inputSearch {
+  box-shadow: rgba(0, 0, 0, 0.09) 0px 3px 12px;
 }
